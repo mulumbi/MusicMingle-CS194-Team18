@@ -2,6 +2,7 @@
 
 Wiki Home Page:
 https://github.com/StanfordCS194/Win24-Team18/wiki
+
 Front-End Host URL:
 [MusicMingle](https://musicmingle-cabf2.web.app)
 
