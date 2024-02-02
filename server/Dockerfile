@@ -2,8 +2,10 @@ FROM node:alpine
 
 WORKDIR /usr/src/app
 
-COPY . .
+COPY package.json package-lock.json* ./
 
-RUN npm install
+RUN npm ci && npm cache clean --force
+
+COPY src .env tsconfig.json ./
 
 EXPOSE 3000

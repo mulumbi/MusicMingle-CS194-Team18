@@ -1,9 +1,11 @@
 FROM node:alpine
- 
+
 WORKDIR /usr/src/app
 
-COPY . .
+COPY package.json package-lock.json* ./
 
-RUN npm install
- 
+RUN npm ci && npm cache clean --force
+
+COPY src .env index.html tsconfig.json tsconfig.node.json vite.config.ts ./
+
 EXPOSE 5173
