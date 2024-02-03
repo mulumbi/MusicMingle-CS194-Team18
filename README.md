@@ -18,7 +18,7 @@ Front-End Host URL:
 - Data is currently locally stored in a directory called `data` since otherwise, data created will be lost after containers shut down
 
 ### Pull repo:
-- Make sure you have Docker Desktop [installed]([url](https://www.docker.com/products/docker-desktop/)) 
+- Make sure you have Docker Desktop [installed](https://www.docker.com/products/docker-desktop/) 
 - Navigate to where you want to place the project
 - `git clone https://github.com/StanfordCS194/Win24-Team18.git`
 - `cd Win24-Team18`
