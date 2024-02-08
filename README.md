@@ -12,7 +12,7 @@ Front-End Host URL:
 - The project is separated into two subdirectories, `client` (front-end), `server` (back-end)
 - Hot reloading (HMR) using the `Vite` bundler for `React` hosted locally at (`http://localhost:5173/`), (fast bundle and compile on file save)
 - `Express Node` server uses `Nodemon` to rebuild when files change
-- Docker is running three images, front-end, back-end, and db. To access front-end and back-end container terminals, run:  `docker exec -it <image-hash found in docker desktop> sh`. To enter the Postgres database container terminal, change the trailing `sh` to `bash`. Enter the psql shell with: `psql -h db -p 5432 -U postgres -d postgres` with the password `54321`
+- Docker is running three images, front-end, back-end, and db. To access front-end and back-end container terminals, run:  `docker exec -it <image-hash found in docker desktop> sh`. To enter the Postgres database container terminal, change the trailing `sh` to `bash`. Enter the psql shell with: `psql -h db -p 5432 -U postgres -d postgres` with the password `1234`
   - Example for front-end container: `docker exec -it 5addc1785520 sh`
   - Example for db container: `docker exec -it b37a8fcf4b20 bash`
 - Data is currently locally stored in a directory called `data` since otherwise, data created will be lost after containers shut down
