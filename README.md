@@ -6,6 +6,9 @@ https://github.com/StanfordCS194/Win24-Team18/wiki
 Front-End Host URL:
 [MusicMingle](https://musicmingle-cabf2.web.app)
 
+## Source Control Git:
+- Angel Sandoval
+
 # Onboarding:
 ### Notes:
 - Everything is now preconfigured so it should be easy to spin up without hassle
