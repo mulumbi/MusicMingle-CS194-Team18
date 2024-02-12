@@ -6,7 +6,10 @@ https://github.com/StanfordCS194/Win24-Team18/wiki
 Front-End Host URL:
 [MusicMingle](https://musicmingle-cabf2.web.app)
 
-# Onboarding:
+# Milestone: Source Control with Git
+- Audrey Sy
+
+# Onboarding
 ### Notes:
 - Everything is now preconfigured so it should be easy to spin up without hassle
 - The project is separated into two subdirectories, `client` (front-end), `server` (back-end)
