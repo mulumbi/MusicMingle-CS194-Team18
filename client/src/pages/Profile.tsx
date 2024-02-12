@@ -6,7 +6,7 @@ import axios from "axios";
 function Profile() {
 	const { currentUser, signOut } = useContext(AuthContext);
 	const navigate = useNavigate();
-	const [loggedInState, setLoggedInState] = useState();
+	const [profileDetails, setProfileDetails] = useState();
 
 	useEffect(() => {
 		currentUser
@@ -20,8 +20,7 @@ function Profile() {
 						},
 					})
 					.then((res) => {
-						setLoggedInState(res);
-						console.log(res);
+						setProfileDetails(res.data);
 					})
 					.catch((err) => {
 						console.log("CORS error: ", err);
@@ -31,7 +30,7 @@ function Profile() {
 				console.log("Token err: ", err);
 			});
 	}, []);
-
+	console.log(profileDetails);
 	return (
 		<div>
 			<h3>Welcome! {currentUser?.email}</h3>
