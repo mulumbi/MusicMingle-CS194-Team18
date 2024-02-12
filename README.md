@@ -9,6 +9,7 @@ Front-End Host URL:
 # Milestone: Source Control with Git
 - Jason Mei
 - Audrey Sy
+- Hong Vo
 
 # Onboarding
 
