@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "musicmingle",
+  "private_key_id": "847509563d60cdb94b3066cab117803e0116846c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCvJ4V2OASFHx+L\n964ygApazfhVBxDzKcMVXK0vBPBNzxuMlfOlYO9ypnT+oUURYPTge8Jksq3ByLMt\nqsgzaAwm640ukocAtS9r6KxKktRWJqilBAbaIKkpyYtlzKPOgDrx5j3SHjWw7QHX\nQVzMGqB6CGjO7yv3iRU9d9Wb9Tjg78KmVCnbvJ3yTE11dK6SGRysDCFkCZtpgjG9\nehnJhUIryut6ulHGgW5tMZXxK2SnfYiQFzWXEWEdKpIwIwZdm1qrfMNVYkWcYsEt\nO0ceNdQ6kvN0jOAED9JRSZEPRuxK7LQSPhPNFhVXaEJeFl6ZozMZFp6TvFbLahGA\nq+TqCvcBAgMBAAECggEAAPVMwKQeT8R1WTHtCte9FsNcTxE3d8WGvnAXGwJF0wzs\nwOhi/Qim6yOQ0TrKryHZZ8RtjryGgMP5gkxA2r0j5W8qu7J2rlRy+bb01o9EzA2G\nJPC85L9Q8ENyFTKD0Tq/hgbBnv2CmKDwMEdcESFyflsUeiYAM0Tx9xttIzSWQXz7\nFcQv4Mu50cVlHABvoSG4jX7tlH7RyMOl2kTasAN3Cimn/4KMV2I1wt8gMiyyOvxx\nWmRSIHcXvUTYqlt/naLz+YRRmcbjqepc7pDDPmsGxOnYG2IiPb0H16mRqEUkIY6l\nzZ6Dr9c7OUw5br7L1Mxm+KB+YwPFBMiGmI8hTLvrZQKBgQDiXu+0B4bzbGzwhrWi\nyTQVXwE8P/5JSxWXsei0Iqg5DwDuip6LnQzwy4g9B0uUO5FVLmoNzPWn/19MV/bl\nwMsxHAyZLK9BG9b0TPn7qvmuCKwRThIzCmOqDNc0mL4H8revzOx9BBOIVgabEDzE\ndT6bqsSTo5xrxVfrPcOS0H63ZQKBgQDGFHZYw6c2xdLVdaBE1slJoWQslCjLByC7\nWMD4f9wQvJymuBBMDUD6IcqzKbLHbO32NkEQxqOjwSqppLlyA818En3JQpcN2DbH\n6LRPgY+EeFnyZAgGQs4xzwMe8/25+dXVNkaZuZPt1cNuKeLKSqAPbUZFcV8lPS2g\ncF1iPh/NbQKBgH1M93m7QOO0/IgWyKuWm5HIyLJE6chAG2+gNqKfHGaY+3cOm7vD\n7snKn1rIkvk2D7gKvQFulfury2BCwJNkKBTC5eZTaZ6sfksz4JuBhDrk6fmaMVC3\nS3txKB4g/e8AVtSkpbJ9cyJgG7/xOPG1xDX+TFk8kvTEg2nfAkZdygZRAoGAC0O4\noz2lMcE4RzlkPuX0FoLeHobidwFVxDG876Tdz/nZ8sU+8ARE8LShQWUarKquMbVO\nJ/UT80kV8wXSIgDDW831Z0+pJXlpTB8YufjFP6RUgStdJXYBIeYC6Gy5vizOE0z9\n4Noj5n+kmIw7QIPT7GyrdWGIJqb/BEO/m8mqp1UCgYEAtPe1Tu4BEA3pL+Jryr5B\nrBSHRuqdTpPEfv5iSC/nFFMTNFzvE7ovey/JNgEY1z2lRxv5wgu51rv2mnKa/ZP8\niKE2ilMQYxtoXOLMYw7NUwuOdZQHpzW+waZG9sj5c86tdcgReLf4hrcrtoNTE2NE\nWgmP2itdok15uSKLbOCZQAU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "jason-675@musicmingle.iam.gserviceaccount.com",
+  "client_id": "116590802656817129665",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/jason-675%40musicmingle.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
