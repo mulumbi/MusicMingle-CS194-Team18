@@ -10,6 +10,7 @@ Front-End Host URL:
 - Jason Mei
 - Audrey Sy
 - Hong Vo
+- Shirley Mulumbi
 
 # Onboarding
 
