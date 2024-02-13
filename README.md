@@ -8,6 +8,7 @@ Front-End Host URL:
 
 # Milestone: Source Control with Git
 - Jason Mei
+- Angel Sandoval
 - Audrey Sy
 - Hong Vo
 
