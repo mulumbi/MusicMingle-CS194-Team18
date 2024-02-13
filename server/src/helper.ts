@@ -242,4 +242,34 @@ const uploadVideos = async (req, res, next) => {
 	}
 };
 
-export { isLoggedIn, uploadProfileImage, uploadPortfolioImages, uploadVideos };
+const getProfileDetails = async (req, res) => {
+	const { uid, email } = req.user;
+
+	const user = await models.User.findByPk(uid);
+	const profileImage = await user.getUserContents({
+		where: { type: "profileImage" },
+	});
+	const portfolioImages = await user.getUserContents({
+		where: { type: "portfolioImage" },
+	});
+	const portfolioVideos = await user.getUserContents({
+		where: { type: "portfolioVideo" },
+	});
+
+	return {
+		uid,
+		email,
+		profileImage,
+		portfolioImages,
+		portfolioVideos,
+		bio: user.bio,
+	};
+};
+
+export {
+	isLoggedIn,
+	uploadProfileImage,
+	uploadPortfolioImages,
+	uploadVideos,
+	getProfileDetails,
+};

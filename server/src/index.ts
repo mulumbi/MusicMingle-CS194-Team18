@@ -9,6 +9,7 @@ import cors from "cors";
 import models, { sequelize } from "./db";
 
 import {
+	getProfileDetails,
 	isLoggedIn,
 	uploadPortfolioImages,
 	uploadProfileImage,
@@ -96,27 +97,8 @@ app.get("/api", (req: Request, res: Response) => {
 app.get("/api/profile", [
 	isLoggedIn,
 	async (req, res) => {
-		const { uid, email } = req.user;
-
-		const user = await models.User.findByPk(uid);
-		const profileImage = await user.getUserContents({
-			where: { type: "profileImage" },
-		});
-		const portfolioImages = await user.getUserContents({
-			where: { type: "portfolioImage" },
-		});
-		const portfolioVideos = await user.getUserContents({
-			where: { type: "portfolioVideo" },
-		});
-
-		res.status(201).json({
-			uid,
-			email,
-			profileImage,
-			portfolioImages,
-			portfolioVideos,
-			bio: user.bio,
-		});
+		const profileDetails = await getProfileDetails(req, res);
+		res.status(201).json(profileDetails);
 	},
 ]);
 
@@ -138,14 +120,7 @@ app.post(
 		uploadVideos,
 	],
 	async (req: any, res) => {
-		const {
-			portfolio_images,
-			profile_image,
-			videos,
-			deleted_portfolio_images,
-			deleted_videos,
-			bio,
-		} = req;
+		const { deleted_portfolio_images, deleted_videos, bio } = req;
 		const { uid, name, email } = req.user;
 
 		const user = await models.User.findByPk(uid);
@@ -194,7 +169,9 @@ app.post(
 		}
 
 		await Promise.allSettled(promises);
-		res.sendStatus(200);
+
+		const profileDetails = await getProfileDetails(req, res);
+		res.status(201).json(profileDetails);
 	}
 );
 
