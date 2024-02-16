@@ -11,6 +11,7 @@ Front-End Host URL:
 - Angel Sandoval
 - Audrey Sy
 - Hong Vo
+- Shirley Mulumbi
 
 # Onboarding
 
