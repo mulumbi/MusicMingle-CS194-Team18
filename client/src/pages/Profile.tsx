@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
+import { Button } from "@/components/ui/button";
 
 interface FormData {
 	profile_image: string;
@@ -64,8 +65,8 @@ function Profile() {
 		<div>
 			<h3>Welcome! {currentUser?.email}</h3>
 			<p>Sign In Status: {currentUser && "active"}</p>
-			<button onClick={onSubmit}>Submit</button>
-			<button onClick={signOut}>Sign Out</button>
+			<Button onClick={onSubmit}>Submit</Button>
+			<Button onClick={signOut}>Sign Out</Button>
 		</div>
 	);
 }
