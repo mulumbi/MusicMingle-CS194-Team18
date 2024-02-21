@@ -13,7 +13,7 @@ import {
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FilterSidebarArtist } from "../components/Filterbar";
 
-function ArtistsList() {
+function Artists() {
  
   return (
 	  <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
@@ -135,4 +135,4 @@ function ArtistsList() {
 	);
 }
 
-export default ArtistsList;
+export default Artists;

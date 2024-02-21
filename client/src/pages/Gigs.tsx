@@ -1,10 +1,10 @@
 
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
 	Card,
 	CardContent,
@@ -13,11 +13,9 @@ import {
 	CardHeader,
 	CardTitle,
   } from "@/components/ui/card";
+  import FilterSidebarGig from "@/components/Filterbar";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { IoMdAddCircle } from "react-icons/io";
-
-import FilterSidebarGig from "@/components/Filterbar";
-
 
 
 function EventsList() {
@@ -130,9 +128,6 @@ function EventsList() {
 			
 		  </div>
 
-		  
-		  
-  
 		  {/* Filter Sidebar on the Right */}
 		  <FilterSidebarGig />
 		</div>
