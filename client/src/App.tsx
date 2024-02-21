@@ -5,6 +5,7 @@ import EventsList from "./pages/EventsList.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 
 import "./App.css";
+import ArtistsList from "./pages/ArtistsList.tsx";
 
 function App() {
 	return (
@@ -25,6 +26,13 @@ function App() {
 				path="events_list"
 				element={<EventsList />}
 			/>
+
+			<Route
+				path="artists_list"
+				element={<ArtistsList />}
+			/>
+
+
 		</Routes>
 	);
 }

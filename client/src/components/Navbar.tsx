@@ -27,6 +27,14 @@ const Navbar = () => {
 			>
 				Events List
 			</button>
+
+			<button
+				type="submit"
+				onClick={() => navigate("/artists_list")}
+			>
+				Artists List
+			</button>
+
 			<button
 				type="submit"
 				onClick={() => {
