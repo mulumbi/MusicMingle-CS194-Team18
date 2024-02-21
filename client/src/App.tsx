@@ -7,6 +7,7 @@ import Profile from "./pages/Profile.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 
 import "./App.css";
+import ArtistsList from "./pages/ArtistsList.tsx";
 
 function App() {
 	return (
