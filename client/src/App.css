@@ -1,23 +1,15 @@
 #root {
-  max-width: 1280px;
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  align-self: flex-start;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
+/* Logo spin animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +25,91 @@
   }
 }
 
+/* Card styling */
 .card {
   padding: 2em;
 }
 
+/* Styling for 'read the docs' text */
 .read-the-docs {
   color: #888;
+}
+
+/* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #0F1020;
+  color: #FFFFFF;
+  align-self: flex-start;
+}
+
+/* Grouping navbar items */
+.navbar-group {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  padding: 0.8rem 1.6rem;
+}
+
+/* Navbar logo button styling */
+.navbar-logo {
+  padding:0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Adjusting logo image height */
+.navbar-logo img {
+  height: 2.5rem;
+}
+
+/* Separator styling */
+.navbar-separator {
+  width: 1px;
+  height: 1.5rem;
+  background-color: #ccc;
+  margin: 0 0.9375rem;
+}
+
+/* Styling navbar items, actions, and sign button */
+.navbar-item, .navbar-action, .navbar-sign {
+  margin-right: 0.4rem;
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+/* Adjusting navbar action image height */
+.navbar-action img {
+  height: 1.6rem;
+}
+
+/* Aligning navbar actions */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  border: none;
+}
+
+/* Updating hover effect for buttons */
+button.navbar-item:hover, button.navbar-action:hover, button.navbar-sign:hover {
+  background-color: #3697c749;
+  border: none;
+}
+
+button.navbar-item:focus, button.navbar-action:focus, button.navbar-sign:focus {
+  outline: none;
+}
+
+/* Styling for active button */
+button.active {
+  color: #3696C7; /* Set active button text color */
+  background: transparent;
+  border: none;
 }
