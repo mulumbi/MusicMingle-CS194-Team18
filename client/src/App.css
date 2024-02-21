@@ -3,12 +3,23 @@
   align-items: flex-start;
   align-content: flex-start;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   margin: 0 auto;
   align-self: flex-start;
 }
 
+.App {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-image: url('../src/assets/bg.png');
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  justify-content: space-around;
+}
 /* Logo spin animation */
 @keyframes logo-spin {
   from {
@@ -40,6 +51,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 1.25rem;
   width: 100%;
   background-color: #0F1020;
   color: #FFFFFF;
@@ -51,7 +63,6 @@
   display: flex;
   align-items: center;
   flex-grow: 1;
-  padding: 0.8rem 1.6rem;
 }
 
 /* Navbar logo button styling */
@@ -78,7 +89,7 @@
 
 /* Styling navbar items, actions, and sign button */
 .navbar-item, .navbar-action, .navbar-sign {
-  margin-right: 0.4rem;
+  margin-right: 0.625rem;
   background: transparent;
   border: none;
   color: #FFFFFF;
@@ -87,7 +98,7 @@
 
 /* Adjusting navbar action image height */
 .navbar-action img {
-  height: 1.6rem;
+  height: 2rem;
 }
 
 /* Aligning navbar actions */
@@ -103,13 +114,87 @@ button.navbar-item:hover, button.navbar-action:hover, button.navbar-sign:hover {
   border: none;
 }
 
-button.navbar-item:focus, button.navbar-action:focus, button.navbar-sign:focus {
-  outline: none;
-}
-
 /* Styling for active button */
 button.active {
-  color: #3696C7; /* Set active button text color */
-  background: transparent;
+  color: #3696C7; 
   border: none;
 }
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #FFFFFF;
+  padding: 0 1rem;
+}
+
+.title h1 {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.title button {
+  font-size: 0.75rem; 
+  background: transparent;
+  border: none;
+  color: #3696C7;
+  cursor: pointer;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.card {
+  background-color: #FFFFFF;
+  display: block;
+  flex-direction: column;
+  width: 17.5rem; 
+  overflow: auto;
+  border-radius: 0.8rem; 
+  padding:1rem;
+}
+
+.card img {
+  height: 10rem; 
+  width: 100%;
+  object-fit: cover; 
+  margin: 0; 
+  border-radius: 0.44rem; 
+  padding: 0;
+}
+
+.card h2 {
+  color: #3696C7;
+  font-size: 1rem; 
+  margin-bottom: 0;
+}
+
+.card p {
+  color: #000;
+  font-size: 0.875rem; 
+  display: flex; 
+  flex-direction: column; 
+  margin:0;
+}
+.card p :first-of-type{
+  margin-top: 0.25rem;
+}
+
+
+.tag {
+  display: inline-block;
+  background-color: #3697c749;
+  color: #3696C7;
+  padding: 0.5rem 1rem; 
+  margin: 0;
+  margin-top: 0.25rem;
+  margin-right: 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+}
+
