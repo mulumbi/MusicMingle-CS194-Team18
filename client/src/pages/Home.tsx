@@ -14,7 +14,7 @@ import artists2 from "../assets/artists/2.jpg";
 import artists3 from "../assets/artists/3.jpg";
 import artists4 from "../assets/artists/4.jpg";
 import artists5 from "../assets/artists/5.jpg";
-import { toast } from "sonner";
+
 
 function Home() {
     const navigate = useNavigate();

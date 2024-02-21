@@ -1,3 +1,4 @@
+// Card.tsx
 import React from 'react';
 
 type CardProps = {
@@ -6,18 +7,11 @@ type CardProps = {
   date: string;
   time: string;
   tags: string[];
-  onImageClick?: () => void;
 };
 
-const Card: React.FC<CardProps> = ({ image, header, date, time, tags, onImageClick }) => (
+const Card: React.FC<CardProps> = ({ image, header, date, time, tags }) => (
   <div className="card">
-    {onImageClick ? (
-      <button onClick={onImageClick} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-        <img src={image} alt={header} style={{ maxWidth: '100%', display: 'block' }}/>
-      </button>
-    ) : (
-      <img src={image} alt={header} style={{ maxWidth: '100%', display: 'block' }}/>
-    )}
+    <img src={image} alt={header} />
     <h2>{header}</h2>
     <p>{date}</p>
     <p>{time}</p>
