@@ -40,7 +40,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.25rem;
   width: 100%;
   background-color: #0F1020;
   color: #FFFFFF;
@@ -52,6 +51,7 @@
   display: flex;
   align-items: center;
   flex-grow: 1;
+  padding: 0.8rem 1.6rem;
 }
 
 /* Navbar logo button styling */
@@ -78,7 +78,7 @@
 
 /* Styling navbar items, actions, and sign button */
 .navbar-item, .navbar-action, .navbar-sign {
-  margin-right: 0.625rem;
+  margin-right: 0.4rem;
   background: transparent;
   border: none;
   color: #FFFFFF;
@@ -87,7 +87,7 @@
 
 /* Adjusting navbar action image height */
 .navbar-action img {
-  height: 2rem;
+  height: 1.6rem;
 }
 
 /* Aligning navbar actions */
@@ -103,8 +103,13 @@ button.navbar-item:hover, button.navbar-action:hover, button.navbar-sign:hover {
   border: none;
 }
 
+button.navbar-item:focus, button.navbar-action:focus, button.navbar-sign:focus {
+  outline: none;
+}
+
 /* Styling for active button */
 button.active {
   color: #3696C7; /* Set active button text color */
+  background: transparent;
   border: none;
 }
