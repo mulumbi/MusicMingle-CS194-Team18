@@ -5,9 +5,7 @@ import Artists from "./pages/Artists.tsx";
 import MyGigs from "./pages/MyGigs.tsx";
 import Profile from "./pages/Profile.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
-
 import "./App.css";
-import ArtistsList from "./pages/ArtistsList.tsx";
 
 function App() {
 	return (

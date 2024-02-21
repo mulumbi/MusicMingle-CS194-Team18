@@ -33,15 +33,19 @@ const Navbar = () => {
                 </button>
             </div>
             <div className="navbar-actions">
-                <button className="navbar-action" onClick={() => navigate("/")}>
-                    <img src={ChatIcon} alt="Chats" />
-                </button>
-                <button className="navbar-action" onClick={() => navigate("/")}>
-                    <img src={NotificationsIcon} alt="Notifications" />
-                </button>
-                <button className="navbar-action" onClick={() => navigate("/profile")}>
-                    <img src={UserIcon} alt="Profile" />
-                </button>
+                { !!currentUser && 
+                    <div>
+                        <button className="navbar-action" onClick={() => navigate("/")}>
+                            <img src={ChatIcon} alt="Chats" />
+                        </button>
+                        <button className="navbar-action" onClick={() => navigate("/")}>
+                            <img src={NotificationsIcon} alt="Notifications" />
+                        </button>
+                        <button className="navbar-action" onClick={() => navigate("/profile")}>
+                            <img src={UserIcon} alt="Profile" />
+                        </button>
+                    </div>
+                }
                 <button className="navbar-sign" onClick={() => {
                     !!currentUser ? signOut() : signInWithGooglePopup();
                 }}>

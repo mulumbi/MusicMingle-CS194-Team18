@@ -14,7 +14,7 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-image: url('../src/assets/bg.png');
+  background-image: url('../src/assets/Background.png');
   background-size: cover; 
   background-position: center; 
   background-repeat: no-repeat; 
@@ -51,7 +51,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.25rem;
   width: 100%;
   background-color: #0F1020;
   color: #FFFFFF;
@@ -63,6 +62,7 @@
   display: flex;
   align-items: center;
   flex-grow: 1;
+  padding: 0.75rem 1.25rem;
 }
 
 /* Navbar logo button styling */
@@ -96,9 +96,15 @@
   cursor: pointer;
 }
 
+.navbar-sign {
+  color: black;
+  background: lightcyan;
+  border: none;
+}
+
 /* Adjusting navbar action image height */
 .navbar-action img {
-  height: 2rem;
+  height: 1.6rem;
 }
 
 /* Aligning navbar actions */
@@ -106,6 +112,7 @@
   display: flex;
   align-items: center;
   border: none;
+  margin-right: 1rem;
 }
 
 /* Updating hover effect for buttons */
@@ -114,11 +121,117 @@ button.navbar-item:hover, button.navbar-action:hover, button.navbar-sign:hover {
   border: none;
 }
 
+
+
 /* Styling for active button */
 button.active {
   color: #3696C7; 
   border: none;
 }
+
+button.navbar-item:focus, button.navbar-action:focus, button.navbar-sign:focus {
+  outline: none;
+}
+
+/* PROFILE PAGE STYLING */
+
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.profile-banner {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 18rem;
+}
+
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 10rem;
+}
+
+.profile-row {
+  display: flex;
+  flex-direction: row;
+  padding: 0 2rem;
+}
+
+.profile-left {
+  width: 14rem;
+  min-width: 14rem;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 3rem;
+}
+
+.profile-right {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.profile-photo {
+  width: 14rem;
+  height: 14rem;
+  margin-top: -8rem;
+  border-radius: 7rem;
+}
+
+.profile-button {
+  margin: 1rem 1rem 0 0;
+  border: none;
+}
+
+button.profile-button:hover {
+  background-color: #3697c749;
+  border: none;
+}
+
+.profile-role {
+  align-self: center;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 4rem;
+  border: none;
+  color: white;
+  background-color: navy;
+}
+
+.bio {
+  padding-top: 0.35rem;
+}
+
+.portfolio {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;  
+  margin-top: 1.2rem;
+  gap: 2rem;
+}
+
+.portfolio-item {
+  width: 15rem; 
+  height: 15rem;
+  border-radius: 0.8rem; 
+  background-color: lightgrey;
+}
+
+.portfolio-item img {
+  width: 15rem; 
+  height: 15rem;
+  object-fit: cover; 
+}
+
+/* PROFILE PAGE STYLING */
 
 .title {
   display: flex;
