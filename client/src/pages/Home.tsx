@@ -25,9 +25,9 @@ function Home() {
         id: 'g1',
         image: Gig1,
         header: 'Create New Gig',
-        date: 'Do you have an event coming up?',
+        date: '',
         time: 'Find local talent for your next gig!',
-        tags: ['Genre', 'Type'],
+        tags: [],
       },
       {
         id: 'g2',

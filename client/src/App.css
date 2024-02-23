@@ -19,6 +19,7 @@
   background-position: center; 
   background-repeat: no-repeat; 
   justify-content: space-around;
+
 }
 /* Logo spin animation */
 @keyframes logo-spin {
@@ -52,7 +53,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  background-color: #0F1020;
+  background-color: rgb(5, 22, 36);
   color: #FFFFFF;
   align-self: flex-start;
 }
@@ -239,20 +240,25 @@ button.profile-button:hover {
   align-items: center;
   color: #FFFFFF;
   padding: 0 1rem;
+  margin-top: 1rem;
 }
 
 .title h1 {
   margin-top: 1rem;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.title button {
-  font-size: 0.75rem; 
+.title button { 
   background: transparent;
   border: none;
   color: #3696C7;
   cursor: pointer;
+  text-decoration: underline;
+}
+
+.title button:hover {
+  background-color: rgba(54, 151, 199, 0.25);
 }
 
 .cards {
@@ -298,6 +304,33 @@ button.profile-button:hover {
   margin-top: 0.25rem;
 }
 
+.gig-cards .cards .card:first-child{
+  color: #FFFFFF;
+  background-color: rgb(0, 64, 88);
+  align-items: center;
+}
+
+.gig-cards .cards .card:first-child p {
+  color: rgb(232, 248, 252);
+  padding-top: 0.15rem;
+}
+
+.gig-cards .cards .card:first-child img {
+  box-shadow: rgb(255, 255, 255);
+  object-fit:contain;
+}
+.gig-cards .cards .card:first-child span {
+  color:rgb(232, 248, 252) ;
+}
+
+.gig-cards .cards .card:first-child h2 {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: white;
+  align-items: center;
+  width: 100%;
+  padding-top: 1.5rem;
+}
 
 .tag {
   display: inline-block;
@@ -310,4 +343,74 @@ button.profile-button:hover {
   font-size: 0.75rem;
   border-radius: 0.5rem;
 }
+  
+.Title {
+  /* Styles for the title div */
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #FFFFFF;
+  margin-top: 0;
+}
 
+.Selection-tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.selection-buttons {
+  border-radius: 12px;
+  background: rgba(0,64,88, 0.5);
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  color:#FFFFFF;
+}
+
+.selection-buttons:hover {
+  background: rgba(0,64,88, 0.7);
+}
+
+.selection-buttons.Active {
+  background: rgba(0,64,88);
+}
+
+.my-gigs-cards {
+  /* Styles for the gigs cards container */
+}
+
+.page-body {
+  padding: 2.5rem;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.Title, .Selection-tabs {
+  padding-bottom:1rem;
+}
+
+.Selection-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  margin-bottom: 1rem;
+  width: auto; /* Hug content */
+}
+
+.selection-buttons {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  margin-right: 2.5rem; /* Add space between buttons */
+}
+
+.selection-buttons:last-child {
+  margin-right: 0; /* Remove margin for the last button */
+}
+
+.selection-buttons.Active {
+  /* Distinct styling for the active button */
+}

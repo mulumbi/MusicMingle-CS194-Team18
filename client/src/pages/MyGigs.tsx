@@ -1,16 +1,53 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import GigCard from "@/components/GigCards";
+
+const gigs = [
+  {
+    imageUrl: 'path/to/image1.jpg',
+    title: 'Gig Title 1',
+    bio: 'This is a short bio for Gig 1',
+    tags: ['Tag1', 'Tag2'],
+  },
+  {
+    imageUrl: 'path/to/image2.jpg',
+    title: 'Gig Title 2',
+    bio: 'This is a short bio for Gig 2',
+    tags: ['Tag1'],
+  },
+  {
+    imageUrl: 'path/to/image1.jpg',
+    title: 'Gig Title 1',
+    bio: 'This is a short bio for Gig 1',
+    tags: ['Tag1', 'Tag2'],
+  },
+];
 
 function MyGigs() {
-	return (
-		/**
-		 * Extract the currrentUser from the context, if you want to
-		 * get the User info, like the email, display name, etc.
-		 */
-		<div>
-			<h1>MyGigs List</h1>
-		</div>
-	);
+  return (
+    <div className="App">
+      <div className="page-body">
+        <div className="Title">View My Gigs</div>
+        <div className="Selection-tabs">
+          <button className="selection-buttons Active">APPLIED GIGS</button>
+          <button className="selection-buttons">POSTED GIGS</button>
+        </div>
+        <div className="my-gigs-cards">
+          {/* Content here will depend on the state or context providing the gigs */}
+          {gigs.map((gig, index) => (
+        <GigCard
+          key={index}
+          imageUrl={gig.imageUrl}
+          title={gig.title}
+          bio={gig.bio}
+          tags={gig.tags}
+        />
+      ))}
+        </div>
+      </div>
+    </div>
+  );
 }
+
 export default MyGigs;
