@@ -31,6 +31,7 @@ const Navbar = () => {
                 <button className={"navbar-item " + (pathname === "/my_gigs" ? 'active' : '')} onClick={() => navigate("/my_gigs")}>
                     My Gigs
                 </button>
+
                 <button className={"navbar-item " + (pathname === "/create_gig" ? 'active' : '')} onClick={() => navigate("/create_gig")}>
                     Create Gig
                 </button>

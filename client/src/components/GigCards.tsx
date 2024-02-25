@@ -10,7 +10,7 @@ interface GigCardProps {
   onButtonClick: () => void; 
 }
 
-const GigCard: React.FC<GigCardProps> = ({ imageUrl, title, bio, tags, buttonText, onButtonClick }) => (
+const GigCard: React.FC<GigCardProps> = ({ imageUrl, title, bio, tags,  buttonText, onButtonClick  }) => (
   <div className="my-gig-cards">
     <img src={imageUrl} alt="Gig" />
     <div className="gig-details">
@@ -24,7 +24,7 @@ const GigCard: React.FC<GigCardProps> = ({ imageUrl, title, bio, tags, buttonTex
           ))}
         </div>
         <div className="bottom-buttons">
-          <button onClick={onButtonClick}>{buttonText}</button> // Modify this line
+        <button onClick={onButtonClick}>{buttonText}</button> 
         </div>
       </div>
     </div>
