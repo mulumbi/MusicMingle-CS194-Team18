@@ -1,10 +1,16 @@
 const getUserContentModel = (sequelize, { DataTypes }) => {
 	const UserContent = sequelize.define("UserContent", {
+		id: {
+			type: DataTypes.UUID,
+			primaryKey: true,
+			defaultValue: DataTypes.UUIDV4,
+		},
 		type: {
 			type: DataTypes.ENUM(
 				"profileImage",
 				"portfolioImage",
-				"portfolioVideo"
+				"portfolioVideo",
+				"gigImage"
 			),
 			allowNull: false,
 		},
@@ -16,10 +22,23 @@ const getUserContentModel = (sequelize, { DataTypes }) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		user_id: {
+			type: DataTypes.UUID,
+		},
+		gig_id: {
+			type: DataTypes.UUID,
+		},
 	});
 
 	UserContent.associate = (models) => {
-		UserContent.belongsTo(models.User);
+		UserContent.belongsTo(models.User, {
+			foreignKey: "user_id",
+			contraints: false,
+		});
+		UserContent.belongsTo(models.Gig, {
+			foreignKey: "gig_id",
+			contraints: false,
+		});
 	};
 
 	return UserContent;

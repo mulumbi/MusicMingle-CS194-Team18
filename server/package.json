@@ -23,7 +23,8 @@
 		"pg": "^8.11.3",
 		"pg-hstore": "^2.3.4",
 		"sequelize": "^6.36.0",
-		"sharp": "^0.33.2"
+		"sharp": "^0.33.2",
+		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
 		"@google-cloud/storage": "^7.7.0",

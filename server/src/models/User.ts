@@ -1,8 +1,13 @@
 const getUserModel = (sequelize, { DataTypes }) => {
 	const User = sequelize.define("User", {
 		id: {
-			type: DataTypes.STRING,
+			type: DataTypes.UUID,
 			primaryKey: true,
+			defaultValue: DataTypes.UUIDV4,
+		},
+		uuid: {
+			type: DataTypes.STRING,
+			unique: true,
 		},
 		name: {
 			type: DataTypes.STRING,
@@ -13,12 +18,36 @@ const getUserModel = (sequelize, { DataTypes }) => {
 		},
 		bio: {
 			type: DataTypes.TEXT,
-			default: "",
+			defaultValue: "",
+		},
+		user_genre_tags: {
+			type: DataTypes.ARRAY(DataTypes.STRING),
+			defaultValue: [],
+		},
+		user_role_tags: {
+			type: DataTypes.ARRAY(DataTypes.STRING),
+			defaultValue: [],
+		},
+		organization_name: {
+			type: DataTypes.TEXT,
+			defaultValue: "",
+		},
+		organization_group_size: {
+			type: DataTypes.INTEGER,
+			defaultValue: 1,
+		},
+		estimate_flat_rate: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0,
 		},
 	});
 
 	User.associate = (models) => {
-		User.hasMany(models.UserContent);
+		User.hasMany(models.UserContent, {
+			foreignKey: "user_id",
+			contraints: false,
+		});
+		User.hasMany(models.Gig);
 	};
 
 	return User;

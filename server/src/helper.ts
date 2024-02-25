@@ -3,7 +3,9 @@ import { getAuth } from "firebase-admin/auth";
 import sharp from "sharp";
 import { Storage } from "@google-cloud/storage";
 import fs from "fs";
-import models from "./db";
+import models, { sequelize } from "./db";
+import { Op, Sequelize } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
 
 const bucketStorage = new Storage({
 	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
@@ -13,6 +15,7 @@ const videoBucket = bucketStorage.bucket("music-mingle-video");
 const portfolioImageBucket = bucketStorage.bucket(
 	"music-mingle-portfolio-bucket"
 );
+const gigImageBucket = bucketStorage.bucket("music-mingle-gig-bucket");
 
 // middleware for checking if user is logged in. allows the extraction of name, uid, email, etc from req.user anywhere
 const isLoggedIn = (req, res, next) => {
@@ -26,20 +29,23 @@ const isLoggedIn = (req, res, next) => {
 		.then((decodedToken) => {
 			req.user = decodedToken;
 			const { uid, email, name, picture } = decodedToken;
-			models.User.findByPk(uid)
+			models.User.findOne({ where: { uuid: uid } })
 				.then(async (user) => {
 					if (!user) {
 						const newUser = await models.User.create({
-							id: uid,
+							uuid: uid,
 							name: name,
 							email: email,
 							bio: "",
+							user_genre_tags: [],
+							user_role_tags: [],
+							organization_name: "",
+							organization_group_size: 1,
 						});
 						const newUserContent = await newUser.createUserContent({
 							type: "profileImage",
 							file_name: name + "-Profile.webp",
 							public_url: picture,
-							UserId: uid,
 						});
 						await newUserContent.save();
 						next();
@@ -67,7 +73,9 @@ const uploadProfileImage = async (req, res, next) => {
 
 		if (profile_image?.length === 1) {
 			// Delete old image from db
-			const user = await models.UserContent.findByPk(uid);
+			const user = await models.UserContent.findOne({
+				where: { uuid: uid },
+			});
 			const old_image = await user.getUserContents({
 				where: { type: "profileImage" },
 			});
@@ -122,7 +130,7 @@ const uploadPortfolioImages = async (req, res, next) => {
 		const { portfolio_images } = req.files;
 		const { uid, name, email } = req.user;
 
-		const user = await models.UserContent.findByPk(uid);
+		const user = await models.User.findOne({ where: { uuid: uid } });
 
 		if (portfolio_images?.length > 0) {
 			const portfolio_images_obj = [];
@@ -132,11 +140,11 @@ const uploadPortfolioImages = async (req, res, next) => {
 				const ref = `${name}-${originalname}.webp`;
 				const file = portfolioImageBucket.file(ref);
 				// Create portfolio image instance
-				await user.createUserContents({
+				const user_content = await user.createUserContent({
 					type: "portfolioImage",
 					file_name: ref,
 					public_url: file.publicUrl(),
-					UserId: uid,
+					// UserId: uid,
 				});
 				// Optimize image, upload to google cloud storage, make image public
 				sharp(path)
@@ -167,7 +175,9 @@ const uploadPortfolioImages = async (req, res, next) => {
 							error: `Parse profile image error: ${err}`,
 						});
 					});
+				portfolio_images_obj.push(user_content);
 			});
+			await Promise.allSettled(portfolio_images_obj);
 			req.portfolio_images = portfolio_images_obj;
 			next();
 		} else {
@@ -184,10 +194,10 @@ const uploadVideos = async (req, res, next) => {
 		const { videos } = req.files;
 		const { uid } = req.user;
 
-		const user = await models.UserContent.findByPk(uid);
+		const user = await models.User.findOne({ where: { uuid: uid } });
 
 		if (videos?.length > 0) {
-			const videos_obj = [];
+			const videos_objs = [];
 			videos.forEach(async (video) => {
 				const { path, originalname } = video;
 				const name = req.user?.name || "Jason Mei";
@@ -195,11 +205,10 @@ const uploadVideos = async (req, res, next) => {
 				const fileName = ref.slice(4);
 				const file = videoBucket.file(ref.slice(4));
 
-				await user.createUserContents({
+				const user_content = await user.createUserContent({
 					type: "portfolioVideos",
 					file_name: fileName,
 					public_url: file.publicUrl(),
-					UserId: uid,
 				});
 
 				ffmpeg()
@@ -233,8 +242,10 @@ const uploadVideos = async (req, res, next) => {
 								});
 							});
 					});
+				videos_objs.push(user_content);
 			});
-			req.videos = videos_obj;
+			await Promise.allSettled(videos_objs);
+			req.videos = videos_objs;
 			next();
 		} else {
 			next();
@@ -242,10 +253,206 @@ const uploadVideos = async (req, res, next) => {
 	}
 };
 
+const getGigDetails = async (req, res) => {
+	const { gigUid } = req;
+
+	const gig = await models.Gig.findByPk(gigUid);
+
+	return gig;
+};
+
+const uploadGigImages = async (req, res, next) => {
+	if (!req.files || !req.files.gig_images) {
+		next();
+	} else {
+		const { gig_images } = req.files;
+		if (gig_images?.length > 0) {
+			const gigImages = [];
+			gig_images.forEach(async (image) => {
+				const { path, originalname } = image;
+				const ref = `${uuidv4()}-${originalname}.webp`;
+				const file = gigImageBucket.file(ref);
+				// Optimize image, upload to google cloud storage, make image public
+				sharp(path)
+					.webp({ quality: 70 })
+					.toBuffer()
+					.then((data) => {
+						file.save(data)
+							.then(() => {
+								fs.unlink(path, (err) => {
+									console.log(err);
+								});
+								file.makePublic().catch((err) => {
+									console.log("Error verifying token:", err);
+									res.status(501).json({
+										error: `Profile make public error: ${err}`,
+									});
+								});
+							})
+							.catch((err) => {
+								console.log("Save error:", err);
+								res.status(501).json({
+									error: `Save profile error: ${err}`,
+								});
+							});
+					})
+					.catch((err) => {
+						res.status(501).json({
+							error: `Parse profile image error: ${err}`,
+						});
+					});
+				gigImages.push({
+					type: "gigImage",
+					file_name: ref,
+					public_url: file.publicUrl(),
+				});
+			});
+			await Promise.allSettled(gigImages);
+			req.gig_images = gigImages;
+			next();
+		} else {
+			next();
+		}
+	}
+};
+
+const tagParser = (tags) => {
+	return JSON.parse(tags)
+		.map((tag) => `'${tag}'`)
+		.join(", ");
+};
+
+const searchArtists = async (req, res) => {
+	const {
+		user_role_tags,
+		user_genre_tags,
+		name,
+		flat_rate_start,
+		flat_rate_end,
+		organization,
+		organization_size_start,
+		organization_size_end,
+		limit,
+		offset,
+	} = req.query;
+	const query = [];
+	if (organization_size_start) {
+		query.push({
+			organization_group_size: { [Op.gt]: organization_size_start },
+		});
+	}
+	if (organization_size_end) {
+		query.push({
+			organization_group_size: { [Op.lt]: organization_size_end },
+		});
+	}
+	if (flat_rate_start) {
+		query.push({ estimate_flat_rate: { [Op.gt]: flat_rate_start } });
+	}
+	if (flat_rate_end) {
+		query.push({ estimate_flat_rate: { [Op.lt]: flat_rate_end } });
+	}
+	if (name) {
+		query.push({
+			[Op.or]: [
+				{
+					name: Sequelize.literal(
+						`tsvector_name @@ to_tsquery('${name}:* ')`
+					),
+				},
+				{
+					name: Sequelize.literal(
+						`tsvector_organization @@ to_tsquery('${name}:* ')`
+					),
+				},
+			],
+		});
+	}
+	if (user_role_tags?.length > 0) {
+		const tags = tagParser(user_role_tags);
+		query.push({
+			user_role_tags: Sequelize.literal(
+				`ARRAY[${tags}]::varchar[] <@ user_role_tags`
+			),
+		});
+	}
+	if (user_genre_tags?.length > 0) {
+		const tags = tagParser(user_genre_tags);
+		query.push({
+			user_genre_tags: Sequelize.literal(
+				`ARRAY[${tags}]::varchar[] <@ user_genre_tags`
+			),
+		});
+	}
+
+	const users = await models.User.findAll({
+		where: {
+			[Op.and]: query,
+		},
+		order: [["name", "DESC"]],
+		limit: limit ? limit : 10,
+		offset: offset ? offset : 0,
+	});
+
+	return users;
+};
+
+const searchGigs = async (req, res) => {
+	const {
+		event_start,
+		event_end,
+		gig_tags,
+		name,
+		flat_rate_start,
+		flat_rate_end,
+		limit,
+		offset,
+	} = req.query;
+	const query = [];
+	if (event_start) {
+		query.push({ event_start: { [Op.gt]: event_start } });
+	}
+	if (event_end) {
+		query.push({ event_end: { [Op.lt]: event_end } });
+	}
+	if (flat_rate_start) {
+		query.push({ event_end: { [Op.gt]: flat_rate_start } });
+	}
+	if (flat_rate_end) {
+		query.push({ event_end: { [Op.lt]: flat_rate_end } });
+	}
+	if (name) {
+		query.push({
+			name: Sequelize.literal(`tsvector_name @@ to_tsquery('${name}:*')`),
+		});
+	}
+	if (gig_tags?.length > 0) {
+		const tags = JSON.parse(gig_tags)
+			.map((tag) => `'${tag}'`)
+			.join(", ");
+		query.push({
+			gig_tags: Sequelize.literal(
+				`ARRAY[${tags}]::varchar[] <@ gig_tags`
+			),
+		});
+	}
+
+	const gigs = await models.Gig.findAll({
+		where: {
+			[Op.and]: query,
+		},
+		order: [["name", "DESC"]],
+		limit: limit ? limit : 10,
+		offset: offset ? offset : 0,
+	});
+
+	return gigs;
+};
+
 const getProfileDetails = async (req, res) => {
 	const { uid, email } = req.user;
 
-	const user = await models.User.findByPk(uid);
+	const user = await models.User.findOne({ where: { uuid: uid } });
 	const profileImage = await user.getUserContents({
 		where: { type: "profileImage" },
 	});
@@ -255,15 +462,24 @@ const getProfileDetails = async (req, res) => {
 	const portfolioVideos = await user.getUserContents({
 		where: { type: "portfolioVideo" },
 	});
+	const { id, ...data } = user.dataValues;
 
 	return {
-		uid,
-		email,
+		...data,
 		profileImage,
 		portfolioImages,
 		portfolioVideos,
-		bio: user.bio,
 	};
+};
+
+const formatDateTime = (dateTime: string) => {
+	const date = new Date(dateTime);
+	const isoString = date.toISOString();
+	const isoDate = isoString.slice(0, 10); // YYYY-MM-DD
+	const isoTime = isoString.slice(11, 23); // HH:MM:SS.MS
+	const postgresTimestamp = `${isoDate} ${isoTime}`;
+
+	return postgresTimestamp; //YYYY-MM-DD HH:MM:SS.MS
 };
 
 export {
@@ -272,4 +488,9 @@ export {
 	uploadPortfolioImages,
 	uploadVideos,
 	getProfileDetails,
+	getGigDetails,
+	searchGigs,
+	uploadGigImages,
+	formatDateTime,
+	searchArtists,
 };
