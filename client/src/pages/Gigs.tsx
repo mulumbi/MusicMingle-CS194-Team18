@@ -1,4 +1,3 @@
-
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -16,9 +15,8 @@ import {
   import FilterSidebarGig from "@/components/Filterbar";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import GigCard from "@/components/GigCards"; 
-import Gig1 from "../assets/gigs/add.png";
-
-
+import NewGig from "../assets/gigs/add.png"; 
+import { Link } from 'react-router-dom';
 
 const gigs = [
     {
@@ -38,13 +36,17 @@ const gigs = [
     // Add more gigs as necessary
 ];
 
-const navigate = useNavigate(); // This hook gives you access to the navigate function
-
-const handleCreateGig = () => {
-	navigate('/create-gig'); // Use the path to your CreateGig page
-};
 
 function EventsList() {
+
+	const navigate = useNavigate();  // Get the navigate function
+
+    // Define a function to handle the button click
+    const goToCreateGig = () => {
+        navigate('/create-gig');  // Use the navigate function to change routes
+    };
+
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <h1 style={{ textAlign: 'center' }}>Discover Gigs</h1>
@@ -58,14 +60,26 @@ function EventsList() {
                     </div>
 
 					{/* Create New Gig Card */}
-                    <GigCard 
-                        imageUrl= {Gig1} 
+                    {/* <GigCard 
+                        imageUrl= {NewGig} // Placeholder image 
                         title="Create New Gig"
                         bio="Set up your own gig here now!"
                         tags={["Create", "New"]} // Placeholder tags
                         buttonText="Create"
-						onButtonClick={handleCreateGig}
-                    />
+						onButtonClick={() => console.log('Button Clicked')}
+                    /> */}
+
+					<Link to="/create_gig">
+					<GigCard 
+						imageUrl={NewGig} // Placeholder image 
+						title="Create New Gig"
+						bio="Set up your own gig here now!"
+						tags={["Create", "New"]} // Placeholder tags
+						buttonText="Create"
+						onButtonClick={goToCreateGig} 
+					/>
+					</Link>
+
 
 
                     {gigs.map((gig, index) => (
@@ -88,7 +102,4 @@ function EventsList() {
 }
 
 export default EventsList;
-  
-
-
 
