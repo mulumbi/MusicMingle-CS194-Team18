@@ -6,6 +6,7 @@ import MyGigs from "./pages/MyGigs.tsx";
 import Profile from "./pages/Profile.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 import "./App.css";
+import CreateGig from "./pages/CreateGig.tsx";
 
 function App() {
 	return (
@@ -33,6 +34,11 @@ function App() {
 						<Profile />
 					</RequireAuth>
 				}
+			/>
+			
+			<Route
+				path="create_gig"
+				element={<CreateGig />}
 			/>
 		</Routes>
 	);
