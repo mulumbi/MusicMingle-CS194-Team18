@@ -114,29 +114,33 @@ function FilterSidebarGig() {
 function FilterSidebarArtist() {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
 return (
-      <Card className="h-full w-1/3 p-5 bg-gray-800 text-white">
-        <CardHeader className="flex justify-between items-center">
+      <Card id="Filterbar">
+        <CardHeader className="filterbar-header">
           <CardTitle>Filters</CardTitle>
           
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
         <div>
 
-        <div className="mb-2 text-sm font-semibold"> Flat Rate</div>
+        <div className="filter-action"> 
+          <h5>Flat Rate</h5>
         <Input  placeholder="Enter $$$" />
-
+        </div>
         {/* slider doesn't work yet, use input temporarily */}
         <Slider defaultValue={[10]} max={40} step={1} />
         </div>
 
-        <div> Group Size</div>
+        <div className="filter-action"> 
+          <h5>Group Size</h5>
         <Input  placeholder="Number of members" />
+        </div>
+        
 
 
-          <div style ={{marginBottom: '100px'}}>
-            Genre
-            <Select>
-                <SelectTrigger className="w-[180px]">
+          <div className="filter-action" >
+            <h5>Genre</h5>
+            <Select className="dropdown">
+                <SelectTrigger >
                     <SelectValue placeholder="Choose genre" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,10 +152,10 @@ return (
             </Select>
           </div>
 
-          <div style ={{marginBottom: '100px'}}>
-            Role
-            <Select>
-                <SelectTrigger className="w-[180px]">
+          <div className="filter-action">
+            <h5>Role</h5>
+            <Select className="dropdown">
+                <SelectTrigger>
                     <SelectValue placeholder="Choose role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -162,13 +166,14 @@ return (
                 </SelectContent>
             </Select>
           </div>
-
+          <div className="filter-action">
+            <h5>Available Dates</h5>
           <Calendar
     mode="single"
     selected={date}
     onSelect={setDate}
-    className="rounded-md border"
   />
+  </div>
 
         </CardContent>
         <CardFooter>

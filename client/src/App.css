@@ -414,3 +414,91 @@ button.profile-button:hover {
 .selection-buttons.Active {
   /* Distinct styling for the active button */
 }
+
+#ArtistBody {
+  display: flex;
+  flex-direction: row;
+}
+
+.Artist-page-cards{
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+}
+
+#ArtistBody .my-gig-cards {
+  width: 100%;
+}
+
+#ArtistPageApp{
+  flex-direction: row;
+}
+
+#Filterbar {
+  background-color: #040D11;
+  color: white;
+  display: flex;
+  height: auto;
+  padding: 2rem;
+  flex-direction: column;
+}
+
+.filterbar-header h1, /* Assuming CardTitle uses h1, adjust if it's a different tag */
+.filterbar-header h2, /* Adjust according to actual tag used for CardTitle */
+.filterbar-header h3, /* Adjust according to actual tag used for CardTitle */
+.filterbar-header h4, /* Adjust according to actual tag used for CardTitle */
+.filterbar-header h5, /* Adjust according to actual tag used for CardTitle */
+.filterbar-header h6 { /* Adjust according to actual tag used for CardTitle */
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.filter-action h5 {
+  font-size: 1rem; /* Set h5 size to 1rem */
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin:0;
+}
+
+.filter-action {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem; /* Ensure spacing around actions, adjust as needed */
+}
+
+.filter-action select,
+.filter-action input,
+.filter-action .dropdown, /* Assuming .dropdown is used for select wrappers */
+#Filterbar button {
+  height: auto; /* Allow height to wrap content */
+  width: 100%; /* Set a uniform width, adjust if necessary */
+  padding: 0.5rem; /* Provide some padding inside inputs/buttons for content to fit nicely */
+  box-sizing: border-box; /* Include padding in the height calculation */
+}
+
+.dropdown {
+  font-size: 1rem; /* Adjusted to 1rem to match h5 size */
+  display: flex; /* Already present, ensure dropdowns are flex containers */
+  justify-content: center; /* Center content, already present */
+  padding: 0.5rem 0; /* Adjust padding to ensure height wraps content */
+}
+
+#Filterbar button {
+  display: inline-flex; /* Use inline-flex to align button text properly */
+  align-items: center; /* Center button content vertically */
+  justify-content: center; /* Center button content horizontally */
+}
+
+/* Additional styles for uniform button and select heights */
+button, .dropdown select {
+  height: 2.5rem; /* Example fixed height, adjust as needed */
+}
+
+/* Ensure all form controls have the same width */
+.filter-action input,
+.filter-action button,
+.filter-action .dropdown {
+  width: auto; /* Adjust as needed to ensure uniform width */
+}
