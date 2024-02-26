@@ -59,15 +59,6 @@ function EventsList() {
                         </Button>
                     </div>
 
-					{/* Create New Gig Card */}
-                    {/* <GigCard 
-                        imageUrl= {NewGig} // Placeholder image 
-                        title="Create New Gig"
-                        bio="Set up your own gig here now!"
-                        tags={["Create", "New"]} // Placeholder tags
-                        buttonText="Create"
-						onButtonClick={() => console.log('Button Clicked')}
-                    /> */}
 
 					<Link to="/create_gig">
 					<GigCard 
