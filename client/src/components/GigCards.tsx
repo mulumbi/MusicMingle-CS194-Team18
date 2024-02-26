@@ -6,9 +6,11 @@ interface GigCardProps {
   title: string;
   bio: string;
   tags: string[]; // Added to allow for a variable number of tags
+  buttonText : string;
+  onButtonClick: () => void; 
 }
 
-const GigCard: React.FC<GigCardProps> = ({ imageUrl, title, bio, tags }) => (
+const GigCard: React.FC<GigCardProps> = ({ imageUrl, title, bio, tags,  buttonText, onButtonClick  }) => (
   <div className="my-gig-cards">
     <img src={imageUrl} alt="Gig" />
     <div className="gig-details">
@@ -22,7 +24,7 @@ const GigCard: React.FC<GigCardProps> = ({ imageUrl, title, bio, tags }) => (
           ))}
         </div>
         <div className="bottom-buttons">
-          <button>Withdraw Application</button>
+        <button onClick={onButtonClick}>{buttonText}</button> 
         </div>
       </div>
     </div>
