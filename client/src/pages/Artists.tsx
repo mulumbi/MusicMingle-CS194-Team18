@@ -42,10 +42,10 @@ function Artists() {
     return (
         <div className="App" id="ArtistPageApp" >
             <div>
-            <h1 className="Title">Discover Artists</h1>
+            <div className="Title" style={{margin: "20px"}}>Discover Artists</div>
             <div id="ArtistBody" >
                 <div className="Artist-page-cards">
-                    <div>
+                    <div style = {{textAlign: "center"}}>
                         <Input placeholder="Search" />
                         <Button type="submit">
                             <PiMagnifyingGlassBold />
