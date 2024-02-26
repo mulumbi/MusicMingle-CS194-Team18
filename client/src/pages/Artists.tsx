@@ -40,12 +40,13 @@ const artists = [
 
 function Artists() {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-            <h1 style={{ textAlign: 'center' }}>Discover Artists</h1>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                <div style={{ width: '66%', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                        <Input placeholder="Search" style={{ marginRight: '8px' }} />
+        <div className="App" id="ArtistPageApp" >
+            <div>
+            <h1 className="Title">Discover Artists</h1>
+            <div id="ArtistBody" >
+                <div className="Artist-page-cards">
+                    <div>
+                        <Input placeholder="Search" />
                         <Button type="submit">
                             <PiMagnifyingGlassBold />
                         </Button>
@@ -56,8 +57,11 @@ function Artists() {
 						/>
                     ))}
                 </div>
-                <FilterSidebarArtist />
+               
             </div>
+            </div>
+            <FilterSidebarArtist />
+            
         </div>
     );
 }
