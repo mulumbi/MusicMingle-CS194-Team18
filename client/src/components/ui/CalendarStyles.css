@@ -1,0 +1,102 @@
+.calendar-padding {
+    padding: 0;
+}
+
+.flex-col-sm-flex-row-space-y-4-sm-space-x-4-sm-space-y-0 {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .flex-col-sm-flex-row-space-y-4-sm-space-x-4-sm-space-y-0 {
+      flex-direction: row;
+      gap: 1rem;
+    }
+}
+
+.month-space-y {
+    margin-bottom: 1rem;
+}
+
+.caption-style {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-top: 0.25rem;
+}
+
+.caption-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.nav-style {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.nav-button-style {
+    height: 2.25rem;
+    width: 2.25rem;
+    padding: 0;
+    background-color: transparent;
+    opacity: 0.5;
+}
+
+.nav-button-style:hover {
+    opacity: 1;
+}
+
+.nav-button-previous,
+.nav-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-button-previous {
+    left: 0.25rem;
+}
+
+.nav-button-next {
+    right: 0.25rem;
+}
+
+.table-style {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.head-row-style, .row-style {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.head-cell-style, .cell-style {
+    text-align: center;
+    font-size: 0.8rem;
+    height: 2.25rem;
+    width: 2.25rem;
+}
+
+.day-button-style {
+    height: 2.25rem;
+    width: 2.25rem;
+    padding: 0;
+    font-size: 0.875rem;
+}
+
+.icon-left, .icon-right {
+    height: 1rem;
+    width: 1rem;
+}
+
+.day-selected, .day-today, .day-outside, .day-disabled {
+}
+
+.row-style {
+    justify-content: space-between;
+}
