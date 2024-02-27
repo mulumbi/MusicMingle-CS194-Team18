@@ -20,7 +20,6 @@ import {
 	searchArtists,
 	getGigDetails,
 } from "./helper";
-import { profile } from "console";
 
 dotenv.config();
 
