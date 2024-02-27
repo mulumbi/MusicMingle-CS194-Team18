@@ -22,7 +22,11 @@ const getGigModel = (sequelize, { DataTypes }) => {
 		event_end: {
 			type: DataTypes.DATE,
 		},
-		gig_tags: {
+		gig_role_tags: {
+			type: DataTypes.ARRAY(DataTypes.STRING),
+			defaultValue: [],
+		},
+		gig_genre_tags: {
 			type: DataTypes.ARRAY(DataTypes.STRING),
 			defaultValue: [],
 		},

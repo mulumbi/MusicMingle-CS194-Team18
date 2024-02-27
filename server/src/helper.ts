@@ -438,7 +438,8 @@ const searchGigs = async (req, res) => {
 	const {
 		event_start,
 		event_end,
-		gig_tags,
+		gig_role_tags,
+		gig_genre_tags,
 		name,
 		flat_rate_start,
 		flat_rate_end,
@@ -463,13 +464,23 @@ const searchGigs = async (req, res) => {
 			name: Sequelize.literal(`tsvector_name @@ to_tsquery('${name}:*')`),
 		});
 	}
-	if (gig_tags?.length > 0) {
-		const tags = JSON.parse(gig_tags)
+	if (gig_role_tags?.length > 0) {
+		const tags = JSON.parse(gig_role_tags)
 			.map((tag) => `'${tag}'`)
 			.join(", ");
 		query.push({
-			gig_tags: Sequelize.literal(
-				`ARRAY[${tags}]::varchar[] <@ gig_tags`
+			gig_role_tags: Sequelize.literal(
+				`ARRAY[${tags}]::varchar[] <@ gig_role_tags`
+			),
+		});
+	}
+	if (gig_genre_tags?.length > 0) {
+		const tags = JSON.parse(gig_genre_tags)
+			.map((tag) => `'${tag}'`)
+			.join(", ");
+		query.push({
+			gig_genre_tags: Sequelize.literal(
+				`ARRAY[${tags}]::varchar[] <@ gig_genre_tags`
 			),
 		});
 	}
