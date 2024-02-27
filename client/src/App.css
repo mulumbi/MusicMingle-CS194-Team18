@@ -493,14 +493,11 @@ button.profile-button:hover {
   width: 100%; /* Ensure dropdowns fill the width of the parent */
   background-color: white; /* Ensure dropdowns have a white background */
   color: black;
-  align-items: center;  
-  justify-content: center;
-  align-self: center;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: none;
-  box-sizing: border-box;
-
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
 }
 
 #Filterbar button {
@@ -521,3 +518,91 @@ button, .dropdown select {
 .filter-action .dropdown {
   width: auto; /* Adjust as needed to ensure uniform width */
 }
+
+/* GIGS PAGE STYLING */
+
+#GigsBody .my-gig-cards {
+  width: 100%;
+}
+
+#GigsPageApp {
+  flex-direction: row;
+}
+
+#GigsFilterbar {
+  background-color: #040D11;
+  color: white;
+  display: flex;
+  height: auto;
+  padding: 2rem;
+  flex-direction: column;
+}
+
+.gigs-filterbar-header h1,
+.gigs-filterbar-header h2,
+.gigs-filterbar-header h3,
+.gigs-filterbar-header h4,
+.gigs-filterbar-header h5,
+.gigs-filterbar-header h6 {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.gigs-filter-action h5 {
+  font-size: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin: 0;
+}
+
+.gigs-filter-action {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.gigs-filter-action select,
+.gigs-filter-action input,
+.gigs-filter-action .dropdown,
+#GigsFilterbar button {
+  height: auto;
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.gigs-dropdown {
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.gigs-fillDropdown {
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#GigsFilterbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.gigs-button,
+.gigs-dropdown select {
+  height: 2.5rem;
+}
+
+.gigs-filter-action input,
+.gigs-filter-action button,
+.gigs-filter-action .dropdown {
+  width: auto;
+}
+
