@@ -18,6 +18,7 @@ import {
 	formatDateTime,
 	searchGigs,
 	searchArtists,
+	getGigDetails,
 } from "./helper";
 
 dotenv.config();
@@ -86,12 +87,12 @@ client
 		// User.sync({ force: true }) - This creates the table, dropping it first if it already existed
 		/* User.sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, 
 		 what are their data types, etc), and then performs the necessary changes in the table to make it match the model. */
-		sequelize;
-		// .sync({ force: true })
-		// sequelize.sync({ alter: true })
 		sequelize
+			// 	.sync({ force: true })
+			// sequelize
+			// 	.sync({ alter: true })
 			.sync()
-			//
+
 			.then(() => {
 				console.log("Model Sync Complete");
 				testDbConnection();
@@ -224,10 +225,15 @@ app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
 	});
 	const retGig = await Promise.all(
 		myGigs.map(async (gig) => {
-			const content = await gig.getUserContents();
+			const content = await gig.getGigImages();
 			const values = {
 				...gig.dataValues,
-				gigImages: content.map((image) => image.dataValues),
+				gigImages: content
+					.filter((image) => image.type === "gigImage")
+					.map((image) => image.dataValues),
+				gigProfileImage: content.find(
+					(image) => image.type === "gigProfileImage"
+				),
 			};
 			return values;
 		})
@@ -245,7 +251,7 @@ app.get("/api/search_gigs", async (req: any, res) => {
 app.post(
 	"/api/mygigs/edit",
 	isLoggedIn,
-	fileUpload.fields([{ name: "gig_images" }]),
+	fileUpload.fields([{ name: "gig_images" }, { name: "gig_profile_image" }]),
 	uploadGigImages,
 	async (req: any, res) => {
 		const { uid } = req.user;
@@ -290,9 +296,20 @@ app.post(
 				where: { UserId: user.id, id: gig_id },
 			}
 		);
+
+		if (req.gig_profile_image) {
+			await models.UserContent.destroy({
+				where: { gig_id: updatedGig.id, type: "gigProfileImage" },
+			});
+			const newContent = await models.UserContent.create({
+				gig_id: updatedGig.id,
+				...req.gig_profile_image,
+			});
+			await newContent.save();
+		}
 		if (req.gig_images) {
 			req.gig_images.forEach(async (gig_image) => {
-				const newContent = await gig.createUserContent(gig_image);
+				const newContent = await gig.createGigImage(gig_image);
 				await newContent.save();
 			});
 		}
@@ -320,7 +337,10 @@ app.post(
 			});
 		}
 		await Promise.allSettled(promises);
-		res.status(201).json(gig);
+		await updatedGig.save();
+		req.gig_id = gig_id;
+		const gigDetails = await getGigDetails(req, res);
+		res.status(201).json(gigDetails);
 	}
 );
 
@@ -328,7 +348,7 @@ app.post(
 app.post(
 	"/api/gigs/create",
 	isLoggedIn,
-	fileUpload.fields([{ name: "gig_images" }]),
+	fileUpload.fields([{ name: "gig_images" }, { name: "gig_profile_image" }]),
 	uploadGigImages,
 	async (req: any, res) => {
 		const {
@@ -356,16 +376,26 @@ app.post(
 			bio,
 			estimate_flat_rate,
 		});
+		await new_gig.save();
+		if (req.gig_profile_image) {
+			const newContent = await models.UserContent.create({
+				gig_id: new_gig.id,
+				...req.gig_profile_image,
+			});
+			await newContent.save();
+		}
 		if (req.gig_images) {
 			req.gig_images.forEach(async (gig_image) => {
-				const newContent = await new_gig.createUserContent(gig_image);
+				const newContent = await new_gig.createGigImage(gig_image);
 				await newContent.save();
 			});
 		}
 
 		await user.addGig(new_gig);
-		await new_gig.save();
-		res.status(201).json(new_gig);
+		const savedGig = await new_gig.save();
+		req.gig_id = savedGig.id;
+		const gigDetails = await getGigDetails(req, res);
+		res.status(201).json(gigDetails);
 	}
 );
 

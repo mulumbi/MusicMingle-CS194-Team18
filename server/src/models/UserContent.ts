@@ -10,7 +10,8 @@ const getUserContentModel = (sequelize, { DataTypes }) => {
 				"profileImage",
 				"portfolioImage",
 				"portfolioVideo",
-				"gigImage"
+				"gigImage",
+				"gigProfileImage"
 			),
 			allowNull: false,
 		},

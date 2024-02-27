@@ -67,7 +67,6 @@ const uploadProfileImage = async (req, res, next) => {
 	if (!req.files || !req.files.profile_image) {
 		next();
 	} else {
-		console.log("upload profile image");
 		const { profile_image } = req.files;
 		const { name, uid } = req.user;
 
@@ -254,18 +253,17 @@ const uploadVideos = async (req, res, next) => {
 };
 
 const getGigDetails = async (req, res) => {
-	const { gigUid } = req;
-
-	const gig = await models.Gig.findByPk(gigUid);
+	const { gig_id } = req;
+	const gig = await models.Gig.findByPk(gig_id);
 
 	return gig;
 };
 
 const uploadGigImages = async (req, res, next) => {
-	if (!req.files || !req.files.gig_images) {
+	if (!req.files || (!req.files.gig_images && !req.files.gig_profile_image)) {
 		next();
 	} else {
-		const { gig_images } = req.files;
+		const { gig_images, gig_profile_image } = req.files;
 		if (gig_images?.length > 0) {
 			const gigImages = [];
 			gig_images.forEach(async (image) => {
@@ -309,10 +307,49 @@ const uploadGigImages = async (req, res, next) => {
 			});
 			await Promise.allSettled(gigImages);
 			req.gig_images = gigImages;
-			next();
-		} else {
-			next();
 		}
+		const gigProfileImage = {};
+		if (gig_profile_image.length > 0) {
+			gig_profile_image.forEach((image) => {
+				const { path, originalname } = image;
+				const ref = `${uuidv4()}-${originalname}.webp`;
+				const file = gigImageBucket.file(ref);
+				// Optimize image, upload to google cloud storage, make image public
+				sharp(path)
+					.webp({ quality: 70 })
+					.toBuffer()
+					.then((data) => {
+						file.save(data)
+							.then(() => {
+								fs.unlink(path, (err) => {
+									console.log(err);
+								});
+								file.makePublic().catch((err) => {
+									console.log("Error verifying token:", err);
+									res.status(501).json({
+										error: `Profile make public error: ${err}`,
+									});
+								});
+							})
+							.catch((err) => {
+								console.log("Save error:", err);
+								res.status(501).json({
+									error: `Save profile error: ${err}`,
+								});
+							});
+					})
+					.catch((err) => {
+						res.status(501).json({
+							error: `Parse profile image error: ${err}`,
+						});
+					});
+				gigProfileImage["type"] = "gigProfileImage";
+				gigProfileImage["file_name"] = ref;
+				gigProfileImage["public_url"] = file.publicUrl();
+			});
+			req.gig_profile_image = gigProfileImage;
+		}
+		next();
 	}
 };
 
