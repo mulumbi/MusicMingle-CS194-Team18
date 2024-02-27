@@ -521,88 +521,45 @@ button, .dropdown select {
 
 /* GIGS PAGE STYLING */
 
-#GigsBody .my-gig-cards {
-  width: 100%;
-}
 
-#GigsPageApp {
-  flex-direction: row;
-}
+/* CREATE GIG PAGE */
 
-#GigsFilterbar {
-  background-color: #040D11;
-  color: white;
-  display: flex;
-  height: auto;
-  padding: 2rem;
-  flex-direction: column;
-}
-
-.gigs-filterbar-header h1,
-.gigs-filterbar-header h2,
-.gigs-filterbar-header h3,
-.gigs-filterbar-header h4,
-.gigs-filterbar-header h5,
-.gigs-filterbar-header h6 {
+.NewGigTitle {
+  font-size: 1.5rem;
   font-weight: bold;
-  text-decoration: underline;
-}
-
-.gigs-filter-action h5 {
-  font-size: 1rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin: 0;
-}
-
-.gigs-filter-action {
-  display: flex;
-  flex-direction: column;
   margin-bottom: 1rem;
-}
-
-.gigs-filter-action select,
-.gigs-filter-action input,
-.gigs-filter-action .dropdown,
-#GigsFilterbar button {
-  height: auto;
+  color: #FFFFFF;
+  margin-top: 0;
   width: 100%;
-  padding: 0.5rem;
-  box-sizing: border-box;
+  text-align: center; /* Center the text horizontally */
+  margin: 1rem 0; /* Add margin above and below the title */
 }
 
-.gigs-dropdown {
-  font-size: 1rem;
-  display: flex;
-  justify-content: center;
-  padding: 0.5rem 0;
-}
-
-.gigs-fillDropdown {
-  width: 100%;
-  background-color: white;
-  color: black;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+.create_gig_body {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  align-content: center;
+  color: white;
+  
 }
 
-#GigsFilterbar button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.new-gig-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* Adjust the gap between fields */
+  width: 100%;
+  color: white;
 }
 
-button.gigs-button,
-.gigs-dropdown select {
-  height: 2.5rem;
+.new-gig-fields .Label {
+  margin-bottom: 1rem; /* Add margin between each field */
 }
 
-.gigs-filter-action input,
-.gigs-filter-action button,
-.gigs-filter-action .dropdown {
-  width: auto;
+.new-gig-fields .Button {
+  margin-top: 1rem; /* Add margin above the button */
 }
+
 
