@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, Response, application } from "express";
 import pg from "pg";
 import bodyParser from "body-parser";
 import { Storage } from "@google-cloud/storage";
@@ -6,7 +6,7 @@ import multer from "multer";
 import dotenv from "dotenv";
 import { initializeApp } from "firebase-admin/app";
 import cors from "cors";
-import models, { sequelize } from "./db";
+import models, { sequelize, testDbConnection } from "./db";
 
 import {
 	getProfileDetails,
@@ -14,6 +14,11 @@ import {
 	uploadPortfolioImages,
 	uploadProfileImage,
 	uploadVideos,
+	uploadGigImages,
+	formatDateTime,
+	searchGigs,
+	searchArtists,
+	getGigDetails,
 } from "./helper";
 
 dotenv.config();
@@ -65,6 +70,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
 
 const bucketStorage = new Storage({
 	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
@@ -81,9 +87,16 @@ client
 		// User.sync({ force: true }) - This creates the table, dropping it first if it already existed
 		/* User.sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, 
 		 what are their data types, etc), and then performs the necessary changes in the table to make it match the model. */
-		sequelize.sync({ alter: true }).then(() => {
-			console.log("Model Sync Complete");
-		});
+		sequelize
+			// .sync({ force: true })
+			// sequelize
+			// 	.sync({ alter: true })
+			.sync()
+
+			.then(() => {
+				console.log("Model Sync Complete");
+				testDbConnection();
+			});
 	})
 	.catch((err) => console.log(err));
 
@@ -101,6 +114,11 @@ app.get("/api/profile", [
 		res.status(201).json(profileDetails);
 	},
 ]);
+
+app.get("/api/artists", async (req, res) => {
+	const users = await searchArtists(req, res);
+	res.status(201).json(users);
+});
 
 /* User profile edit:
 	Add property in post request if value has changed
@@ -120,25 +138,225 @@ app.post(
 		uploadVideos,
 	],
 	async (req: any, res) => {
-		const { deleted_portfolio_images, deleted_videos, bio } = req;
+		const {
+			deleted_portfolio_images,
+			deleted_videos,
+			bio,
+			user_genre_tags,
+			user_role_tags,
+			organization_name,
+			organization_group_size,
+			estimate_flat_rate,
+		} = req.body;
 		const { uid, name, email } = req.user;
 
-		const user = await models.User.findByPk(uid);
-		// update bio
-		if (bio !== user.bio) {
-			await user.update({ bio: bio });
-		}
+		const user = await models.User.findOne({ where: { uuid: uid } });
+		const updated = await user.update({
+			bio,
+			user_genre_tags,
+			user_role_tags,
+			organization_name,
+			organization_group_size,
+			estimate_flat_rate,
+		});
 
-		// deleted_portfolio_images: [uids_of_deleted_images] | undefined
-		// deleted_videos: [uids_of_deleted_videos] | undefined
-
-		// delete old portfolio photos
 		const promises = [];
 
-		if (!!deleted_portfolio_images) {
-			deleted_portfolio_images.forEach(async (del_portfolio_image_id) => {
-				models.UserContent.findByPk(del_portfolio_image_id).then(
-					(user_content) => {
+		const ids_of_port_images_to_delete = deleted_portfolio_images
+			? JSON.parse(deleted_portfolio_images)
+			: [];
+		const ids_of_videos_to_delete = deleted_videos
+			? JSON.parse(deleted_videos)
+			: [];
+
+		if (!!ids_of_port_images_to_delete) {
+			ids_of_port_images_to_delete.forEach(
+				async (del_portfolio_image_id) => {
+					models.UserContent.findByPk(del_portfolio_image_id).then(
+						async (user_content) => {
+							// destroy from google bucket then from db
+							promises.push(
+								portfolioImageBucket
+									.file(user_content.file_name)
+									.delete()
+									.then(user_content.destroy())
+							);
+							await user.removeUserContent(user_content);
+						}
+					);
+				}
+			);
+		}
+
+		// delete old videos
+		if (!!ids_of_videos_to_delete) {
+			ids_of_videos_to_delete.forEach(async (del_video_id) => {
+				models.UserContent.findByPk(del_video_id).then(
+					async (user_content) => {
+						// destroy from google bucket then from db
+						promises.push(
+							videoBucket
+								.file(user_content.file_name)
+								.delete()
+								.then(user_content.destroy())
+						);
+						await user.removeUserContent(user_content);
+					}
+				);
+			});
+		}
+
+		await Promise.allSettled(promises);
+
+		const profileDetails = await getProfileDetails(req, res);
+		res.status(201).json(profileDetails);
+	}
+);
+
+// returns list of your gigs, add param like below for individual gig:
+// exp: localhost/api/mygigs/?gig_id=2dc4080e-82c8-4858-b669-e1ab3f45bb49
+app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
+	const { uid } = req.user;
+	const { gig_id } = req.query;
+	const user = await models.User.findOne({
+		where: { uuid: uid },
+		include: { model: models.Application, include: [models.Gig] },
+	});
+	const myGigs = await user.getGigs({
+		where: gig_id ? { id: gig_id } : {},
+		include: { model: models.Application, include: [models.User] },
+	});
+
+	const retGig = await Promise.all(
+		myGigs.map(async (gig) => {
+			const content = await gig.getGigImages();
+			const { UserId, Applications, ...gigData } = gig.dataValues;
+			const values = {
+				...gigData,
+				userId: user.id,
+				applications: gig.Applications.map((application) => {
+					const { userId, gigId, User, ...values } =
+						application.dataValues;
+					return {
+						user: User,
+						...values,
+					};
+				}),
+				gigImages: content
+					.filter((image) => image.type === "gigImage")
+					.map((image) => image.dataValues),
+				gigProfileImage: content.find(
+					(image) => image.type === "gigProfileImage"
+				),
+			};
+			return values;
+		})
+	);
+	const returnObj = {
+		my_gigs: retGig,
+		my_applications: await Promise.all(
+			user.Applications.map(async (application) => {
+				const { userId, gigId, Gig, ...values } =
+					application.dataValues;
+				const profileImage = await Gig.getGigImages();
+				return {
+					gig: Gig,
+					gig_profile_image: profileImage.find(
+						(image) => image.type === "gigProfileImage"
+					),
+					gig_images: profileImage.filter(
+						(image) => image.type === "gigImage"
+					),
+					...values,
+				};
+			})
+		),
+	};
+
+	res.status(201).json(returnObj);
+});
+
+// exp: localhost/api/search_gigs?name="bla"&gig_tags=["musician", "party"]&event_start="2024-02-25T10:55:38.033Z"
+app.get("/api/search_gigs", async (req: any, res) => {
+	const searchedGigs = await searchGigs(req, res);
+	res.status(201).json(searchedGigs);
+});
+
+// edit a gig
+app.post(
+	"/api/mygigs/edit",
+	isLoggedIn,
+	fileUpload.fields([{ name: "gig_images" }, { name: "gig_profile_image" }]),
+	uploadGigImages,
+	async (req: any, res) => {
+		const { uid } = req.user;
+		const {
+			gig_id,
+			event_start,
+			event_end,
+			gig_tags,
+			name,
+			bio,
+			estimate_flat_rate,
+			deleted_gig_images,
+		} = req.body;
+		if (name === "" || event_start === "" || event_end === "") {
+			res.status(401).json(
+				"Error: Name, event_start, event_end cannot be empty"
+			);
+			res.end();
+			return;
+		}
+
+		const user = await models.User.findOne({
+			where: { uuid: uid },
+		});
+
+		const gig = await models.Gig.findOne({
+			where: { UserId: user.id, id: gig_id },
+		});
+
+		const updatedGig = await gig.update(
+			{
+				event_start: event_start
+					? formatDateTime(event_start)
+					: undefined,
+				event_end: event_start ? formatDateTime(event_end) : undefined,
+				gig_tags: gig_tags ? JSON.parse(gig_tags) : undefined,
+				name,
+				bio,
+				estimate_flat_rate,
+			},
+			{
+				where: { UserId: user.id, id: gig_id },
+			}
+		);
+
+		if (req.gig_profile_image) {
+			await models.UserContent.destroy({
+				where: { gig_id: updatedGig.id, type: "gigProfileImage" },
+			});
+			const newContent = await models.UserContent.create({
+				gig_id: updatedGig.id,
+				...req.gig_profile_image,
+			});
+			await newContent.save();
+		}
+		if (req.gig_images) {
+			req.gig_images.forEach(async (gig_image) => {
+				const newContent = await gig.createGigImage(gig_image);
+				await newContent.save();
+			});
+		}
+
+		const promises = [];
+		const ids_of_images_to_delete = deleted_gig_images
+			? JSON.parse(deleted_gig_images)
+			: [];
+		if (!!ids_of_images_to_delete) {
+			ids_of_images_to_delete.forEach(async (del_gig_image_id) => {
+				models.UserContent.findByPk(del_gig_image_id).then(
+					async (user_content) => {
 						// destroy from google bucket then from db
 						promises.push(
 							portfolioImageBucket
@@ -149,29 +367,101 @@ app.post(
 					}
 				);
 			});
+			await models.UserContent.destroy({
+				where: { id: ids_of_images_to_delete },
+			});
 		}
+		await Promise.allSettled(promises);
+		await updatedGig.save();
+		req.gig_id = gig_id;
+		const gigDetails = await getGigDetails(req, res);
+		res.status(201).json(gigDetails);
+	}
+);
 
-		// delete old videos
-		if (!!deleted_videos) {
-			deleted_videos.forEach(async (del_video_id) => {
-				models.UserContent.findByPk(del_video_id).then(
-					(user_content) => {
-						// destroy from google bucket then from db
-						promises.push(
-							videoBucket
-								.file(user_content.file_name)
-								.delete()
-								.then(user_content.destroy())
-						);
-					}
-				);
+app.post("/api/gigs/application", isLoggedIn, async (req: any, res) => {
+	const { uid } = req.user;
+	const { gig_id } = req.query;
+	try {
+		const user = await models.User.findOne({
+			where: { uuid: uid },
+			include: { model: models.Application, include: models.User },
+		});
+
+		const gig = await models.Gig.findOne({ where: { id: gig_id } });
+		const existingApplication = user.Applications.find(
+			(application) => application.gigId === gig_id
+		);
+		if (gig.id) {
+			if (existingApplication) {
+				res.status(201).json("Application already exists");
+			} else {
+				const application = await models.Application.create({
+					userId: user.id,
+					gigId: gig.id,
+				});
+				res.status(201).json(application);
+			}
+		} else {
+			res.status(401).json("Error: Gig not found");
+		}
+	} catch (error) {
+		res.status(401).json(error);
+	}
+});
+
+// Create gigs, event_start, event_end, name required
+app.post(
+	"/api/gigs/create",
+	isLoggedIn,
+	fileUpload.fields([{ name: "gig_images" }, { name: "gig_profile_image" }]),
+	uploadGigImages,
+	async (req: any, res) => {
+		const {
+			event_start,
+			event_end,
+			gig_tags,
+			name,
+			bio,
+			estimate_flat_rate,
+		} = req.body;
+		const { uid } = req.user;
+		if (!event_start || !event_end || !name) {
+			res.status(401).json(
+				"Error: Name, event_start, event_end cannot be empty"
+			);
+			res.end();
+			return;
+		}
+		const user = await models.User.findOne({ where: { uuid: uid } });
+		const new_gig = await models.Gig.create({
+			event_start: formatDateTime(event_start),
+			event_end: formatDateTime(event_end),
+			gig_tags,
+			name,
+			bio,
+			estimate_flat_rate,
+		});
+		await new_gig.save();
+		if (req.gig_profile_image) {
+			const newContent = await models.UserContent.create({
+				gig_id: new_gig.id,
+				...req.gig_profile_image,
+			});
+			await newContent.save();
+		}
+		if (req.gig_images) {
+			req.gig_images.forEach(async (gig_image) => {
+				const newContent = await new_gig.createGigImage(gig_image);
+				await newContent.save();
 			});
 		}
 
-		await Promise.allSettled(promises);
-
-		const profileDetails = await getProfileDetails(req, res);
-		res.status(201).json(profileDetails);
+		await user.addGig(new_gig);
+		const savedGig = await new_gig.save();
+		req.gig_id = savedGig.id;
+		const gigDetails = await getGigDetails(req, res);
+		res.status(201).json(gigDetails);
 	}
 );
 
