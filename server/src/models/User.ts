@@ -48,6 +48,10 @@ const getUserModel = (sequelize, { DataTypes }) => {
 			contraints: false,
 		});
 		User.hasMany(models.Gig);
+		User.hasMany(models.Application, {
+			foreignKey: "userId",
+			contraints: false,
+		});
 	};
 
 	return User;

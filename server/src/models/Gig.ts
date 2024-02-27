@@ -35,6 +35,10 @@ const getGigModel = (sequelize, { DataTypes }) => {
 			contraints: false,
 			as: "gigImages",
 		});
+		Gig.hasMany(models.Application, {
+			foreignKey: "gigId",
+			contraints: false,
+		});
 	};
 
 	return Gig;

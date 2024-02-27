@@ -2,6 +2,7 @@ import { Sequelize, DataTypes } from "sequelize";
 import getUserContentModel from "./models/UserContent";
 import getUserModel from "./models/User";
 import getGigModel from "./models/Gig";
+import getApplicationModel from "./models/Application";
 
 const sequelize = new Sequelize("postgres", "postgres", "1234", {
 	host: "db",
@@ -13,6 +14,7 @@ const models = {
 	User: getUserModel(sequelize, { DataTypes }),
 	UserContent: getUserContentModel(sequelize, { DataTypes }),
 	Gig: getGigModel(sequelize, { DataTypes }),
+	Application: getApplicationModel(sequelize, { DataTypes }),
 };
 
 Object.keys(models).forEach((key) => {

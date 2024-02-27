@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, Response, application } from "express";
 import pg from "pg";
 import bodyParser from "body-parser";
 import { Storage } from "@google-cloud/storage";
@@ -20,6 +20,7 @@ import {
 	searchArtists,
 	getGigDetails,
 } from "./helper";
+import { profile } from "console";
 
 dotenv.config();
 
@@ -88,7 +89,7 @@ client
 		/* User.sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, 
 		 what are their data types, etc), and then performs the necessary changes in the table to make it match the model. */
 		sequelize
-			// 	.sync({ force: true })
+			// .sync({ force: true })
 			// sequelize
 			// 	.sync({ alter: true })
 			.sync()
@@ -170,7 +171,6 @@ app.post(
 			: [];
 
 		if (!!ids_of_port_images_to_delete) {
-			console.log(ids_of_port_images_to_delete);
 			ids_of_port_images_to_delete.forEach(
 				async (del_portfolio_image_id) => {
 					models.UserContent.findByPk(del_portfolio_image_id).then(
@@ -219,15 +219,30 @@ app.post(
 app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
 	const { uid } = req.user;
 	const { gig_id } = req.query;
-	const user = await models.User.findOne({ where: { uuid: uid } });
+	const user = await models.User.findOne({
+		where: { uuid: uid },
+		include: { model: models.Application, include: [models.Gig] },
+	});
 	const myGigs = await user.getGigs({
 		where: gig_id ? { id: gig_id } : {},
+		include: { model: models.Application, include: [models.User] },
 	});
+
 	const retGig = await Promise.all(
 		myGigs.map(async (gig) => {
 			const content = await gig.getGigImages();
+			const { UserId, Applications, ...gigData } = gig.dataValues;
 			const values = {
-				...gig.dataValues,
+				...gigData,
+				userId: user.id,
+				applications: gig.Applications.map((application) => {
+					const { userId, gigId, User, ...values } =
+						application.dataValues;
+					return {
+						user: User,
+						...values,
+					};
+				}),
 				gigImages: content
 					.filter((image) => image.type === "gigImage")
 					.map((image) => image.dataValues),
@@ -238,7 +253,28 @@ app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
 			return values;
 		})
 	);
-	res.status(201).json(retGig);
+	const returnObj = {
+		my_gigs: retGig,
+		my_applications: await Promise.all(
+			user.Applications.map(async (application) => {
+				const { userId, gigId, Gig, ...values } =
+					application.dataValues;
+				const profileImage = await Gig.getGigImages();
+				return {
+					gig: Gig,
+					gig_profile_image: profileImage.find(
+						(image) => image.type === "gigProfileImage"
+					),
+					gig_images: profileImage.filter(
+						(image) => image.type === "gigImage"
+					),
+					...values,
+				};
+			})
+		),
+	};
+
+	res.status(201).json(returnObj);
 });
 
 // exp: localhost/api/search_gigs?name="bla"&gig_tags=["musician", "party"]&event_start="2024-02-25T10:55:38.033Z"
@@ -343,6 +379,37 @@ app.post(
 		res.status(201).json(gigDetails);
 	}
 );
+
+app.post("/api/gigs/application", isLoggedIn, async (req: any, res) => {
+	const { uid } = req.user;
+	const { gig_id } = req.query;
+	try {
+		const user = await models.User.findOne({
+			where: { uuid: uid },
+			include: { model: models.Application, include: models.User },
+		});
+
+		const gig = await models.Gig.findOne({ where: { id: gig_id } });
+		const existingApplication = user.Applications.find(
+			(application) => application.gigId === gig_id
+		);
+		if (gig.id) {
+			if (existingApplication) {
+				res.status(201).json("Application already exists");
+			} else {
+				const application = await models.Application.create({
+					userId: user.id,
+					gigId: gig.id,
+				});
+				res.status(201).json(application);
+			}
+		} else {
+			res.status(401).json("Error: Gig not found");
+		}
+	} catch (error) {
+		res.status(401).json(error);
+	}
+});
 
 // Create gigs, event_start, event_end, name required
 app.post(

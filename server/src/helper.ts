@@ -482,8 +482,15 @@ const searchGigs = async (req, res) => {
 		limit: limit ? limit : 10,
 		offset: offset ? offset : 0,
 	});
+	const formattedGigs = gigs.map((gig) => {
+		const { UserId, ...data } = gig.dataValues;
+		return {
+			userId: UserId,
+			...data,
+		};
+	});
 
-	return gigs;
+	return formattedGigs;
 };
 
 const getProfileDetails = async (req, res) => {
