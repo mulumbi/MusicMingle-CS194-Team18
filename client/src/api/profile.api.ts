@@ -33,6 +33,6 @@ export const mutateProfileDetails = async (
 			const user: User = res.data;
 			return user;
 		})
-		.catch((err) => console.log("profile data fetch error: ", err));
+		.catch((err) => console.log("profile data mutate error: ", err));
 	return data;
 };

@@ -122,15 +122,13 @@ button.navbar-item:hover, button.navbar-action:hover, button.navbar-sign:hover {
   border: none;
 }
 
-
-
 /* Styling for active button */
 button.active {
   color: #3696C7; 
   border: none;
 }
 
-button.navbar-item:focus, button.navbar-action:focus, button.navbar-sign:focus {
+button.navbar-item:focus, button.navbar-action:focus, button.navbar-sign:focus, button.navbar-logo:focus {
   outline: none;
 }
 
@@ -196,6 +194,18 @@ button.profile-button:hover {
   border: none;
 }
 
+button.profile-button:focus {
+  outline: none;
+}
+
+.profile-tag-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;  
+  gap: 0.6rem;
+}
+
 .profile-role {
   align-self: center;
   height: 2.5rem;
@@ -203,7 +213,17 @@ button.profile-button:hover {
   border-radius: 4rem;
   border: none;
   color: white;
-  background-color: navy;
+  background-color: rgb(1, 1, 179);
+}
+
+.profile-genre {
+  align-self: center;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 4rem;
+  border: none;
+  color: white;
+  background-color: #046fa5;
 }
 
 .bio {
@@ -230,6 +250,161 @@ button.profile-button:hover {
   width: 15rem; 
   height: 15rem;
   object-fit: cover; 
+}
+
+.profile-settings-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.back-button {
+  border-radius: 20rem; 
+  background-color: lightgrey;
+  margin: 4rem 0 2rem 0;  
+  height: 3.5rem;
+  width: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container {
+  width: 50%;
+}
+
+.settings-label {
+  font-size: 16px;
+  color: var(--violet-11);
+}
+
+.settings-input {
+  width: 95%;
+  flex: 1;
+  display: inline-flex;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 2.25rem;
+  color: var(--violet-11);
+  background-color: white;
+  border-color: var(--violet-8);
+  border-radius: 0.25rem;
+  border-width: 0.1cap;
+  padding: 0 1rem;
+  margin: 0.25rem 0 1rem 0;
+}
+.input:focus {
+  outline: none;
+  box-shadow: 0px 0px 1px 1px var(--violet-8);
+}
+
+.settings-textarea {
+  width: 95%;
+  min-width: 95%;
+  max-width: 95%;
+  flex: 1;
+  display: inline-flex;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 2.25rem;
+  color: var(--violet-11);
+  background-color: white;
+  border-color: var(--violet-8);
+  border-radius: 0.25rem;
+  border-width: 0.1cap;
+  padding: 0.5rem 1rem;
+  margin: 0.25rem 0 1rem 0;
+}
+
+.settings-message {
+  font-size: 12px;
+  line-height: 1;
+  color: darkgrey;
+  margin: 0 0 1rem 0;
+}
+
+.settings-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submit-button {
+  background-color: var(--violet-11);
+  color: white;
+  border: none;
+}
+
+.cancel-button {
+  background: transparent;
+  border: none;
+}
+
+.back-button:hover {
+  background-color: #3697c749;
+  border: none;
+}
+
+button.submit-button:focus, .back-button:focus {
+  outline: none;
+}
+
+.settings-combobox {
+  flex: 1;
+  display: inline-flex;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 2.25rem;
+  color: var(--violet-11);
+  background-color: white;
+  border-color: var(--violet-8);
+  border-radius: 0.25rem;
+  border-width: 0.1cap;
+  margin: 0.25rem 0 1rem 0;
+  align-items: center;
+  justify-items: center;
+}
+
+.chevrons-icon {
+  height: 1rem;
+  width: 1rem;
+}
+
+.popover-content {
+  flex: 1;
+  background-color: white;
+  color: var(--violet-11);
+  border-color: var(--violet-8);
+  border-radius: 0.25rem;
+  border-width: 0.1cap;
+  padding: 1rem;
+  box-shadow: 0px 0px 1px 1px rgb(111, 109, 109);
+}
+
+.command-item {
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 2rem;
+}
+
+.check-show {
+  height: 1rem;
+  width: 1rem;
+  padding: 0 0.5rem 0 0;
+  opacity: 100%;
+}
+
+.check-hide {
+  height: 1rem;
+  width: 1rem;
+  padding: 0 0.5rem 0 0;
+  opacity: 0%;
 }
 
 /* PROFILE PAGE STYLING */
