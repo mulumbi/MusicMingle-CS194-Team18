@@ -16,29 +16,35 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 
+
+
 function CreateGig() {
     const [gigTitle, setGigTitle] = useState('');
-    const [picture, setPicture] = useState(null);
     const [description, setDescription] = useState('');
     const [date, setDate] = useState<Date | undefined>(undefined);
+    const [time, setTime] = useState(''); // New state for time
     const [budget, setBudget] = useState('');
-    const [openings, setOpenings] = useState('');
     const [genre, setGenre] = useState('');
     const [instrumentRole, setInstrumentRole] = useState('');
 
-    // Define your form style with the correct TypeScript type
-
-
     const handleDateSelect = (newDate: Date | undefined) => {
-        setDate(newDate); // Wrapping setDate to match SelectSingleEventHandler type
+        setDate(newDate); // Set the selected date
     };
 
-    return (
+    const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTime(event.target.value); // Set the selected time
+    };
 
-        <div className="App" id="ArtistPageApp" >
+    // Format date and time for display
+    const formattedDate = date ? format(date, "PPP") : "Pick a date";
+    const displayDateTime = date ? `${formattedDate} at ${time}` : formattedDate;
+
+    return (
+        <div className="App" id="ArtistPageApp">
             <div>
                 <div className="NewGigTitle">Create New Gig</div>
-                <div className='create_gig_body' id="CreateGigBody" >
+                <div className='create_gig_body' id="CreateGigBody">
+                    <div className='new-gig-fields'>
                     <div className='new-gig-fields'>
                         <Label>
                             Gig Title:
@@ -58,37 +64,40 @@ function CreateGig() {
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                             />
-                        </Label>
-
+                        </Label>           
+                        
                         <Label>
                             Date and Time:
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button variant="outline">
-                                        <FaCalendar className="mr-2 h-4 w-4" />
-                                        {date ? format(date, "PPP") : <span>Pick a date</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
-                                    <Calendar
-                                        mode="single"
-                                        selected={date}
-                                        onSelect={handleDateSelect}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                            <div className="datetime-picker">
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button variant="outline">
+                                            <FaCalendar className="calendar-icon" />
+                                            <span>{displayDateTime}</span>
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="select-date">
+                                        <Calendar
+                                            mode="single"
+                                            selected={date}
+                                            onSelect={handleDateSelect}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <Input 
+                                    type="time"
+                                    value={time}
+                                    onChange={handleTimeChange}
+                                    style={{ marginLeft: '10px' }}
+                                />
+                            </div>
                         </Label>
-
 
                         <Label>
                             Budget:
                             <Input type="text" value={budget} onChange={(e) => setBudget(e.target.value)} />
                         </Label>
-                        <Label>
-                            Openings:
-                            <Input type="text" value={openings} onChange={(e) => setOpenings(e.target.value)} />
-                        </Label>
+            
                         <Label>
                             Genre:
                             <Input type="text" value={genre} onChange={(e) => setGenre(e.target.value)} />
@@ -101,10 +110,12 @@ function CreateGig() {
                         <Button>Create Gig</Button>
                     </div>
                 </div>
-
+            </div>
             </div>
         </div>
     );
 }
+                    
 
 export default CreateGig;
+
