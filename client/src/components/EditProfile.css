@@ -1,0 +1,142 @@
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/green.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/violet.css';
+
+.edit-button {
+    margin-top: 1rem;
+    border: none;
+    outline: none;
+}
+.edit-button:hover {
+    background-color: #3697c749;
+    border: none;
+}
+
+.save-button {
+    border: none;
+    outline: none;
+}
+.save-button:hover {
+    background-color: #3697c7;
+    border: none;
+}
+.save-row {
+    display: flex;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+}
+
+.icon-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: black;
+    background-color: transparent;
+    margin: 0;
+    padding: 0.5rem 0.8rem 0.2rem 0.8rem;
+    align-content: center;
+    justify-content: center;
+}
+.icon-button:hover {
+    border: none;
+}
+
+.edit-button:focus, .save-button:focus, .icon-button:focus {
+    border: none;
+}
+
+.dialog-overlay {
+    background-color: var(--black-a9);
+    position: fixed;
+    inset: 0;
+    animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialog-content {
+    background-color: white;
+    border-radius: 6px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 30%;
+    max-height: 50%;
+    padding: 2rem;
+    animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dialog-content:focus {
+    outline: none;
+}
+
+.dialog-title {
+    margin: 0;
+    font-weight: 500;
+    font-size: 20px;
+    color: black;
+}
+
+.dialog-description {
+    margin: 10px 0 20px;
+    font-size: 16px;
+    color: darkslategrey;
+    line-height: 1.5;
+}
+
+.fieldset {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    border: none;
+    outline: none;
+}
+
+.label {
+    font-size: 16px;
+    color: var(--violet-11);
+    width: 7rem;
+    text-align: right;
+}
+
+.input {
+    width: 90%;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    height: 2.25rem;
+    color: var(--violet-11);
+    background-color: white;
+    border-color: var(--violet-8);
+    border-radius: 0.25rem;
+    border-width: 0.1cap;
+    padding: 0 1rem;
+}
+.input:focus {
+    outline: none;
+    box-shadow: 0px 0px 1px 1px var(--violet-8);
+}
+
+@keyframes overlayShow {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes contentShow {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}

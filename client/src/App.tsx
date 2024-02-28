@@ -4,6 +4,7 @@ import Gigs from "./pages/Gigs.tsx";
 import Artists from "./pages/Artists.tsx";
 import MyGigs from "./pages/MyGigs.tsx";
 import Profile from "./pages/Profile.tsx";
+import ProfileSettings from "./pages/ProfileSettings.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 import "./App.css";
 import CreateGig from "./pages/CreateGig.tsx";
@@ -36,6 +37,14 @@ function App() {
 				element={
 					<RequireAuth>
 						<Profile />
+					</RequireAuth>
+				}
+			/>
+			<Route
+				path="profile_settings"
+				element={
+					<RequireAuth>
+						<ProfileSettings />
 					</RequireAuth>
 				}
 			/>
