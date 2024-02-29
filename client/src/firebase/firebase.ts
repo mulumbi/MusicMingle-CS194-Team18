@@ -23,7 +23,8 @@ console.log(firebaseConfig);
 
 const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ hd: "stanford.edu" });
+// Removed for testing
+// provider.setCustomParameters({ hd: "stanford.edu" });
 const auth = getAuth(app);
 
 export const signInWithGooglePopup = async () =>

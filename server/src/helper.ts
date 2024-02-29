@@ -366,7 +366,7 @@ const searchArtists = async (req, res) => {
 		name,
 		flat_rate_start,
 		flat_rate_end,
-		organization,
+		organization_name,
 		organization_size_start,
 		organization_size_end,
 		limit,
@@ -399,7 +399,7 @@ const searchArtists = async (req, res) => {
 				},
 				{
 					name: Sequelize.literal(
-						`tsvector_organization @@ to_tsquery('${name}:* ')`
+						`tsvector_organization @@ to_tsquery('${organization_name}:* ')`
 					),
 				},
 			],
