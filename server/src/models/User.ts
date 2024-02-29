@@ -40,6 +40,10 @@ const getUserModel = (sequelize, { DataTypes }) => {
 			type: DataTypes.INTEGER,
 			defaultValue: 0,
 		},
+		is_artist: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: true,
+		},
 	});
 
 	User.associate = (models) => {

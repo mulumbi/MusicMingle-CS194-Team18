@@ -88,10 +88,10 @@ client
 		/* User.sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, 
 		 what are their data types, etc), and then performs the necessary changes in the table to make it match the model. */
 		sequelize
-			// .sync({ force: true })
+			.sync({ force: true })
 			// sequelize
 			// 	.sync({ alter: true })
-			.sync()
+			// .sync()
 
 			.then(() => {
 				console.log("Model Sync Complete");
@@ -147,6 +147,7 @@ app.post(
 			organization_name,
 			organization_group_size,
 			estimate_flat_rate,
+			is_artist,
 		} = req.body;
 		const { uid, name, email } = req.user;
 
@@ -158,6 +159,12 @@ app.post(
 			organization_name,
 			organization_group_size,
 			estimate_flat_rate,
+			is_artist:
+				is_artist === undefined
+					? undefined
+					: is_artist === "true"
+					? true
+					: false,
 		});
 
 		const promises = [];

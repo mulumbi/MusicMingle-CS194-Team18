@@ -372,7 +372,7 @@ const searchArtists = async (req, res) => {
 		limit,
 		offset,
 	} = req.query;
-	const query = [];
+	const query: any = [{ is_artist: true }];
 	if (organization_size_start) {
 		query.push({
 			organization_group_size: { [Op.gt]: organization_size_start },
