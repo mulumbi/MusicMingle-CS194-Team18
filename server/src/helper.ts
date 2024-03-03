@@ -19,7 +19,8 @@ const gigImageBucket = bucketStorage.bucket("music-mingle-gig-bucket");
 
 // middleware for checking if user is logged in. allows the extraction of name, uid, email, etc from req.user anywhere
 const isLoggedIn = (req, res, next) => {
-	const token = req.headers.authorization;
+	const token =
+		req.headers.authorization || req?.body?.headers?.authorization;
 	if (!token) {
 		return res.status(401).json({ error: "Unauthorized" });
 	}

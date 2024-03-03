@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -11,22 +11,18 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@/components/ui/form"
-import {
-	Command,
-	CommandGroup,
-	CommandItem,
-} from "@/components/ui/command"
+} from "@/components/ui/form";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/components/ui/popover"  
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { IoChevronBackSharp } from "react-icons/io5";
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { mutateProfileDetails } from "../api/profile.api";
 
@@ -40,7 +36,7 @@ const FormSchema = z.object({
 	// deleted_portfolio_images: z.array(z.string()),
 	// videos: z.array(z.object({url: z.string(), title: z.string()})),
 	// deleted_videos: z.array(z.object({url: z.string(), title: z.string()})),
-})
+});
 
 const genres = [
 	{ label: "Pop", value: "Pop" },
@@ -55,7 +51,7 @@ const genres = [
 	{ label: "Indie", value: "Indie" },
 	{ label: "Latin", value: "Latin" },
 	{ label: "Cultural", value: "Cultural" },
-] as const
+] as const;
 
 const roles = [
 	{ label: "Gig Organizer", value: "Gig Organizer" },
@@ -75,7 +71,7 @@ const roles = [
 	{ label: "Audio Engineer", value: "Audio Engineer" },
 	{ label: "Live Sound Technician", value: "Live Sound Technician" },
 	{ label: "Recording Artist", value: "Recording Artist" },
-] as const
+] as const;
 
 export function ProfileSettings() {
 	const { currentUser } = useContext(AuthContext);
@@ -83,11 +79,11 @@ export function ProfileSettings() {
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
-	})
+	});
 
 	const mutation = useMutation({
-		mutationFn: (bodyFormData: any) => 
-			mutateProfileDetails(currentUser, bodyFormData)
+		mutationFn: (bodyFormData: any) =>
+			mutateProfileDetails(currentUser, bodyFormData),
 	});
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -95,14 +91,18 @@ export function ProfileSettings() {
 
 		// const bodyFormData = new FormData();
 		// Object.keys(data).forEach(key => bodyFormData.append(key, data[key]));
-
 		let bodyFormData = new FormData();
-		if (data.bio) 
-			bodyFormData.append("bio", data.bio);
-		if (data.user_role_tags) 
-			bodyFormData.append("user_role_tags", data.user_role_tags);
-		if (data.user_genre_tags) 
-			bodyFormData.append("user_genre_tags", data.user_genre_tags);
+		if (data.bio) bodyFormData.append("bio", data.bio);
+		if (data.user_role_tags)
+			bodyFormData.append(
+				"user_role_tags",
+				JSON.stringify(data.user_role_tags)
+			);
+		if (data.user_genre_tags)
+			bodyFormData.append(
+				"user_genre_tags",
+				JSON.stringify(data.user_genre_tags)
+			);
 		if (data.estimate_flat_rate)
 			bodyFormData.append("estimate_flat_rate", data.estimate_flat_rate);
 
@@ -112,159 +112,270 @@ export function ProfileSettings() {
 		// }
 
 		mutation.mutate(bodyFormData);
-		navigate("/profile", {state: data});
+		navigate("/profile", { state: data });
 	}
 
 	return (
 		<div className="profile-settings-page">
 			<div className="form-container">
-				<Button className="back-button" onClick={() => navigate("/profile")}>
+				<Button
+					className="back-button"
+					onClick={() => navigate("/profile")}
+				>
 					<IoChevronBackSharp />
-				</Button> 
+				</Button>
 				<h1>Edit profile</h1>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="w-2/3 space-y-6"
+					>
 						<FormField
 							control={form.control}
 							name="bio"
 							render={({ field }) => (
-							<FormItem>
-								<FormLabel className="settings-label">About Me</FormLabel>
-								<FormControl>
-									<Textarea
-										placeholder="Tell us about yourself!"
-										className="settings-textarea"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage className="settings-message" />
-							</FormItem>
+								<FormItem>
+									<FormLabel className="settings-label">
+										About Me
+									</FormLabel>
+									<FormControl>
+										<Textarea
+											placeholder="Tell us about yourself!"
+											className="settings-textarea"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage className="settings-message" />
+								</FormItem>
 							)}
 						/>
 						<FormField
 							control={form.control}
 							name="user_role_tags"
 							render={({ field }) => (
-							<FormItem>
-								<FormLabel className="settings-label">Roles</FormLabel>
-								<div>
-									<Popover>
-										<PopoverTrigger asChild>
-											<FormControl>
-												<Button variant="outline" role="combobox" className="settings-combobox">
-													{field.value && field.value.length
-														? field.value.length + " selected" 
-														: "Select role"
-													}
-													<ChevronsUpDown className="chevrons-icon"/>
-												</Button>
-											</FormControl>
-										</PopoverTrigger>
-										<PopoverContent className="popover-content">
-											<Command>
-												<CommandGroup>
-													{roles.map((role) => (
-														<CommandItem
-															value={role.label}
-															key={role.value}
-															className="command-item"
-															onSelect={() => {
-																const existing_tags = field.value || []
-																if (!existing_tags.includes(role.value)) {
-																	const new_tags = existing_tags.concat([role.value]);
-																	form.setValue("user_role_tags", new_tags);
-																} else {
-																	const new_tags = existing_tags.filter(tag => tag != role.value);
-																	form.setValue("user_role_tags", new_tags);
+								<FormItem>
+									<FormLabel className="settings-label">
+										Roles
+									</FormLabel>
+									<div>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className="settings-combobox"
+													>
+														{field.value &&
+														field.value.length
+															? field.value
+																	.length +
+															  " selected"
+															: "Select role"}
+														<ChevronsUpDown className="chevrons-icon" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="popover-content">
+												<Command>
+													<CommandGroup>
+														{roles.map((role) => (
+															<CommandItem
+																value={
+																	role.label
 																}
-															}}
-														>
-															<Check className={field.value?.includes(role.value) ? "check-show" : "check-hide"} />
-															{role.label}
-														</CommandItem>
-													))}
-												</CommandGroup>
-											</Command>
-										</PopoverContent>
-									</Popover>
-								</div>
-								<FormMessage className="settings-message" />
-							</FormItem>
+																key={role.value}
+																className="command-item"
+																onSelect={() => {
+																	const existing_tags =
+																		field.value ||
+																		[];
+																	if (
+																		!existing_tags.includes(
+																			role.value
+																		)
+																	) {
+																		const new_tags =
+																			existing_tags.concat(
+																				[
+																					role.value,
+																				]
+																			);
+																		form.setValue(
+																			"user_role_tags",
+																			new_tags
+																		);
+																	} else {
+																		const new_tags =
+																			existing_tags.filter(
+																				(
+																					tag
+																				) =>
+																					tag !=
+																					role.value
+																			);
+																		form.setValue(
+																			"user_role_tags",
+																			new_tags
+																		);
+																	}
+																}}
+															>
+																<Check
+																	className={
+																		field.value?.includes(
+																			role.value
+																		)
+																			? "check-show"
+																			: "check-hide"
+																	}
+																/>
+																{role.label}
+															</CommandItem>
+														))}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+									</div>
+									<FormMessage className="settings-message" />
+								</FormItem>
 							)}
 						/>
 						<FormField
 							control={form.control}
 							name="user_genre_tags"
 							render={({ field }) => (
-							<FormItem>
-								<FormLabel className="settings-label">Genres</FormLabel>
-								<div>
-									<Popover>
-										<PopoverTrigger asChild>
-											<FormControl>
-												<Button variant="outline" role="combobox" className="settings-combobox">
-													{field.value && field.value.length
-														? field.value.length + " selected" 
-														: "Select genre"
-													}
-													<ChevronsUpDown className="chevrons-icon"/>
-												</Button>
-											</FormControl>
-										</PopoverTrigger>
-										<PopoverContent className="popover-content">
-											<Command>
-												<CommandGroup>
-													{genres.map((genre) => (
-														<CommandItem
-															value={genre.label}
-															key={genre.value}
-															className="command-item"
-															onSelect={() => {
-																const existing_tags = field.value || []
-																if (!existing_tags.includes(genre.value)) {
-																	const new_tags = existing_tags.concat([genre.value]);
-																	form.setValue("user_genre_tags", new_tags);
-																} else {
-																	const new_tags = existing_tags.filter(tag => tag != genre.value);
-																	form.setValue("user_genre_tags", new_tags);
+								<FormItem>
+									<FormLabel className="settings-label">
+										Genres
+									</FormLabel>
+									<div>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className="settings-combobox"
+													>
+														{field.value &&
+														field.value.length
+															? field.value
+																	.length +
+															  " selected"
+															: "Select genre"}
+														<ChevronsUpDown className="chevrons-icon" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="popover-content">
+												<Command>
+													<CommandGroup>
+														{genres.map((genre) => (
+															<CommandItem
+																value={
+																	genre.label
 																}
-															}}
-														>
-															<Check className={field.value?.includes(genre.value) ? "check-show" : "check-hide"} />
-															{genre.label}
-														</CommandItem>
-													))}
-												</CommandGroup>
-											</Command>
-										</PopoverContent>
-									</Popover>
-								</div>
-								<FormMessage className="settings-message" />
-							</FormItem>
+																key={
+																	genre.value
+																}
+																className="command-item"
+																onSelect={() => {
+																	const existing_tags =
+																		field.value ||
+																		[];
+																	if (
+																		!existing_tags.includes(
+																			genre.value
+																		)
+																	) {
+																		const new_tags =
+																			existing_tags.concat(
+																				[
+																					genre.value,
+																				]
+																			);
+																		form.setValue(
+																			"user_genre_tags",
+																			new_tags
+																		);
+																	} else {
+																		const new_tags =
+																			existing_tags.filter(
+																				(
+																					tag
+																				) =>
+																					tag !=
+																					genre.value
+																			);
+																		form.setValue(
+																			"user_genre_tags",
+																			new_tags
+																		);
+																	}
+																}}
+															>
+																<Check
+																	className={
+																		field.value?.includes(
+																			genre.value
+																		)
+																			? "check-show"
+																			: "check-hide"
+																	}
+																/>
+																{genre.label}
+															</CommandItem>
+														))}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+									</div>
+									<FormMessage className="settings-message" />
+								</FormItem>
 							)}
 						/>
 						<FormField
 							control={form.control}
 							name="estimate_flat_rate"
 							render={({ field }) => (
-							<FormItem>
-								<FormLabel className="settings-label">Typical Rate (per Gig)</FormLabel>
-								<FormControl>
-									<Input type="number" placeholder="$" className="settings-input" {...field} />
-								</FormControl>
-								<FormMessage className="settings-message" />
-							</FormItem>
+								<FormItem>
+									<FormLabel className="settings-label">
+										Typical Rate (per Gig)
+									</FormLabel>
+									<FormControl>
+										<Input
+											type="number"
+											placeholder="$"
+											className="settings-input"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage className="settings-message" />
+								</FormItem>
 							)}
 						/>
 						<div className="settings-actions">
-							<Button className="cancel-button" onClick={() => navigate("/profile")}>Cancel</Button>
-							<Button className="submit-button" type="submit">Submit</Button>
+							<Button
+								className="cancel-button"
+								onClick={() => navigate("/profile")}
+							>
+								Cancel
+							</Button>
+							<Button
+								className="submit-button"
+								type="submit"
+							>
+								Submit
+							</Button>
 						</div>
 					</form>
 				</Form>
 			</div>
 		</div>
-	)
+	);
 }
 
 export default ProfileSettings;
