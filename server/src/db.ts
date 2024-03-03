@@ -30,7 +30,8 @@ const testDbConnection = async () => {
 			ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS tsvector_name tsvector GENERATED ALWAYS as (to_tsvector('english', coalesce(name, ''))) STORED;
 			ALTER TABLE "Gigs" ADD COLUMN IF NOT EXISTS tsvector_name tsvector GENERATED ALWAYS as (to_tsvector('english', coalesce(name, ''))) STORED;
 			ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS tsvector_organization tsvector GENERATED ALWAYS as (to_tsvector('english', coalesce(organization_name, ''))) STORED;
-			CREATE INDEX IF NOT EXISTS GIGS_TAGS_X ON "Gigs" USING GIN (gig_tags);
+			CREATE INDEX IF NOT EXISTS GIGS_ROLE_TAGS_X ON "Gigs" USING GIN (gig_role_tags);
+			CREATE INDEX IF NOT EXISTS GIGS_GENRE_TAGS_X ON "Gigs" USING GIN (gig_genre_tags);
 			CREATE INDEX IF NOT EXISTS USER_GENRE_TAGS_X ON "Users" USING GIN (user_genre_tags);
 			CREATE INDEX IF NOT EXISTS USER_ROLE_TAGS_X ON "Users" USING GIN (user_role_tags);
 		`);

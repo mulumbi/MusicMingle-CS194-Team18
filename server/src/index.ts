@@ -276,7 +276,7 @@ app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
 	res.status(201).json(returnObj);
 });
 
-// exp: localhost/api/search_gigs?name="bla"&gig_tags=["musician", "party"]&event_start="2024-02-25T10:55:38.033Z"
+// exp: localhost/api/search_gigs?name="bla"&gig_role_tags=["musician", "party"]&event_start="2024-02-25T10:55:38.033Z"
 app.get("/api/search_gigs", async (req: any, res) => {
 	const searchedGigs = await searchGigs(req, res);
 	res.status(201).json(searchedGigs);
@@ -294,7 +294,8 @@ app.post(
 			gig_id,
 			event_start,
 			event_end,
-			gig_tags,
+			gig_role_tags,
+			gig_genre_tags,
 			name,
 			bio,
 			estimate_flat_rate,
@@ -322,7 +323,12 @@ app.post(
 					? formatDateTime(event_start)
 					: undefined,
 				event_end: event_start ? formatDateTime(event_end) : undefined,
-				gig_tags: gig_tags ? JSON.parse(gig_tags) : undefined,
+				gig_role_tags: gig_role_tags
+					? JSON.parse(gig_role_tags)
+					: undefined,
+				gig_genre_tags: gig_genre_tags
+					? JSON.parse(gig_genre_tags)
+					: undefined,
 				name,
 				bio,
 				estimate_flat_rate,
@@ -420,7 +426,8 @@ app.post(
 		const {
 			event_start,
 			event_end,
-			gig_tags,
+			gig_role_tags,
+			gig_genre_tags,
 			name,
 			bio,
 			estimate_flat_rate,
@@ -437,7 +444,12 @@ app.post(
 		const new_gig = await models.Gig.create({
 			event_start: formatDateTime(event_start),
 			event_end: formatDateTime(event_end),
-			gig_tags,
+			gig_genre_tags: gig_genre_tags
+				? JSON.parse(gig_genre_tags)
+				: undefined,
+			gig_role_tags: gig_role_tags
+				? JSON.parse(gig_role_tags)
+				: undefined,
 			name,
 			bio,
 			estimate_flat_rate,
