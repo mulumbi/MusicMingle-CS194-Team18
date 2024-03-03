@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
 	Form,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -21,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
@@ -28,10 +30,11 @@ import { mutateProfileDetails } from "../api/profile.api";
 
 const FormSchema = z.object({
 	// profile_image: z.string(),
-	bio: z.string(),
-	user_role_tags: z.array(z.string()),
-	user_genre_tags: z.array(z.string()),
-	estimate_flat_rate: z.coerce.number(),
+	bio: z.string().optional(),
+	user_role_tags: z.array(z.string()).optional(),
+	user_genre_tags: z.array(z.string()).optional(),
+	estimate_flat_rate: z.coerce.number().optional(),
+	is_artist: z.boolean().optional(),
 	// portfolio_images: z.array(z.string()),
 	// deleted_portfolio_images: z.array(z.string()),
 	// videos: z.array(z.object({url: z.string(), title: z.string()})),
@@ -79,6 +82,13 @@ export function ProfileSettings() {
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			bio: "",
+			user_role_tags: [],
+			user_genre_tags: [],
+			estimate_flat_rate: undefined,
+			is_artist: false,
+		},
 	});
 
 	const mutation = useMutation({
@@ -91,20 +101,18 @@ export function ProfileSettings() {
 
 		// const bodyFormData = new FormData();
 		// Object.keys(data).forEach(key => bodyFormData.append(key, data[key]));
+
 		let bodyFormData = new FormData();
-		if (data.bio) bodyFormData.append("bio", data.bio);
-		if (data.user_role_tags)
-			bodyFormData.append(
-				"user_role_tags",
-				JSON.stringify(data.user_role_tags)
-			);
-		if (data.user_genre_tags)
-			bodyFormData.append(
-				"user_genre_tags",
-				JSON.stringify(data.user_genre_tags)
-			);
+		if (data.bio) 
+			bodyFormData.append("bio", data.bio);
+		if (data.user_role_tags) 
+			bodyFormData.append("user_role_tags", JSON.stringify(data.user_role_tags));
+		if (data.user_genre_tags) 
+			bodyFormData.append("user_genre_tags", JSON.stringify(data.user_genre_tags));
 		if (data.estimate_flat_rate)
-			bodyFormData.append("estimate_flat_rate", data.estimate_flat_rate);
+			bodyFormData.append("estimate_flat_rate", JSON.stringify(data.estimate_flat_rate));
+		if (data.is_artist)
+			bodyFormData.append("is_artist", JSON.stringify(data.is_artist));
 
 		// console.log("bodyFormData.values()");
 		// for (const value of bodyFormData.values()) {
@@ -126,10 +134,7 @@ export function ProfileSettings() {
 				</Button>
 				<h1>Edit profile</h1>
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="w-2/3 space-y-6"
-					>
+					<form onSubmit={form.handleSubmit(onSubmit)}>
 						<FormField
 							control={form.control}
 							name="bio"
@@ -355,6 +360,29 @@ export function ProfileSettings() {
 									</FormControl>
 									<FormMessage className="settings-message" />
 								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="is_artist"
+							render={({ field }) => (
+							<FormItem>
+								<div className="settings-switch-container">
+									<div>
+										<FormLabel className="settings-label">Artist Profile</FormLabel>
+										<FormDescription className="settings-description">
+											Publicly list and display your profile on the Artists page.
+										</FormDescription>
+									</div>
+									<FormControl>
+										<Switch
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+									</FormControl>
+								</div>
+								
+							</FormItem>
 							)}
 						/>
 						<div className="settings-actions">
