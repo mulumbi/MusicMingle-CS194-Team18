@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -15,9 +14,7 @@ import {
 } from "@/components/ui/form"
 import {
 	Command,
-	CommandEmpty,
 	CommandGroup,
-	CommandInput,
 	CommandItem,
 } from "@/components/ui/command"
 import {
@@ -25,16 +22,19 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover"  
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Check, ChevronsUpDown } from "lucide-react"
+import { AuthContext } from "../context/AuthContext";
+import { mutateProfileDetails } from "../api/profile.api";
 
 const FormSchema = z.object({
 	// profile_image: z.string(),
 	bio: z.string(),
-	user_role_tags: z.string(),
-	user_genre_tags: z.string(),
+	user_role_tags: z.array(z.string()),
+	user_genre_tags: z.array(z.string()),
 	estimate_flat_rate: z.coerce.number(),
 	// portfolio_images: z.array(z.string()),
 	// deleted_portfolio_images: z.array(z.string()),
@@ -78,15 +78,40 @@ const roles = [
 ] as const
 
 export function ProfileSettings() {
+	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 	})
 
+	const mutation = useMutation({
+		mutationFn: (bodyFormData: any) => 
+			mutateProfileDetails(currentUser, bodyFormData)
+	});
+
 	function onSubmit(data: z.infer<typeof FormSchema>) {
-		console.log("onSubmit called from ProfileSettings");
-		console.log(JSON.stringify(data, null, 2));
+		console.log("form data", data);
+
+		// const bodyFormData = new FormData();
+		// Object.keys(data).forEach(key => bodyFormData.append(key, data[key]));
+
+		let bodyFormData = new FormData();
+		if (data.bio) 
+			bodyFormData.append("bio", data.bio);
+		if (data.user_role_tags) 
+			bodyFormData.append("user_role_tags", data.user_role_tags);
+		if (data.user_genre_tags) 
+			bodyFormData.append("user_genre_tags", data.user_genre_tags);
+		if (data.estimate_flat_rate)
+			bodyFormData.append("estimate_flat_rate", data.estimate_flat_rate);
+
+		// console.log("bodyFormData.values()");
+		// for (const value of bodyFormData.values()) {
+		// 	console.log(value);
+		// }
+
+		mutation.mutate(bodyFormData);
 		navigate("/profile", {state: data});
 	}
 
@@ -127,10 +152,8 @@ export function ProfileSettings() {
 										<PopoverTrigger asChild>
 											<FormControl>
 												<Button variant="outline" role="combobox" className="settings-combobox">
-													{field.value
-														? roles.find(
-															(role) => role.value === field.value
-														)?.label
+													{field.value && field.value.length
+														? field.value.length + " selected" 
 														: "Select role"
 													}
 													<ChevronsUpDown className="chevrons-icon"/>
@@ -146,10 +169,17 @@ export function ProfileSettings() {
 															key={role.value}
 															className="command-item"
 															onSelect={() => {
-																form.setValue("user_role_tags", role.value)
+																const existing_tags = field.value || []
+																if (!existing_tags.includes(role.value)) {
+																	const new_tags = existing_tags.concat([role.value]);
+																	form.setValue("user_role_tags", new_tags);
+																} else {
+																	const new_tags = existing_tags.filter(tag => tag != role.value);
+																	form.setValue("user_role_tags", new_tags);
+																}
 															}}
 														>
-															<Check className={role.value === field.value ? "check-show" : "check-hide"} />
+															<Check className={field.value?.includes(role.value) ? "check-show" : "check-hide"} />
 															{role.label}
 														</CommandItem>
 													))}
@@ -173,10 +203,8 @@ export function ProfileSettings() {
 										<PopoverTrigger asChild>
 											<FormControl>
 												<Button variant="outline" role="combobox" className="settings-combobox">
-													{field.value
-														? genres.find(
-															(genre) => genre.value === field.value
-														)?.label
+													{field.value && field.value.length
+														? field.value.length + " selected" 
 														: "Select genre"
 													}
 													<ChevronsUpDown className="chevrons-icon"/>
@@ -192,10 +220,17 @@ export function ProfileSettings() {
 															key={genre.value}
 															className="command-item"
 															onSelect={() => {
-																form.setValue("user_genre_tags", genre.value)
+																const existing_tags = field.value || []
+																if (!existing_tags.includes(genre.value)) {
+																	const new_tags = existing_tags.concat([genre.value]);
+																	form.setValue("user_genre_tags", new_tags);
+																} else {
+																	const new_tags = existing_tags.filter(tag => tag != genre.value);
+																	form.setValue("user_genre_tags", new_tags);
+																}
 															}}
 														>
-															<Check className={genre.value === field.value ? "check-show" : "check-hide"} />
+															<Check className={field.value?.includes(genre.value) ? "check-show" : "check-hide"} />
 															{genre.label}
 														</CommandItem>
 													))}
