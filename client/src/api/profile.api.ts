@@ -28,7 +28,7 @@ export const mutateProfileDetails = async (
 			{
 				headers: {
 					authorization: token,
-					"Content-Type": "multipart/form-data",
+					"Content-Type": "application/json",
 				},
 			}
 		)

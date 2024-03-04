@@ -102,17 +102,26 @@ export function ProfileSettings() {
 		// const bodyFormData = new FormData();
 		// Object.keys(data).forEach(key => bodyFormData.append(key, data[key]));
 
-		let bodyFormData = new FormData();
-		if (data.bio) 
-			bodyFormData.append("bio", data.bio);
-		if (data.user_role_tags) 
-			bodyFormData.append("user_role_tags", JSON.stringify(data.user_role_tags));
-		if (data.user_genre_tags) 
-			bodyFormData.append("user_genre_tags", JSON.stringify(data.user_genre_tags));
+		const bodyFormData = new FormData();
+		if (data.bio) bodyFormData.append("bio", data.bio);
+		if (data.user_role_tags)
+			bodyFormData.append(
+				"user_role_tags",
+				JSON.stringify(data.user_role_tags)
+			);
+		if (data.user_genre_tags)
+			bodyFormData.append(
+				"user_genre_tags",
+				JSON.stringify(data.user_genre_tags)
+			);
 		if (data.estimate_flat_rate)
-			bodyFormData.append("estimate_flat_rate", JSON.stringify(data.estimate_flat_rate));
+			bodyFormData.append(
+				"estimate_flat_rate",
+				JSON.stringify(data.estimate_flat_rate)
+			);
 		if (data.is_artist)
-			bodyFormData.append("is_artist", JSON.stringify(data.is_artist));
+			// @syaudrey this will only enter the if, if is_artist is true. i.e cant toggle false!!
+			bodyFormData.append("is_artist", String(data.is_artist));
 
 		// console.log("bodyFormData.values()");
 		// for (const value of bodyFormData.values()) {
@@ -366,23 +375,25 @@ export function ProfileSettings() {
 							control={form.control}
 							name="is_artist"
 							render={({ field }) => (
-							<FormItem>
-								<div className="settings-switch-container">
-									<div>
-										<FormLabel className="settings-label">Artist Profile</FormLabel>
-										<FormDescription className="settings-description">
-											Publicly list and display your profile on the Artists page.
-										</FormDescription>
+								<FormItem>
+									<div className="settings-switch-container">
+										<div>
+											<FormLabel className="settings-label">
+												Artist Profile
+											</FormLabel>
+											<FormDescription className="settings-description">
+												Publicly list and display your
+												profile on the Artists page.
+											</FormDescription>
+										</div>
+										<FormControl>
+											<Switch
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
 									</div>
-									<FormControl>
-										<Switch
-											checked={field.value}
-											onCheckedChange={field.onChange}
-										/>
-									</FormControl>
-								</div>
-								
-							</FormItem>
+								</FormItem>
 							)}
 						/>
 						<div className="settings-actions">
