@@ -354,6 +354,7 @@ const uploadGigImages = async (req, res, next) => {
 };
 
 const tagParser = (tags) => {
+	if (!tags) return [];
 	return JSON.parse(tags)
 		.map((tag) => `'${tag}'`)
 		.join(", ");
@@ -405,23 +406,20 @@ const searchArtists = async (req, res) => {
 			],
 		});
 	}
-	if (user_role_tags?.length > 0) {
-		const tags = tagParser(user_role_tags);
-		query.push({
-			user_role_tags: Sequelize.literal(
-				`ARRAY[${tags}]::varchar[] <@ user_role_tags`
-			),
-		});
-	}
-	if (user_genre_tags?.length > 0) {
-		const tags = tagParser(user_genre_tags);
-		query.push({
-			user_genre_tags: Sequelize.literal(
-				`ARRAY[${tags}]::varchar[] <@ user_genre_tags`
-			),
-		});
-	}
-
+	console.log(user_role_tags, "User Role Tags");
+	const parsed_user_role_tags = tagParser(user_role_tags);
+	query.push({
+		user_role_tags: Sequelize.literal(
+			`ARRAY[${parsed_user_role_tags}]::varchar[] <@ user_role_tags`
+		),
+	});
+	const parsed_user_genre_tags = tagParser(user_genre_tags);
+	query.push({
+		user_genre_tags: Sequelize.literal(
+			`ARRAY[${parsed_user_genre_tags}]::varchar[] <@ user_genre_tags`
+		),
+	});
+	console.log(query, "Query");
 	const users = await models.User.findAll({
 		where: {
 			[Op.and]: query,
