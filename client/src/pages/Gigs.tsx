@@ -17,6 +17,7 @@ import { PiMagnifyingGlassBold } from "react-icons/pi";
 import GigCard from "@/components/GigCards";
 import NewGig from "../assets/gigs/add.png";
 import { Link } from 'react-router-dom';
+import {Slider} from "@/components/ui/slider";
 
 const gigs = [
     {
@@ -72,6 +73,7 @@ function EventsList() {
                         </Link>
 
 
+
                         {gigs.map((gig, index) => (
                             <GigCard
                                 key={index}
@@ -89,7 +91,7 @@ function EventsList() {
 
                 </div>
             </div>
-            <FilterSidebarGig />
+            <FilterSidebarGig minBudget={0} maxBudget={10000} />
 
         </div>
     );

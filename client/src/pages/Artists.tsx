@@ -60,7 +60,7 @@ function Artists() {
                
             </div>
             </div>
-            <FilterSidebarArtist />
+            <FilterSidebarArtist rate={5} />   
             
         </div>
     );
