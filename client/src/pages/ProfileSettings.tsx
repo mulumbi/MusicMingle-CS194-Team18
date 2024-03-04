@@ -120,7 +120,7 @@ export function ProfileSettings() {
 		// }
 
 		mutation.mutate(bodyFormData);
-		navigate("/profile", { state: data });
+		// navigate("/profile", { state: data });
 	}
 
 	return (
