@@ -14,12 +14,19 @@ function Profile() {
 	const { currentUser } = useContext(AuthContext);
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	// Fetch user data
 	const { data, error, isLoading } = useQuery({
 		queryKey: ["profile_get"],
 		queryFn: () => fetchProfileDetails(currentUser),
 	});
+
+	useEffect(() => {
+		if (location.state?.refresh) {
+			// navigate(0);
+		}
+	}, [location]);
 
 	console.log("loading", isLoading);
 	console.log("data", data);
@@ -40,8 +47,8 @@ function Profile() {
 							<p>{data?.email}</p>
 						</div>
 						<div>
-							<Button className="profile-button" onClick={() => navigate("/profile_settings")}>Profile Settings</Button> 
-							<EditProfile />
+							<Button className="profile-button" onClick={() => navigate("/profile_settings")}>Edit Profile</Button> 
+							{/* <EditProfile /> */}
 						</div>
 					</div>
 				</div>
@@ -51,9 +58,10 @@ function Profile() {
 						<h3>About Me</h3>
 					</div>
 					<div className="profile-right bio">
-						<p>
-							{ data?.bio ? data.bio : "Tell us about yourself!"}
-						</p>
+						{ data?.bio 
+							? <p>{data.bio}</p>
+							: <p><i>Tell us about yourself!</i></p>
+						}
 					</div>
 				</div>
 
@@ -63,8 +71,8 @@ function Profile() {
 					</div>
 					<div className="profile-right">
 						<div className="profile-tag-list">
-							{data?.user_role_tags.map(role => (
-								<Button className="profile-role" disabled={true}>{role}</Button> 
+							{data?.user_role_tags.map((role, index) => (
+								<Button key={index} className="profile-role" disabled={true}>{role}</Button> 
 							))}
 						</div>
 					</div>
@@ -76,8 +84,8 @@ function Profile() {
 					</div>
 					<div className="profile-right">
 						<div className="profile-tag-list">
-							{data?.user_genre_tags.map(genre => (
-								<Button className="profile-genre" disabled={true}>{genre}</Button> 
+							{data?.user_genre_tags.map((genre, index) => (
+								<Button key={index} className="profile-genre" disabled={true}>{genre}</Button> 
 							))}
 						</div>
 					</div>

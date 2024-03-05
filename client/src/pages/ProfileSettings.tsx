@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
 	Form,
 	FormControl,
@@ -26,7 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
-import { mutateProfileDetails } from "../api/profile.api";
+import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 
 const FormSchema = z.object({
 	// profile_image: z.string(),
@@ -80,14 +80,19 @@ export function ProfileSettings() {
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
 
+	const { data } = useQuery({
+		queryKey: ["profile_get"],
+		queryFn: () => fetchProfileDetails(currentUser),
+	});
+
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			bio: "",
-			user_role_tags: [],
-			user_genre_tags: [],
-			estimate_flat_rate: undefined,
-			is_artist: false,
+			bio: data?.bio ? data.bio : "",
+			user_role_tags: data?.user_role_tags ? data.user_role_tags : [],
+			user_genre_tags: data?.user_genre_tags ? data.user_genre_tags : [],
+			estimate_flat_rate: data?.estimate_flat_rate ? data.estimate_flat_rate : undefined,
+			is_artist: data?.is_artist,
 		},
 	});
 
@@ -97,39 +102,16 @@ export function ProfileSettings() {
 	});
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
-		console.log("form data", data);
+		let bodyFormData = new FormData();
+		bodyFormData.append("bio", data.bio);
+		bodyFormData.append("user_role_tags", JSON.stringify(data.user_role_tags));
+		bodyFormData.append("user_genre_tags", JSON.stringify(data.user_genre_tags));
+		bodyFormData.append("estimate_flat_rate", JSON.stringify(data.estimate_flat_rate));
+		bodyFormData.append("is_artist", String(data.is_artist));
 
-		// const bodyFormData = new FormData();
-		// Object.keys(data).forEach(key => bodyFormData.append(key, data[key]));
-
-		const bodyFormData = new FormData();
-		if (data.bio) bodyFormData.append("bio", data.bio);
-		if (data.user_role_tags)
-			bodyFormData.append(
-				"user_role_tags",
-				JSON.stringify(data.user_role_tags)
-			);
-		if (data.user_genre_tags)
-			bodyFormData.append(
-				"user_genre_tags",
-				JSON.stringify(data.user_genre_tags)
-			);
-		if (data.estimate_flat_rate)
-			bodyFormData.append(
-				"estimate_flat_rate",
-				JSON.stringify(data.estimate_flat_rate)
-			);
-		if (data.is_artist)
-			// @syaudrey this will only enter the if, if is_artist is true. i.e cant toggle false!!
-			bodyFormData.append("is_artist", String(data.is_artist));
-
-		// console.log("bodyFormData.values()");
-		// for (const value of bodyFormData.values()) {
-		// 	console.log(value);
-		// }
-
-		mutation.mutate(bodyFormData);
-		// navigate("/profile", { state: data });
+		mutation.mutate(bodyFormData), {
+			onSuccess: navigate("/profile", { state: {"refresh": true} })
+		};
 	}
 
 	return (
@@ -375,25 +357,23 @@ export function ProfileSettings() {
 							control={form.control}
 							name="is_artist"
 							render={({ field }) => (
-								<FormItem>
-									<div className="settings-switch-container">
-										<div>
-											<FormLabel className="settings-label">
-												Artist Profile
-											</FormLabel>
-											<FormDescription className="settings-description">
-												Publicly list and display your
-												profile on the Artists page.
-											</FormDescription>
-										</div>
-										<FormControl>
-											<Switch
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
+							<FormItem>
+								<div className="settings-switch-container">
+									<div>
+										<FormLabel className="settings-label">Artist Profile</FormLabel>
+										<FormDescription className="settings-description">
+											Publicly list and display your profile on the Artists page.
+										</FormDescription>
 									</div>
-								</FormItem>
+									<FormControl>
+										<Switch
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+									</FormControl>
+								</div>
+								
+							</FormItem>
 							)}
 						/>
 						<div className="settings-actions">

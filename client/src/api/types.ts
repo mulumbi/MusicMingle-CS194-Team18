@@ -5,6 +5,10 @@ export type User = {
 	profile_image: UserContent;
 	portfolio_videos: [UserContent];
 	portfolio_images: [UserContent];
+	user_role_tags: [string];
+	user_genre_tags: [string];
+	estimate_flat_rate: number;
+	is_artist: boolean;
 };
 
 export type UserContent = {

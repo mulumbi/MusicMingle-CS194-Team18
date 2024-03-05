@@ -278,7 +278,7 @@ button.profile-button:focus {
 .settings-label {
   font-size: 16px;
   font-weight: 500;
-  color: var(--violet-11);
+  color: navy;
 }
 
 .settings-description {
@@ -291,7 +291,7 @@ button.profile-button:focus {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--violet-3);
+  background-color: rgb(217, 227, 247);
   border-radius: 0.5rem;
   padding: 1.2rem 1.5rem 0.5rem 1.5rem;
   margin: 1rem 0 2rem 0;
@@ -304,9 +304,9 @@ button.profile-button:focus {
   font-size: 16px;
   line-height: 1.5;
   min-height: 2.25rem;
-  color: var(--violet-11);
+  color: rgb(1, 1, 179);
   background-color: white;
-  border-color: var(--violet-8);
+  border-color: rgb(70, 129, 247);
   border-radius: 0.25rem;
   border-width: 0.1cap;
   padding: 0 1rem;
@@ -314,7 +314,7 @@ button.profile-button:focus {
 }
 .input:focus {
   outline: none;
-  box-shadow: 0px 0px 1px 1px var(--violet-8);
+  box-shadow: 0px 0px 1px 1px rgb(70, 129, 247);
 }
 
 .settings-textarea {
@@ -326,9 +326,9 @@ button.profile-button:focus {
   font-size: 16px;
   line-height: 1.5;
   min-height: 2.25rem;
-  color: var(--violet-11);
+  color: rgb(1, 1, 179);
   background-color: white;
-  border-color: var(--violet-8);
+  border-color: rgb(70, 129, 247);
   border-radius: 0.25rem;
   border-width: 0.1cap;
   padding: 0.5rem 1rem;
@@ -354,7 +354,7 @@ button.profile-button:focus {
 }
 
 .submit-button {
-  background-color: var(--violet-11);
+  background-color: rgb(1, 1, 179);
   color: white;
   border: none;
 }
@@ -379,9 +379,9 @@ button.submit-button:focus, .back-button:focus {
   font-size: 16px;
   line-height: 1.5;
   min-height: 2.25rem;
-  color: var(--violet-11);
+  color: rgb(1, 1, 179);
   background-color: white;
-  border-color: var(--violet-8);
+  border-color: rgb(70, 129, 247);
   border-radius: 0.25rem;
   border-width: 0.1cap;
   margin: 0.25rem 0 1rem 0;
@@ -397,8 +397,8 @@ button.submit-button:focus, .back-button:focus {
 .popover-content {
   flex: 1;
   background-color: white;
-  color: var(--violet-11);
-  border-color: var(--violet-8);
+  color: rgb(1, 1, 179);
+  border-color: rgb(70, 129, 247);
   border-radius: 0.25rem;
   border-width: 0.1cap;
   padding: 1rem;

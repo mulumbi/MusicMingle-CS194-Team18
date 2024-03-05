@@ -19,7 +19,7 @@
   border: none;
 }
 .SwitchRoot[data-state='checked'] {
-  background-color: black;
+  background-color: rgb(1, 1, 179);
   outline: none;
   border: none;
 }

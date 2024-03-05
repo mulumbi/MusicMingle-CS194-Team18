@@ -37,6 +37,6 @@ export const mutateProfileDetails = async (
 			return user;
 		})
 		.catch((err) => console.log("profile data mutate error: ", err));
-	console.log(data);
+	console.log("mutateProfileDetails data", data);
 	return data;
 };
