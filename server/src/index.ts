@@ -15,10 +15,10 @@ import {
 	uploadProfileImage,
 	uploadVideos,
 	uploadGigImages,
-	formatDateTime,
 	searchGigs,
 	searchArtists,
 	getGigDetails,
+	parseFields,
 } from "./helper";
 
 dotenv.config();
@@ -71,6 +71,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const bucketStorage = new Storage({
 	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
@@ -166,6 +167,7 @@ app.post(
 	"/api/profile/edit",
 	[
 		isLoggedIn,
+		parseFields,
 		fileUpload.fields([
 			{ name: "profile_image", maxCount: 1 },
 			{ name: "portfolio_images" },
@@ -197,14 +199,8 @@ app.post(
 			organization_name,
 			organization_group_size,
 			estimate_flat_rate,
-			is_artist:
-				is_artist === undefined
-					? undefined
-					: is_artist === "true"
-					? true
-					: false,
+			is_artist,
 		});
-
 		const promises = [];
 
 		const ids_of_port_images_to_delete = deleted_portfolio_images
@@ -365,16 +361,10 @@ app.post(
 
 		const updatedGig = await gig.update(
 			{
-				event_start: event_start
-					? formatDateTime(event_start)
-					: undefined,
-				event_end: event_start ? formatDateTime(event_end) : undefined,
-				gig_role_tags: gig_role_tags
-					? JSON.parse(gig_role_tags)
-					: undefined,
-				gig_genre_tags: gig_genre_tags
-					? JSON.parse(gig_genre_tags)
-					: undefined,
+				event_start,
+				event_end,
+				gig_role_tags,
+				gig_genre_tags,
 				name,
 				bio,
 				estimate_flat_rate,
@@ -488,14 +478,10 @@ app.post(
 		}
 		const user = await models.User.findOne({ where: { uuid: uid } });
 		const new_gig = await models.Gig.create({
-			event_start: formatDateTime(event_start),
-			event_end: formatDateTime(event_end),
-			gig_genre_tags: gig_genre_tags
-				? JSON.parse(gig_genre_tags)
-				: undefined,
-			gig_role_tags: gig_role_tags
-				? JSON.parse(gig_role_tags)
-				: undefined,
+			event_start,
+			event_end,
+			gig_genre_tags,
+			gig_role_tags,
 			name,
 			bio,
 			estimate_flat_rate,
