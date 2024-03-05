@@ -392,6 +392,56 @@ app.post(
 	}
 );
 
+app.post("/api/mygigs/close_gig", isLoggedIn, async (req: any, res) => {
+	const { uid } = req.user;
+	const { gig_id } = req.query;
+
+	const user = await models.User.findOne({
+		where: { uuid: uid },
+	});
+
+	const gig = await models.Gig.findOne({
+		where: { UserId: user.id, id: gig_id },
+	});
+
+	const updatedGig = await gig.update(
+		{
+			is_open: false,
+		},
+		{
+			where: { UserId: user.id, id: gig_id },
+		}
+	);
+	await updatedGig.save();
+
+	req.gig_id = gig_id;
+	const gigDetails = await getGigDetails(req, res);
+	res.status(201).json(gigDetails);
+});
+
+app.post("/api/mygigs/withdraw_app", isLoggedIn, async (req: any, res) => {
+	const { uid } = req.user;
+	const { gig_id } = req.query;
+	try {
+		const user = await models.User.findOne({
+			where: { uuid: uid },
+			include: { model: models.Application, include: models.User },
+		});
+
+		const gig = await models.Gig.findOne({ where: { id: gig_id } });
+		if (gig.id) {
+			await models.Application.destroy({
+				where: { userId: user.id, gigId: gig_id },
+			});
+			res.status(201).json("Application successfully withdrawn");
+		} else {
+			res.status(401).json("Error: Gig not found");
+		}
+	} catch (error) {
+		res.status(401).json(error);
+	}
+});
+
 app.post("/api/gigs/application", isLoggedIn, async (req: any, res) => {
 	const { uid } = req.user;
 	const { gig_id } = req.query;
@@ -460,6 +510,7 @@ app.post(
 			name,
 			bio,
 			estimate_flat_rate,
+			is_open: true,
 		});
 		await new_gig.save();
 		if (req.gig_profile_image) {
