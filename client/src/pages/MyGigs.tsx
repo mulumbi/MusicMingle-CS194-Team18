@@ -1,59 +1,65 @@
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import GigCard from "@/components/GigCards";
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
+// Assuming GigCard is properly defined elsewhere, import it
+import GigCard from '@/components/GigCards';
 
-const gigs = [
-  {
-    imageUrl: 'path/to/image1.jpg',
-    title: 'Gig Title 1',
-    bio: 'This is a short bio for Gig 1',
-    tags: ['Tag1', 'Tag2'],
-    buttonText: 'Withdraw Application',
-  },
-  {
-    imageUrl: 'path/to/image2.jpg',
-    title: 'Gig Title 2',
-    bio: 'This is a short bio for Gig 2',
-    tags: ['Tag1'],
-    buttonText: 'Withdraw Application',
-  },
-  {
-    imageUrl: 'path/to/image1.jpg',
-    title: 'Gig Title 1',
-    bio: 'This is a short bio for Gig 1',
-    tags: ['Tag1', 'Tag2'],
-    buttonText: 'Withdraw Application',
-  },
-];
+const MyGigs = () => {
+  const [gigData, setGigData] = useState({ my_gigs: [], my_applications: [] });
+  const [activeTab, setActiveTab] = useState('APPLIED'); // 'APPLIED' for my_gigs, 'POSTED' for my_applications
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-function MyGigs() {
+  useEffect(() => {
+    const fetchGigs = async () => {
+      try {
+        const response = await fetch('/api/mygigs/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user?.token}`, // verifying auth if required
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setGigData(data); 
+      } catch (error) {
+        console.error('There was a problem fetching the gigs:', error);
+        navigate('/Profile'); // Redirect to login if there's an issue (e.g., not authenticated)
+      }
+    };
+
+    fetchGigs();
+  }, [user, navigate]);
+
+  const getGigsToDisplay = () => {
+    return activeTab === 'APPLIED' ? gigData.my_gigs : gigData.my_applications;
+  };
+
   return (
-    <div className="App">
-      <div className="page-body">
-        <div className="Title">View My Gigs</div>
-        <div className="Selection-tabs">
-          <button className="selection-buttons Active">APPLIED GIGS</button>
-          <button className="selection-buttons">POSTED GIGS</button>
-        </div>
-        <div className="my-gigs-cards">
-          {/* Content here will depend on the state or context providing the gigs */}
-          {gigs.map((gig, index) => (
-        <GigCard
-          key={index}
-          imageUrl={gig.imageUrl}
-          title={gig.title}
-          bio={gig.bio}
-          tags={gig.tags}
-          buttonText={gig.buttonText}
-          onButtonClick={() => console.log('Button Clicked')}
-        />
-      ))}
-        </div>
+    <div>
+      <div>
+        <button className={activeTab === 'APPLIED' ? 'active' : ''} onClick={() => setActiveTab('APPLIED')}>APPLIED GIGS</button>
+        <button className={activeTab === 'POSTED' ? 'active' : ''} onClick={() => setActiveTab('POSTED')}>POSTED GIGS</button>
+      </div>
+      <div className="my-gigs-cards">
+        {getGigsToDisplay().map((gig, index) => (
+          <GigCard key={index}
+            id={gig.id}
+            estimateFlatRate={gig.estimate_flat_rate}
+            name={gig.name}
+            bio={gig.bio}
+            eventStart={gig.event_start}
+            eventEnd={gig.event_end}
+            gigRoleTags={gig.gig_role_tags}
+          />
+        ))}
       </div>
     </div>
   );
-}
+};
 
 export default MyGigs;
