@@ -397,7 +397,10 @@ app.post("/api/gigs/application", isLoggedIn, async (req: any, res) => {
 		);
 		if (gig.id) {
 			if (existingApplication) {
-				res.status(201).json("Application already exists");
+				await models.Application.destroy({
+					where: { id: existingApplication.id },
+				});
+				res.status(201).json("Application removed");
 			} else {
 				const application = await models.Application.create({
 					userId: user.id,
