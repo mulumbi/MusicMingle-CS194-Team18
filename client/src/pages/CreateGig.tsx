@@ -1,251 +1,277 @@
-// import React, { useState } from 'react';
-// // Import CSSProperties for TypeScript validation of inline styles
-// import { CSSProperties } from 'react';
-// // Import custom components
-// import { Label } from "@/components/ui/label"
-// import { Input } from "@/components/ui/input";
-// import { Textarea } from "@/components/ui/textarea";
-// import {
-//     Popover,
-//     PopoverContent,
-//     PopoverTrigger,
-// } from "@/components/ui/popover"
-
-// import { FaCalendar } from "react-icons/fa";
-// import { Calendar } from "@/components/ui/calendar";
-// import { format } from "date-fns";
-// import { Button } from "@/components/ui/button";
-
-
-
-// function CreateGig() {
-//     const [gigTitle, setGigTitle] = useState('');
-//     const [description, setDescription] = useState('');
-//     const [date, setDate] = useState<Date | undefined>(undefined);
-//     const [time, setTime] = useState(''); // New state for time
-//     const [budget, setBudget] = useState('');
-//     const [genre, setGenre] = useState('');
-//     const [instrumentRole, setInstrumentRole] = useState('');
-
-//     const handleDateSelect = (newDate: Date | undefined) => {
-//         setDate(newDate); // Set the selected date
-//     };
-
-//     const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//         setTime(event.target.value); // Set the selected time
-//     };
-
-//     // Format date and time for display
-//     const formattedDate = date ? format(date, "PPP") : "Pick a date";
-//     const displayDateTime = date ? `${formattedDate} at ${time}` : formattedDate;
-
-//     return (
-//         <div className="App" id="ArtistPageApp">
-//             <div>
-//                 <div className="NewGigTitle">Create New Gig</div>
-//                 <div className='create_gig_body' id="CreateGigBody">
-//                     <div className='new-gig-fields'>
-//                     <div className='new-gig-fields'>
-//                         <Label>
-//                             Gig Title:
-//                             <Input type="text" value={gigTitle} onChange={(e) => setGigTitle(e.target.value)} />
-//                         </Label>
-
-//                         <Label>
-//                             Picture:
-//                             <Input id="picture" type="file" />
-//                         </Label>
-
-
-//                         <Label>
-//                             Description:
-//                             <Textarea
-//                                 style={{ width: '100%', height: '150px' }}
-//                                 value={description}
-//                                 onChange={(e) => setDescription(e.target.value)}
-//                             />
-//                         </Label>           
-                        
-//                         <Label>
-//                             Date and Time:
-//                             <div className="datetime-picker">
-//                                 <Popover>
-//                                     <PopoverTrigger asChild>
-//                                         <Button variant="outline">
-//                                             <FaCalendar className="calendar-icon" />
-//                                             <span>{displayDateTime}</span>
-//                                         </Button>
-//                                     </PopoverTrigger>
-//                                     <PopoverContent className="select-date">
-//                                         <Calendar
-//                                             mode="single"
-//                                             selected={date}
-//                                             onSelect={handleDateSelect}
-//                                         />
-//                                     </PopoverContent>
-//                                 </Popover>
-//                                 <Input 
-//                                     type="start time"
-//                                     value={time}
-//                                     onChange={handleTimeChange}
-//                                     style={{ marginLeft: '10px' }}
-//                                 />
-//                             </div>
-//                         </Label>
-
-//                         <Label>
-//                             Budget:
-//                             <Input type="text" value={budget} onChange={(e) => setBudget(e.target.value)} />
-//                         </Label>
-            
-//                         <Label>
-//                             Genre:
-//                             <Input type="text" value={genre} onChange={(e) => setGenre(e.target.value)} />
-//                         </Label>
-//                         <Label>
-//                             Instrument/Role:
-//                             <Input type="text" value={instrumentRole} onChange={(e) => setInstrumentRole(e.target.value)} />
-//                         </Label>
-
-//                         <Button>Create Gig</Button>
-//                     </div>
-//                 </div>
-//             </div>
-//             </div>
-//         </div>
-//     );
-// }
-                    
-
-// export default CreateGig;
-
-
-import React, { useState } from 'react';
-// Import CSSProperties for TypeScript validation of inline styles
-import { CSSProperties } from 'react';
-// Import custom components
-import { Label } from "@/components/ui/label"
+import React, { useState, useContext } from "react";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { FaCalendar } from "react-icons/fa";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { mutateCreateGig } from "@/api/create_gig.api";
+import { AuthContext } from "../context/AuthContext";
+import { useMutation } from "@tanstack/react-query";
+import { DateRange } from "react-day-picker";
+import { addDays, endOfToday, format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { start } from "repl";
 
 function CreateGig() {
-    const [gigTitle, setGigTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [date, setDate] = useState<Date | undefined>(undefined);
-    const [startTime, setStartTime] = useState(''); // State for start time
-    const [endTime, setEndTime] = useState(''); // State for end time
-    const [budget, setBudget] = useState('');
-    const [genre, setGenre] = useState('');
-    const [instrumentRole, setInstrumentRole] = useState('');
+	const [date, setDate] = useState<DateRange | undefined>({
+		from: new Date(),
+		to: addDays(new Date(), 1),
+	});
+	const [gigTitle, setGigTitle] = useState("");
+	const [description, setDescription] = useState("");
+	const [startTime, setStartTime] = useState(""); // State for start time
+	const [endTime, setEndTime] = useState(""); // State for end time
+	const [budget, setBudget] = useState("");
+	const [genre, setGenre] = useState([]);
+	const [instrumentRole, setInstrumentRole] = useState([]);
+	const [portfolioImages, setGigPortfolioImages] = useState<FileList | null>(
+		null
+	);
+	const [profileImage, setGigProfileImages] = useState<File | null>(null);
+	const { currentUser } = useContext(AuthContext);
+	console.log(date, "startDate");
+	const mutation = useMutation({
+		mutationFn: (bodyFormData: any) =>
+			mutateCreateGig(currentUser, bodyFormData),
+	});
+	console.log(date, "date");
+	const onSubmit = () => {
+		console.log("onSubmit");
+		console.log(
+			gigTitle,
+			description,
+			date,
+			startTime,
+			endTime,
+			budget,
+			genre,
+			profileImage
+		);
+		// Check to make sure start date < end date
+		const startDate = date?.from;
+		const [startHour, startMinute] = startTime.split(":");
+		startDate?.setHours(parseInt(startHour));
+		startDate?.setMinutes(parseInt(startMinute));
+		startDate?.setSeconds(0);
+		const endDate = date?.to;
+		const [endHour, endMinute] = endTime.split(":");
+		endDate?.setHours(parseInt(endHour));
+		endDate?.setMinutes(parseInt(endMinute));
+		endDate?.setSeconds(0);
 
-    const handleDateSelect = (newDate: Date | undefined) => {
-        setDate(newDate); // Set the selected date
-    };
+		if (
+			!startDate ||
+			!endDate ||
+			startDate > endDate ||
+			!startTime ||
+			!endTime
+		) {
+			console.log("Invalid date range or start/end time");
+			return;
+		}
 
-    const handleStartTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setStartTime(event.target.value); // Set the selected start time
-    };
+		if (!profileImage) {
+			console.log("Profile image is required");
+			return;
+		}
 
-    const handleEndTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEndTime(event.target.value); // Set the selected end time
-    };
+		// Call this function to get the values from the form and send them to the server
+		const bodyFormData = new FormData();
+		bodyFormData.append("name", gigTitle); // Budget already a string
+		bodyFormData.append("bio", description); // Budget already a string
+		bodyFormData.append("event_start", startDate.toISOString());
+		bodyFormData.append("event_end", endDate.toISOString());
+		if (parseInt(budget)) {
+			bodyFormData.append("estimate_flat_rate", budget); // Budget already a string
+		}
+		if (genre.length > 0) {
+			bodyFormData.append("gig_role_tags", JSON.stringify(genre)); // Convert the array to a string as we need to pass as ["Musician", "Singer]
+		}
+		if (instrumentRole.length > 0) {
+			bodyFormData.append(
+				"gig_genre_tags",
+				JSON.stringify(instrumentRole)
+			); // Convert the array to a string as we need to pass as ["Musician", "Singer]
+		}
+		bodyFormData.append("gig_profile_image", profileImage);
+		if (portfolioImages && portfolioImages.length > 0) {
+			for (const file of Array.from(portfolioImages)) {
+				bodyFormData.append("gig_images", file);
+			}
+		}
+		for (const pair of bodyFormData.entries()) {
+			console.log(pair[0] + ", " + pair[1]);
+		}
+		mutation.mutate(bodyFormData);
+	};
 
-    // Format date for display
-    const formattedDate = date ? format(date, "PPP") : "Pick a date";
-    const displayDateTime = date ? `${formattedDate} from ${startTime} to ${endTime}` : formattedDate;
+	return (
+		<div>
+			<div>
+				<div>Create New Gig</div>
+				<div>
+					<div>
+						<Label>
+							Gig Title:
+							<Input
+								type="text"
+								value={gigTitle}
+								onChange={(e) => setGigTitle(e.target.value)}
+								required
+							/>
+						</Label>
 
-    return (
-        <div className="App" id="ArtistPageApp">
-            <div>
-                <div className="NewGigTitle">Create New Gig</div>
-                <div className='create_gig_body' id="CreateGigBody">
-                    <div className='new-gig-fields'>
-                        <Label>
-                            Gig Title:
-                            <Input type="text" value={gigTitle} onChange={(e) => setGigTitle(e.target.value)} />
-                        </Label>
+						<Label>
+							Gig Profile Image:
+							<Input
+								id="gig_profile_image"
+								type="file"
+								onChange={(e) => {
+									if (e?.target?.files?.length > 0) {
+										setGigProfileImages(e.target.files[0]);
+									}
+								}}
+								required
+							/>
+						</Label>
 
-                        <Label>
-                            Picture:
-                            <Input id="picture" type="file" />
-                        </Label>
+						<Label>
+							Gig Gallery Images:
+							<Input
+								id="gig_portfolio_images"
+								type="file"
+								multiple
+								onChange={(e) => {
+									if (e?.target?.files?.length > 0) {
+										setGigPortfolioImages(e.target.files);
+									}
+								}}
+							/>
+						</Label>
 
-                        <Label>
-                            Description:
-                            <Textarea
-                                style={{ width: '100%', height: '150px' }}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                            />
-                        </Label>
+						<Label>
+							Description:
+							<Textarea
+								style={{ width: "100%", height: "150px" }}
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+							/>
+						</Label>
 
-                        <Label>
-                            Date and Time:
-                            <div className="datetime-picker">
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button variant="outline">
-                                            <FaCalendar className="calendar-icon" />
-                                            <span>{displayDateTime}</span>
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="select-date">
-                                        <Calendar
-                                            mode="single"
-                                            selected={date}
-                                            onSelect={handleDateSelect}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+						<Label>
+							Date and Time:
+							<div>
+								<div className="grid gap-2">
+									<Popover className="z-50">
+										<PopoverTrigger asChild>
+											<Button
+												id="date"
+												variant={"outline"}
+												className={cn(
+													"w-[300px] justify-start text-left font-normal",
+													!date &&
+														"text-muted-foreground"
+												)}
+											>
+												<CalendarIcon className="mr-2 h-4 w-4" />
+												{date?.from ? (
+													date.to ? (
+														<>
+															{format(
+																date.from,
+																"LLL dd, y"
+															)}{" "}
+															-{" "}
+															{format(
+																date.to,
+																"LLL dd, y"
+															)}
+														</>
+													) : (
+														format(
+															date.from,
+															"LLL dd, y"
+														)
+													)
+												) : (
+													<span>Pick a date</span>
+												)}
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent
+											className="w-auto p-0"
+											align="start"
+										>
+											<Calendar
+												initialFocus
+												mode="range"
+												defaultMonth={date?.from}
+												selected={date}
+												onSelect={setDate}
+												numberOfMonths={2}
+											/>
+										</PopoverContent>
+									</Popover>
+								</div>
+								Start Time:
+								<Input
+									type="time"
+									onChange={(e) =>
+										setStartTime(e.target.value)
+									}
+									style={{ marginLeft: "10px" }}
+								/>
+								End Time:
+								<Input
+									type="time"
+									onChange={(e) => setEndTime(e.target.value)}
+									style={{ marginLeft: "10px" }}
+								/>
+							</div>
+						</Label>
 
-                                Start Time:
-                                <Input 
-                                    type="time"
-                                    value={startTime}
-                                    onChange={handleStartTimeChange}
-                                    style={{ marginLeft: '10px' }}
-                                />
-                                End Time:
-                                <Input 
-                                    type="time"
-                                    value={endTime}
-                                    onChange={handleEndTimeChange}
-                                    style={{ marginLeft: '10px' }}
-                                />
-                            </div>
-                        </Label>
+						<Label>
+							Budget:
+							<Input
+								type="number"
+								onChange={(e) => setBudget(e.target.value)}
+							/>
+						</Label>
+						{/* Replace this with a drop down of genre tags */}
+						<Label>
+							Genre:
+							<Input
+								type="text"
+								value={genre}
+								onChange={(e) => setGenre(e.target.value)}
+							/>
+						</Label>
+						{/* Replace this with a drop down of role tags */}
+						<Label>
+							Instrument/Role:
+							<Input
+								type="text"
+								value={instrumentRole}
+								onChange={(e) =>
+									setInstrumentRole(e.target.value)
+								}
+							/>
+						</Label>
 
-                        <Label>
-                            Budget:
-                            <Input type="text" value={budget} onChange={(e) => setBudget(e.target.value)} />
-                        </Label>
-
-                        <Label>
-                            Genre:
-                            <Input type="text" value={genre} onChange={(e) => setGenre(e.target.value)} />
-                        </Label>
-                        <Label>
-                            Instrument/Role:
-                            <Input type="text" value={instrumentRole} onChange={(e) => setInstrumentRole(e.target.value)} />
-                        </Label>
-
-                        <Button>Create Gig</Button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+						<Button onClick={() => onSubmit()}>Create Gig</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 export default CreateGig;
-

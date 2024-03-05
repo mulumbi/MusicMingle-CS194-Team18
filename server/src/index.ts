@@ -19,7 +19,9 @@ import {
 	searchArtists,
 	getGigDetails,
 	parseFields,
+	formatDateTime,
 } from "./helper";
+import { parse } from "path";
 
 dotenv.config();
 
@@ -417,6 +419,7 @@ app.post("/api/gigs/application", isLoggedIn, async (req: any, res) => {
 app.post(
 	"/api/gigs/create",
 	isLoggedIn,
+	parseFields,
 	fileUpload.fields([{ name: "gig_images" }, { name: "gig_profile_image" }]),
 	uploadGigImages,
 	async (req: any, res) => {
@@ -439,13 +442,19 @@ app.post(
 		}
 		const user = await models.User.findOne({ where: { uuid: uid } });
 		const new_gig = await models.Gig.create({
-			event_start,
-			event_end,
-			gig_genre_tags,
-			gig_role_tags,
+			event_start: formatDateTime(event_start),
+			event_end: formatDateTime(event_end),
+			gig_genre_tags: gig_genre_tags
+				? JSON.parse(gig_genre_tags)
+				: undefined,
+			gig_role_tags: gig_role_tags
+				? JSON.parse(gig_role_tags)
+				: undefined,
 			name,
 			bio,
-			estimate_flat_rate,
+			estimate_flat_rate: estimate_flat_rate
+				? parseInt(estimate_flat_rate)
+				: undefined,
 		});
 		await new_gig.save();
 		if (req.gig_profile_image) {
