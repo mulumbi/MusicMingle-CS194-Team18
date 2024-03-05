@@ -1,39 +1,33 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
-// Assuming GigCard is properly defined elsewhere, import it
-import GigCard from '@/components/GigCards';
+import { fetchProfileDetails, fetchGigsData } from "../api/mygigs.api";
+import GigCard from '@/components/GigCards'; 
 
 const MyGigs = () => {
   const [gigData, setGigData] = useState({ my_gigs: [], my_applications: [] });
-  const [activeTab, setActiveTab] = useState('APPLIED'); // 'APPLIED' for my_gigs, 'POSTED' for my_applications
-  const { user } = useContext(AuthContext);
+  const [activeTab, setActiveTab] = useState('APPLIED'); 
+  const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchGigs = async () => {
-      try {
-        const response = await fetch('/api/mygigs/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user?.token}`, // verifying auth if required
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    const fetchData = async () => {
+      if (currentUser) {
+        // Fetch profile details first
+        const userProfile = await fetchProfileDetails(currentUser);
+        if (userProfile) {
+          const gigsData = await fetchGigsData(currentUser);
+          if (gigsData) {
+            setGigData(gigsData);
+          }
+        } else {
+          console.error("Failed to fetch user profile.");
+          
         }
-        const data = await response.json();
-        setGigData(data); 
-      } catch (error) {
-        console.error('There was a problem fetching the gigs:', error);
-        navigate('/Profile'); // Redirect to login if there's an issue (e.g., not authenticated)
       }
     };
-
-    fetchGigs();
-  }, [user, navigate]);
+    fetchData();
+  }, [currentUser, navigate]); 
 
   const getGigsToDisplay = () => {
     return activeTab === 'APPLIED' ? gigData.my_gigs : gigData.my_applications;

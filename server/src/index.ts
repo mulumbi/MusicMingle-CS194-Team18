@@ -136,9 +136,6 @@ sequelize.sync().then(async () => {
         await seedDummyGigs();
     }
     // Start your server after seeding is complete
-    app.listen(port, () => {
-        console.log(`[server]: Server is running at http://localhost:${port}`);
-    });
 }).catch((err) => console.log(err));
 
 app.get("/api", (req: Request, res: Response) => {
