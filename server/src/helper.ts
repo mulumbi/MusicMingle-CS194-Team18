@@ -444,7 +444,7 @@ const searchGigs = async (req, res) => {
 		limit,
 		offset,
 	} = req.query;
-	const query = [];
+	const query: any = [{ is_open: true }];
 	if (event_start) {
 		query.push({ event_start: { [Op.gt]: event_start } });
 	}
