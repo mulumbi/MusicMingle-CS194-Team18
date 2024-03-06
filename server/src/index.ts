@@ -15,10 +15,10 @@ import {
 	uploadProfileImage,
 	uploadVideos,
 	uploadGigImages,
-	formatDateTime,
 	searchGigs,
 	searchArtists,
 	getGigDetails,
+	parseFields,
 } from "./helper";
 
 dotenv.config();
@@ -71,6 +71,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const bucketStorage = new Storage({
 	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
@@ -80,25 +81,63 @@ const portfolioImageBucket = bucketStorage.bucket(
 	"music-mingle-portfolio-bucket"
 );
 
-client
-	.connect()
-	.then(() => {
-		// User.sync() - This creates the table if it doesn't exist (and does nothing if it already exists)
-		// User.sync({ force: true }) - This creates the table, dropping it first if it already existed
-		/* User.sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, 
-		 what are their data types, etc), and then performs the necessary changes in the table to make it match the model. */
-		sequelize
-			// .sync({ force: true })
-			// sequelize
-			// 	.sync({ alter: true })
-			.sync()
+// Dummy data seeding function (Assuming it's defined correctly)
+async function seedDummyGigs() {
+	const user = await models.User.findOne(); // Assuming there's at least one user in your database
+	if (!user) {
+	  console.log("No users found, skipping gig seeding.");
+	  return;
+	}
+  
+	const dummyGigs = [
+	  { name: "Applied Gig 1", bio: "This is an applied gig.", estimate_flat_rate: 100, event_start: new Date(), event_end: new Date(), gig_role_tags: ["musician"], userId: user.id, status: "applied" },
+	  { name: "Applied Gig 2", bio: "This is another applied gig.", estimate_flat_rate: 150, event_start: new Date(), event_end: new Date(), gig_role_tags: ["singer"], userId: user.id, status: "applied" },
+	  { name: "Applied Gig 3", bio: "Yet another applied gig.", estimate_flat_rate: 200, event_start: new Date(), event_end: new Date(), gig_role_tags: ["dj"], userId: user.id, status: "applied" },
+	  { name: "Posted Gig 1", bio: "This is a posted gig.", estimate_flat_rate: 250, event_start: new Date(), event_end: new Date(), gig_role_tags: ["band"], userId: user.id, status: "posted" },
+	];
+  
+	// Using Sequelize model to create gigs directly
+	for (const gig of dummyGigs) {
+	  await models.Gig.create(gig);
+	}
+  
+	console.log("Dummy gigs seeded successfully.");
+  }
+  
+// client
+// 	.connect()
+// 	.then(() => {
+// 		// User.sync() - This creates the table if it doesn't exist (and does nothing if it already exists)
+// 		// User.sync({ force: true }) - This creates the table, dropping it first if it already existed
+// 		/* User.sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, 
+// 		 what are their data types, etc), and then performs the necessary changes in the table to make it match the model. */
+// 		sequelize
+// 			// .sync({ force: true })
+// 			// sequelize
+// 			// 	.sync({ alter: true })
+// 			.sync()
 
-			.then(() => {
-				console.log("Model Sync Complete");
-				testDbConnection();
-			});
-	})
-	.catch((err) => console.log(err));
+// 			.then(() => {
+// 				console.log("Model Sync Complete");
+// 				testDbConnection();
+// 				seedDummyGigs().then(() => {
+//                     console.log("Dummy data seeding completed.");
+//                 }).catch((error) => {
+//                     console.error("Error seeding dummy gigs:", error);
+//                 });
+// 			});
+// 	})
+// 	.catch((err) => console.log(err));
+
+sequelize.sync().then(async () => {
+    console.log("Model Sync Complete");
+    testDbConnection();
+    // Call your seeding function here
+    if (process.env.NODE_ENV === 'development') { // Ensure seeding only in development
+        await seedDummyGigs();
+    }
+    // Start your server after seeding is complete
+}).catch((err) => console.log(err));
 
 app.get("/api", (req: Request, res: Response) => {
 	res.send("Express Api");
@@ -128,6 +167,7 @@ app.post(
 	"/api/profile/edit",
 	[
 		isLoggedIn,
+		parseFields,
 		fileUpload.fields([
 			{ name: "profile_image", maxCount: 1 },
 			{ name: "portfolio_images" },
@@ -159,14 +199,8 @@ app.post(
 			organization_name,
 			organization_group_size,
 			estimate_flat_rate,
-			is_artist:
-				is_artist === undefined
-					? undefined
-					: is_artist === "true"
-					? true
-					: false,
+			is_artist,
 		});
-
 		const promises = [];
 
 		const ids_of_port_images_to_delete = deleted_portfolio_images
@@ -194,6 +228,7 @@ app.post(
 				}
 			);
 		}
+
 
 		// delete old videos
 		if (!!ids_of_videos_to_delete) {
@@ -326,16 +361,10 @@ app.post(
 
 		const updatedGig = await gig.update(
 			{
-				event_start: event_start
-					? formatDateTime(event_start)
-					: undefined,
-				event_end: event_start ? formatDateTime(event_end) : undefined,
-				gig_role_tags: gig_role_tags
-					? JSON.parse(gig_role_tags)
-					: undefined,
-				gig_genre_tags: gig_genre_tags
-					? JSON.parse(gig_genre_tags)
-					: undefined,
+				event_start,
+				event_end,
+				gig_role_tags,
+				gig_genre_tags,
 				name,
 				bio,
 				estimate_flat_rate,
@@ -499,14 +528,10 @@ app.post(
 		}
 		const user = await models.User.findOne({ where: { uuid: uid } });
 		const new_gig = await models.Gig.create({
-			event_start: formatDateTime(event_start),
-			event_end: formatDateTime(event_end),
-			gig_genre_tags: gig_genre_tags
-				? JSON.parse(gig_genre_tags)
-				: undefined,
-			gig_role_tags: gig_role_tags
-				? JSON.parse(gig_role_tags)
-				: undefined,
+			event_start,
+			event_end,
+			gig_genre_tags,
+			gig_role_tags,
 			name,
 			bio,
 			estimate_flat_rate,

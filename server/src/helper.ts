@@ -17,9 +17,52 @@ const portfolioImageBucket = bucketStorage.bucket(
 );
 const gigImageBucket = bucketStorage.bucket("music-mingle-gig-bucket");
 
+const parseFields = (req, res, next) => {
+	const {
+		user_genre_tags,
+		user_role_tags,
+		organization_group_size,
+		estimate_flat_rate,
+		is_artist,
+		gig_role_tags,
+		gig_genre_tags,
+		event_end,
+		event_start,
+	} = req.body;
+	if (user_genre_tags) {
+		req.body.user_genre_tags = JSON.parse(user_genre_tags);
+	}
+	if (user_role_tags) {
+		req.body.user_role_tags = JSON.parse(user_role_tags);
+	}
+	if (organization_group_size) {
+		req.body.organization_group_size = parseInt(organization_group_size);
+	}
+	if (estimate_flat_rate) {
+		req.body.estimate_flat_rate = parseInt(estimate_flat_rate);
+	}
+	if (is_artist) {
+		req.body.is_artist = is_artist === "true" ? true : false;
+	}
+	if (gig_role_tags) {
+		req.body.gig_role_tags = JSON.parse(gig_role_tags);
+	}
+	if (gig_genre_tags) {
+		req.body.gig_genre_tags = JSON.parse(gig_genre_tags);
+	}
+	if (event_start) {
+		req.body.event_start = formatDateTime(event_start);
+	}
+	if (event_end) {
+		req.body.event_end = formatDateTime(event_end);
+	}
+	next();
+};
+
 // middleware for checking if user is logged in. allows the extraction of name, uid, email, etc from req.user anywhere
 const isLoggedIn = (req, res, next) => {
-	const token = req.headers.authorization;
+	const token =
+		req.headers.authorization || req?.body?.headers?.authorization;
 	if (!token) {
 		return res.status(401).json({ error: "Unauthorized" });
 	}
@@ -372,7 +415,13 @@ const searchArtists = async (req, res) => {
 		organization_size_end,
 		limit,
 		offset,
+		artist_id,
 	} = req.query;
+	if (artist_id) {
+		return await models.User.findOne({
+			where: { is_artist: true, id: artist_id },
+		});
+	}
 	const query: any = [{ is_artist: true }];
 	if (organization_size_start) {
 		query.push({
@@ -443,7 +492,11 @@ const searchGigs = async (req, res) => {
 		flat_rate_end,
 		limit,
 		offset,
+		gig_id,
 	} = req.query;
+	if (gig_id) {
+		return await models.Gig.findByPk(gig_id);
+	}
 	const query: any = [{ is_open: true }];
 	if (event_start) {
 		query.push({ event_start: { [Op.gt]: event_start } });
@@ -546,4 +599,5 @@ export {
 	uploadGigImages,
 	formatDateTime,
 	searchArtists,
+	parseFields,
 };

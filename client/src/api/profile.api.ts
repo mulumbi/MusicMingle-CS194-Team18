@@ -22,17 +22,21 @@ export const mutateProfileDetails = async (
 ) => {
 	const token = await currentUser.getIdToken();
 	const data = await axios
-		.post(import.meta.env.VITE_BACKEND_URL + "/profile/edit", {
-			headers: {
-				authorization: token,
-				"Content-Type": "multipart/form-data",
-			},
-			data: bodyFormData,
-		})
+		.post(
+			import.meta.env.VITE_BACKEND_URL + "/profile/edit",
+			bodyFormData,
+			{
+				headers: {
+					authorization: token,
+					"Content-Type": "application/json",
+				},
+			}
+		)
 		.then((res) => {
 			const user: User = res.data;
 			return user;
 		})
 		.catch((err) => console.log("profile data mutate error: ", err));
+	console.log("mutateProfileDetails data", data);
 	return data;
 };
