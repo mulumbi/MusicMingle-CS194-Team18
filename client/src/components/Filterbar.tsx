@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// import { Slider } from "@/components/ui/slider";
 import { GrFilter } from "react-icons/gr";
 import { cn } from "@/lib/utils";
 
@@ -22,19 +20,29 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import React from "react";
-import {CustomSlider} from "@/components/CustomSlider";
+import { CustomSlider } from "@/components/CustomSlider";
 import * as Slider from '@radix-ui/react-slider';
+import { useState, useEffect } from "react";
 
 
 interface FilterSidebarGigProps {
   minBudget: number;  // Define the expected type for minBudget
   maxBudget: number;  // Define the expected type for maxBudget
+  onApplyFilters: (minBudget: number, maxBudget: number) => void;
 }
 
-const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({ minBudget, maxBudget }) => {
-  // const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [minBudgetValue, setMinBudgetValue] = React.useState(minBudget);
-  const [maxBudgetValue, setMaxBudgetValue] = React.useState(maxBudget);
+
+const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
+    minBudget,
+    maxBudget,
+    onApplyFilters,
+  }) => {
+    const [localMinBudget, setLocalMinBudget] = React.useState(minBudget);
+    const [localMaxBudget, setLocalMaxBudget] = React.useState(maxBudget);
+  
+    const handleApplyFilters = () => {
+      onApplyFilters(localMinBudget, localMaxBudget);
+    };
 
 
   return (
@@ -47,21 +55,26 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({ minBudget, maxBudge
       <CardContent>
         <div>
 
-          <div className="filter-action">
-            <h5>Budget</h5>
-            <Input 
-              type="number"
-              placeholder="Enter minimum $$$" 
-              value={minBudgetValue} 
-              onChange={(e) => setMinBudgetValue(Number(e.target.value))}
-            />
-            <Input 
-              type="number"
-              placeholder="Enter maximum $$$" 
-              value={maxBudgetValue} 
-              onChange={(e) => setMaxBudgetValue(Number(e.target.value))}
-            />
-          </div>
+        <div className="filter-action">
+          <h5>Min Budget</h5>
+          <Input
+            type="number"
+            placeholder="Enter min $$$"
+            value={localMinBudget}
+            onChange={(e) => setLocalMinBudget(Number(e.target.value))}
+          />
+        </div>
+
+        <div className="filter-action">
+          <h5>Max Budget</h5>
+          <Input
+            type="number"
+            placeholder="Enter max SSS"
+            value={localMaxBudget}
+            onChange={(e) => setLocalMaxBudget(Number(e.target.value))}
+          />
+        </div>
+
 
           {/* <div className="filter-action">
             <CustomSlider label="Budget" defaultValue={[50]} max={100} step={1} />
@@ -85,7 +98,7 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({ minBudget, maxBudge
 
           <div className="filter-action">
             <h5>Role</h5>
-            <Select className="dropdown">
+            <Select >
               <SelectTrigger>
                 <SelectValue placeholder="Choose role" />
               </SelectTrigger>
@@ -111,7 +124,8 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({ minBudget, maxBudge
 
       </CardContent>
       <CardFooter>
-        <Button className="apply-button">Apply <GrFilter /> </Button>
+      <Button className="apply-button" onClick={handleApplyFilters}> 
+      Apply </Button>
       </CardFooter>
     </Card>
   );
@@ -119,13 +133,30 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({ minBudget, maxBudge
 
 
 
-type FilterSidebarArtistProps = {
-  rate: number;
+interface FilterSidebarArtistProps {
+  minRate: number;
+  maxRate: number;
+  onApplyFilters: (minRate: number, maxRate: number) => void;
 };
 
-const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({ rate }) => {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
-  const [rateVal, setRateVal] = React.useState(rate);
+
+const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
+  minRate,
+  maxRate,
+  onApplyFilters,
+}) => {
+  const [localMinRate, setLocalMinRate] = useState<number>(minRate);
+  const [localMaxRate, setLocalMaxRate] = useState<number>(maxRate);
+
+  const handleApplyFilters = () => {
+    onApplyFilters(localMinRate, localMaxRate);
+  };
+
+  // When component receives new props, update local state
+  useEffect(() => {
+    setLocalMinRate(minRate);
+    setLocalMaxRate(maxRate);
+  }, [minRate, maxRate]);
 
   return (
     <Card id="Filterbar">
@@ -136,18 +167,29 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({ rate }) => {
       <CardContent>
         <div>
           <div className="filter-action">
-            <h5>Flat Rate</h5>
-            <Input 
+            <h5>Flat Rate Min</h5>
+            <Input
               type="number"
-              placeholder="Enter $$$" 
-              value={rateVal} 
-              onChange={(e) => setRateVal(Number(e.target.value))}
+              placeholder="Enter min $$$"
+              value={localMinRate}
+              onChange={(e) => setLocalMinRate(Number(e.target.value))}
             />
 
           </div>
+
+          <div className="filter-action">
+            <h5>Flat Rate Max</h5>
+            <Input
+              type="number"
+              placeholder="Enter max $$$"
+              value={localMaxRate}
+              onChange={(e) => setLocalMaxRate(Number(e.target.value))}
+            />
+          </div>
+
           {/* slider doesn't work yet, use input temporarily */}
           {/* <Slider defaultValue={[10]} max={40} step={1} /> */}
-        </div>
+        
 
         {/* <div className="filter-action">
           <h5>Group Size</h5>
@@ -172,7 +214,7 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({ rate }) => {
 
         <div className="filter-action">
           <h5>Role</h5>
-          <Select className="dropdown">
+          <Select>
             <SelectTrigger>
               <SelectValue placeholder="Choose role" />
             </SelectTrigger>
@@ -195,9 +237,13 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({ rate }) => {
           />
         </div> */}
 
+      </div>
       </CardContent>
+
+
       <CardFooter>
-        <Button className="apply-button">Apply <GrFilter /> </Button>
+        <Button className="apply-button" onClick={handleApplyFilters}> 
+          Apply <GrFilter /> </Button>
       </CardFooter>
     </Card>
   );

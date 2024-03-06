@@ -14,48 +14,33 @@ import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FilterSidebarArtist } from "../components/Filterbar";
 import GigCard from "@/components/GigCards";
 import { fetchArtists } from "../api/artists.api";
+import { useNavigate } from 'react-router-dom';
 
-// const artists = [
-//     {
-//         profile_image: "https://web.stanford.edu/group/calypso/cgi-bin/images/feelin_it.jpg",
-//         name: "Cardinal Calypso",
-//         bio: "Cardinal calypso is Stanford University's steelpan ensemble. Founded in 2005, it may be seen anywhere around the greater Stanford campus, causing wanton happiness and general excitement.",
-//         user_role_tags: ["Singer", "Pianist"],
-//         user_genre_tags: ["Steelpan", "Jazz"],
-// 		buttonText: "View Profile",
-//     },
-//     {
-//         profile_image: "https://history.stanford.edu/sites/history/files/styles/custm_medium_scale_360px_upscaling_allowed_/public/media/image/news/hume_humanities.jpg?itok=5v0SGA_H",
-//         name: "Ravi Veriah Jacques",
-//         bio: "Beyond the academic world, Ravi is a talented violinist; he studies with Robin Sharp in the Department of Music and received a Friends of Music scholarship to support those lessons. In 2017, he also won a Stanford Humanities and Sciences Undergraduate Prize in Music.",
-//         user_role_tags: ["Singer", "Pianist"],
-//         user_genre_tags: ["Violin", "Classical"],
-// 		buttonText: "View Profile",
-//     },
-//     {
-//         profile_image: "https://stanforddaily.com/wp-content/uploads/2015/03/AL.030615.SSO_.jpg?w=800",
-//         name: "Jennie Yang",
-//         bio: "Jennie has immersed herself in a variety of academic and artistic pursuits, often operating in the intersections between those interests. She is a longtime violist in the Stanford Symphony Orchestra, as well as a dancer in the Opening Committee of the 2020 Viennese Ball.",
-//         user_role_tags: ["Singer", "Pianist"],
-//         user_genre_tags: ["Violin", "Classical"],
-// 		buttonText: "View Profile",
-//     },
-// ];
+
 
 function Artists() {
+	const navigate = useNavigate();
+	const viewProfile = (artistId: string) => { 
+		navigate(`/artists/artist_id=${artistId}`);
+	};
+
+	
 	const [searchName, setSearchName] = useState("");
 	const [roleTags, setRoleTags] = useState<string[]>([]);
+	const [minFlatRate, setMinFlatRate] = useState<number>(0);
+  	const [maxFlatRate, setMaxFlatRate] = useState<number>(10000);
+
 
 	const { data, error, isLoading, refetch } = useQuery({
-		queryKey: ["artists"],
+		queryKey: ["artists", searchName, minFlatRate, maxFlatRate],
 		queryFn: () =>
-			fetchArtists({ name: searchName, user_role_tags: roleTags }),
+			fetchArtists({ name: searchName, user_role_tags: roleTags, min_flat_rate: minFlatRate, max_flat_rate: maxFlatRate}),
 		enabled: false,
 	});
 
 	useEffect(() => {
 		refetch();
-	}, []);
+	},  [searchName, roleTags, minFlatRate, maxFlatRate]);
 
 	const handleSubmit = () => {
 		console.log("refetch");
@@ -104,14 +89,21 @@ function Artists() {
 								)}
 								buttonText="View Profile"
 								onButtonClick={() =>
-									console.log("Artist Clicked", artist.name)
-								}
+									viewProfile(artist.id)}
 							/>
 						))}
 					</div>
 				</div>
 			</div>
-			<FilterSidebarArtist rate={5} />
+			<FilterSidebarArtist
+				minRate={minFlatRate}
+				maxRate={maxFlatRate}
+				onApplyFilters={(minRate, maxRate) => {
+					setMinFlatRate(minRate);
+					setMaxFlatRate(maxRate);
+					refetch();
+				}}
+			/>
 		</div>
 	);
 }

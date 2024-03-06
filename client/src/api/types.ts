@@ -36,3 +36,26 @@ export type Artist = {
     portfolio_images?: UserContent[]; // Assuming these might exist based on the User type
 };
 
+
+export type GigSearchParams = {
+    name?: string;
+    gig_role_tags?: string[];
+    gig_genre_tags?: string[];
+    event_start?: string;
+    event_end?: string;
+    min_budget?: number; // Added line
+    max_budget?: number; // Added line
+};
+
+export type Gig = {
+    id: string;
+    name: string;
+    bio: string;
+    event_start: string;
+    event_end: string;
+    gig_role_tags: string[];
+    gig_genre_tags: string[];
+    estimate_flat_rate: number;
+    imageUrl?: string;
+};
+
