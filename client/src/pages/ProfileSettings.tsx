@@ -101,13 +101,18 @@ export function ProfileSettings() {
 			mutateProfileDetails(currentUser, bodyFormData),
 	});
 
-	function onSubmit(data: z.infer<typeof FormSchema>) {
+	function onSubmit(formData: z.infer<typeof FormSchema>) {
 		let bodyFormData = new FormData();
-		bodyFormData.append("bio", data.bio);
-		bodyFormData.append("user_role_tags", JSON.stringify(data.user_role_tags));
-		bodyFormData.append("user_genre_tags", JSON.stringify(data.user_genre_tags));
-		bodyFormData.append("estimate_flat_rate", JSON.stringify(data.estimate_flat_rate));
-		bodyFormData.append("is_artist", String(data.is_artist));
+
+		bodyFormData.append("bio", formData.bio ? formData.bio : "");
+		if (formData.user_role_tags)
+			bodyFormData.append("user_role_tags", JSON.stringify(formData.user_role_tags));
+		if (formData.user_genre_tags)
+			bodyFormData.append("user_genre_tags", JSON.stringify(formData.user_genre_tags));
+		// if (formData.estimate_flat_rate)
+		bodyFormData.append("estimate_flat_rate", formData.estimate_flat_rate ? JSON.stringify(formData.estimate_flat_rate) : "0");
+		if (typeof formData.is_artist === 'boolean')
+			bodyFormData.append("is_artist", String(formData.is_artist));
 
 		mutation.mutate(bodyFormData), {
 			onSuccess: navigate("/profile", { state: {"refresh": true} })
