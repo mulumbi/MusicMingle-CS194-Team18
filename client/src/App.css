@@ -761,3 +761,47 @@ button, .dropdown select {
   background-color: darkcyan;
   color: black;
 }
+
+.page-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Adjust this as needed; could be 100vh for full viewport height */
+}
+
+.Title, .Selection-tabs {
+  height: 5%;
+  display: flex;
+  align-items: center; /* This vertically centers the content */
+  justify-content: center; /* This horizontally centers the content */
+}
+
+.my-gigs-cards {
+  height: 82.5%;
+  width: 95%;
+  overflow-y: auto; /* Makes the content scrollable when it overflows vertically */
+}
+
+/* Additional styling for active state and buttons for better UX */
+.selection-buttons {
+  cursor: pointer;
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  background-color: #f0f0f0; /* Light grey background */
+}
+
+.selection-buttons.active {
+  background-color: #d1d1d1; /* Slightly darker background for active state */
+}
+
+/* Ensure the parent container of .page-body has a defined height */
+/* This could be the <div className="App"> or directly on the body */
+.App, body, html {
+  height: 100%;
+}
+
+/* Reset margin and padding for the body to remove default browser spacing */
+body {
+  margin: 0;
+  padding: 0;
+}
