@@ -17,14 +17,21 @@ function Profile() {
 	const location = useLocation();
 
 	// Fetch user data
-	const { data, error, isLoading } = useQuery({
+	const { data, error, isLoading, refetch } = useQuery({
 		queryKey: ["profile_get"],
 		queryFn: () => fetchProfileDetails(currentUser),
+		enabled: false,
 	});
 
+	// Fetch on first page load
+	useEffect(() => {
+		refetch();
+	}, []);
+
+	// Fetch after profile edits
 	useEffect(() => {
 		if (location.state?.refresh) {
-			// navigate(0);
+			refetch();
 		}
 	}, [location]);
 
