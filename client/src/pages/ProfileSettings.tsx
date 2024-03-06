@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -80,25 +80,43 @@ export function ProfileSettings() {
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
 
-	const { data } = useQuery({
-		queryKey: ["profile_get"],
+	const { data, isLoading, refetch } = useQuery({
+		queryKey: ["profile_get_to_settings"],
 		queryFn: () => fetchProfileDetails(currentUser),
+		enabled: false,
 	});
 
-	const form = useForm<z.infer<typeof FormSchema>>({
+	useEffect(() => {
+		refetch();
+	}, []);
+
+	const { control, setValue, reset, handleSubmit, ...form } = useForm<
+		z.infer<typeof FormSchema>
+	>({
 		resolver: zodResolver(FormSchema),
-		defaultValues: {
-			bio: data?.bio ? data.bio : "",
-			user_role_tags: data?.user_role_tags ? data.user_role_tags : [],
-			user_genre_tags: data?.user_genre_tags ? data.user_genre_tags : [],
-			estimate_flat_rate: data?.estimate_flat_rate ? data.estimate_flat_rate : undefined,
-			is_artist: data?.is_artist,
-		},
+		defaultValues: useMemo(() => {
+			return {
+				bio: data?.bio ? data.bio : "",
+				user_role_tags: data?.user_role_tags ? data.user_role_tags : [],
+				user_genre_tags: data?.user_genre_tags
+					? data.user_genre_tags
+					: [],
+				estimate_flat_rate: data?.estimate_flat_rate
+					? data.estimate_flat_rate
+					: undefined,
+				is_artist: data?.is_artist,
+			};
+		}, [data]),
 	});
 
-	const mutation = useMutation({
+	useEffect(() => {
+		reset(data);
+	}, [data]);
+
+	const { mutate, error } = useMutation({
 		mutationFn: (bodyFormData: any) =>
 			mutateProfileDetails(currentUser, bodyFormData),
+		onSuccess: () => navigate("/profile", { state: { refresh: true } }),
 	});
 
 	function onSubmit(formData: z.infer<typeof FormSchema>) {
@@ -106,19 +124,30 @@ export function ProfileSettings() {
 
 		bodyFormData.append("bio", formData.bio ? formData.bio : "");
 		if (formData.user_role_tags)
-			bodyFormData.append("user_role_tags", JSON.stringify(formData.user_role_tags));
+			bodyFormData.append(
+				"user_role_tags",
+				JSON.stringify(formData.user_role_tags)
+			);
 		if (formData.user_genre_tags)
-			bodyFormData.append("user_genre_tags", JSON.stringify(formData.user_genre_tags));
+			bodyFormData.append(
+				"user_genre_tags",
+				JSON.stringify(formData.user_genre_tags)
+			);
 		// if (formData.estimate_flat_rate)
-		bodyFormData.append("estimate_flat_rate", formData.estimate_flat_rate ? JSON.stringify(formData.estimate_flat_rate) : "0");
-		if (typeof formData.is_artist === 'boolean')
+		bodyFormData.append(
+			"estimate_flat_rate",
+			formData.estimate_flat_rate
+				? JSON.stringify(formData.estimate_flat_rate)
+				: "0"
+		);
+		if (typeof formData.is_artist === "boolean")
 			bodyFormData.append("is_artist", String(formData.is_artist));
 
-		mutation.mutate(bodyFormData), {
-			onSuccess: navigate("/profile", { state: {"refresh": true} })
-		};
+		mutate(bodyFormData);
 	}
 
+	if (isLoading) return <div>Loading...</div>;
+	console.log(data);
 	return (
 		<div className="profile-settings-page">
 			<div className="form-container">
@@ -130,9 +159,9 @@ export function ProfileSettings() {
 				</Button>
 				<h1>Edit profile</h1>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form onSubmit={handleSubmit(onSubmit)}>
 						<FormField
-							control={form.control}
+							control={control}
 							name="bio"
 							render={({ field }) => (
 								<FormItem>
@@ -151,7 +180,7 @@ export function ProfileSettings() {
 							)}
 						/>
 						<FormField
-							control={form.control}
+							control={control}
 							name="user_role_tags"
 							render={({ field }) => (
 								<FormItem>
@@ -202,7 +231,7 @@ export function ProfileSettings() {
 																					role.value,
 																				]
 																			);
-																		form.setValue(
+																		setValue(
 																			"user_role_tags",
 																			new_tags
 																		);
@@ -215,7 +244,7 @@ export function ProfileSettings() {
 																					tag !=
 																					role.value
 																			);
-																		form.setValue(
+																		setValue(
 																			"user_role_tags",
 																			new_tags
 																		);
@@ -244,7 +273,7 @@ export function ProfileSettings() {
 							)}
 						/>
 						<FormField
-							control={form.control}
+							control={control}
 							name="user_genre_tags"
 							render={({ field }) => (
 								<FormItem>
@@ -297,7 +326,7 @@ export function ProfileSettings() {
 																					genre.value,
 																				]
 																			);
-																		form.setValue(
+																		setValue(
 																			"user_genre_tags",
 																			new_tags
 																		);
@@ -310,7 +339,7 @@ export function ProfileSettings() {
 																					tag !=
 																					genre.value
 																			);
-																		form.setValue(
+																		setValue(
 																			"user_genre_tags",
 																			new_tags
 																		);
@@ -339,7 +368,7 @@ export function ProfileSettings() {
 							)}
 						/>
 						<FormField
-							control={form.control}
+							control={control}
 							name="estimate_flat_rate"
 							render={({ field }) => (
 								<FormItem>
@@ -359,32 +388,38 @@ export function ProfileSettings() {
 							)}
 						/>
 						<FormField
-							control={form.control}
+							control={control}
 							name="is_artist"
 							render={({ field }) => (
-							<FormItem>
-								<div className="settings-switch-container">
-									<div>
-										<FormLabel className="settings-label">Artist Profile</FormLabel>
-										<FormDescription className="settings-description">
-											Publicly list and display your profile on the Artists page.
-										</FormDescription>
+								<FormItem>
+									<div className="settings-switch-container">
+										<div>
+											<FormLabel className="settings-label">
+												Artist Profile
+											</FormLabel>
+											<FormDescription className="settings-description">
+												Publicly list and display your
+												profile on the Artists page.
+											</FormDescription>
+										</div>
+										<FormControl>
+											<Switch
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
 									</div>
-									<FormControl>
-										<Switch
-											checked={field.value}
-											onCheckedChange={field.onChange}
-										/>
-									</FormControl>
-								</div>
-								
-							</FormItem>
+								</FormItem>
 							)}
 						/>
 						<div className="settings-actions">
 							<Button
 								className="cancel-button"
-								onClick={() => navigate("/profile")}
+								onClick={() =>
+									navigate("/profile", {
+										state: { refresh: true },
+									})
+								}
 							>
 								Cancel
 							</Button>
