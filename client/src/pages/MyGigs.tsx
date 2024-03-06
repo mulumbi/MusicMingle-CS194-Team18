@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { fetchGigsData } from "../api/mygigs.api";
@@ -6,34 +6,11 @@ import GigCard from "@/components/GigCards";
 import { useQuery } from "@tanstack/react-query";
 
 const MyGigs = () => {
-	// const [gigData, setGigData] = useState({
-	// 	my_gigs: [],
-	// 	my_applications: [],
-	// });
 	const [activeTab, setActiveTab] = useState("APPLIED");
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
 
-	// useEffect(() => {
-	//   const fetchData = async () => {
-	//     if (currentUser) {
-	//       // Fetch profile details first
-	//       const userProfile = await fetchProfileDetails(currentUser);
-	//       if (userProfile) {
-	//         const gigsData = await fetchGigsData(currentUser);
-	//         if (gigsData) {
-	//           setGigData(gigsData);
-	//         }
-	//       } else {
-	//         console.error("Failed to fetch user profile.");
-
-	//       }
-	//     }
-	//   };
-	//   fetchData();
-	// }, [currentUser, navigate]);
-
-	const { data, error, isLoading } = useQuery({
+	const { data, isLoading } = useQuery({
 		queryKey: ["my_gigs_get"],
 		queryFn: () => fetchGigsData(currentUser),
 	});
@@ -41,41 +18,42 @@ const MyGigs = () => {
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
-	console.log(isLoading, data);
+
 	return (
-		<div>
-			<div>
+    <div className="App">
+      <div className="page-body">
+        <div className="Title">View My Gigs</div>
+        <div className="Selection-tabs">
 				<button
-					className={activeTab === "APPLIED" ? "active" : ""}
+					className={activeTab === "APPLIED" ? "selection-buttons active" : "selection-buttons"}
 					onClick={() => setActiveTab("APPLIED")}
 				>
 					APPLIED GIGS
 				</button>
 				<button
-					className={activeTab === "POSTED" ? "active" : ""}
+					className={activeTab === "POSTED" ? "selection-buttons active" : "selection-buttons"}
 					onClick={() => setActiveTab("POSTED")}
 				>
 					POSTED GIGS
 				</button>
 			</div>
 			<div className="my-gigs-cards">
-				{(activeTab === "APPLIED"
-					? data?.my_applications
-					: data?.my_gigs
-				).map((gig, index) => (
+				{(activeTab === "APPLIED" ? data?.my_applications : data?.my_gigs).map((gig, index) => (
 					<GigCard
 						key={index}
-						id={gig.id}
-						estimateFlatRate={gig.estimate_flat_rate}
-						name={gig.name}
+						imageUrl={gig.imageUrl} 
+						title={gig.name}
 						bio={gig.bio}
 						eventStart={gig.event_start}
 						eventEnd={gig.event_end}
-						gigRoleTags={gig.gig_role_tags}
+						tags={gig.gig_role_tags}
+						buttonText={activeTab === "APPLIED" ? "Withdraw Application" : "View Applicants"}
+						onButtonClick={() => {/* handle button click */}}
 					/>
 				))}
 			</div>
 		</div>
+    </div>
 	);
 };
 
