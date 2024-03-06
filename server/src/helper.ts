@@ -415,7 +415,13 @@ const searchArtists = async (req, res) => {
 		organization_size_end,
 		limit,
 		offset,
+		artist_id,
 	} = req.query;
+	if (artist_id) {
+		return await models.User.findOne({
+			where: { is_artist: true, id: artist_id },
+		});
+	}
 	const query: any = [{ is_artist: true }];
 	if (organization_size_start) {
 		query.push({
@@ -486,7 +492,11 @@ const searchGigs = async (req, res) => {
 		flat_rate_end,
 		limit,
 		offset,
+		gig_id,
 	} = req.query;
+	if (gig_id) {
+		return await models.Gig.findByPk(gig_id);
+	}
 	const query = [];
 	if (event_start) {
 		query.push({ event_start: { [Op.gt]: event_start } });
