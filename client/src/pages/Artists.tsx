@@ -15,8 +15,7 @@ import { FilterSidebarArtist } from "../components/Filterbar";
 import GigCard from "@/components/GigCards";
 import { fetchArtists } from "../api/artists.api";
 import { useNavigate } from 'react-router-dom';
-import { min } from "date-fns";
-import { Artist } from "../api/types";
+
 
 
 function Artists() {
@@ -25,40 +24,30 @@ function Artists() {
 		navigate(`/artists/artist_id=${artistId}`);
 	};
 
-	
 	const [searchName, setSearchName] = useState("");
-	const [roleTags, setRoleTags] = useState<string[]>([]);
-	const [minFlatRate, setMinFlatRate] = useState<number | null>(null);
-	const [maxFlatRate, setMaxFlatRate] = useState<number | null>(null);
+	const [minFlatRate, setMinFlatRate] = useState<number>(0);
+	const [maxFlatRate, setMaxFlatRate] = useState<number>(10000);
 
 
 	const { data, error, isLoading, refetch } = useQuery({
-		queryKey: ["artists", searchName, minFlatRate, maxFlatRate],
+		queryKey: ["artists", {name: searchName,  flat_rate_start: minFlatRate, flat_rate_end: maxFlatRate},],
 		queryFn: () =>
-			fetchArtists({ name: searchName, user_role_tags: roleTags, min_flat_rate: minFlatRate, max_flat_rate: maxFlatRate}),
+			fetchArtists({ 
+				name: searchName, 
+				flat_rate_start: minFlatRate, 
+				flat_rate_end: maxFlatRate}),
 		enabled: false,
 	});
 
-	// useEffect(() => {
-	// 	refetch();
-	// },  [searchName, roleTags, minFlatRate, maxFlatRate]);
 
 	useEffect(() => {
 		refetch();
-		console.log("Here's the new data after filter: ", data);	
-	}, [searchName, roleTags, minFlatRate, maxFlatRate]); 
+	}, [searchName, minFlatRate, maxFlatRate]); 
 
 
 	const handleSubmit = () => {
-		console.log("refetch");
 		refetch();
 	};
-
-	const handleApplyFilters = (minRate: number | null, maxRate: number | null) => {
-		setMinFlatRate(minRate);
-		setMaxFlatRate(maxRate);
-		refetch();
-	}
 
 	return (
 		<div
@@ -108,7 +97,12 @@ function Artists() {
 			<FilterSidebarArtist
 				minRate={minFlatRate}
 				maxRate={maxFlatRate}
-				onApplyFilters={handleApplyFilters}
+				onApplyFilters={(newMinFlatRate, newMaxFlatRate) => {
+					setMinFlatRate(newMinFlatRate);
+					setMaxFlatRate(newMaxFlatRate);
+					refetch();
+					console.log("data after filters", data);
+				}}
 
 			/>
 		</div>
