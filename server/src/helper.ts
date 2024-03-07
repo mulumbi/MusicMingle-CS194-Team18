@@ -530,10 +530,14 @@ const searchGigs = async (req, res) => {
 		query.push({ event_end: { [Op.lt]: event_end } });
 	}
 	if (flat_rate_start) {
-		query.push({ event_end: { [Op.gt]: flat_rate_start } });
+		query.push({
+			estimate_flat_rate: { [Op.gt]: parseInt(flat_rate_start) },
+		});
 	}
 	if (flat_rate_end) {
-		query.push({ event_end: { [Op.lt]: flat_rate_end } });
+		query.push({
+			estimate_flat_rate: { [Op.lt]: parseInt(flat_rate_end) },
+		});
 	}
 	if (name) {
 		query.push({
@@ -560,7 +564,7 @@ const searchGigs = async (req, res) => {
 			),
 		});
 	}
-
+	console.log(query, "Query");
 	const gigs = await models.Gig.findAll({
 		where: {
 			[Op.and]: query,
@@ -569,13 +573,24 @@ const searchGigs = async (req, res) => {
 		limit: limit ? limit : 10,
 		offset: offset ? offset : 0,
 	});
-	const formattedGigs = gigs.map((gig) => {
-		const { UserId, ...data } = gig.dataValues;
-		return {
-			userId: UserId,
-			...data,
-		};
-	});
+	const formattedGigs = await Promise.all(
+		gigs.map(async (gig) => {
+			const content = await gig.getGigImages();
+			const { ...gigData } = gig.dataValues;
+			const values = {
+				...gigData,
+				gigImages: content
+					.filter((image) => image.type === "gigImage")
+					.map((image) => image.dataValues),
+				gigProfileImage: content.find(
+					(image) => image.type === "gigProfileImage"
+				),
+			};
+			return values;
+		})
+	);
+
+	console.log(formattedGigs, "Gigs");
 
 	return formattedGigs;
 };
