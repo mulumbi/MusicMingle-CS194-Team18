@@ -125,6 +125,11 @@ const uploadProfileImage = async (req, res, next) => {
 
 			const ref = `${name}-profile.webp`;
 			const file = profileBucket.file(ref);
+			const new_image = await user.createUserContent({
+				type: "profileImage",
+				file_name: ref,
+				public_url: file.publicUrl(),
+			});
 			sharp(profile_image[0].path)
 				.webp({ quality: 70 })
 				.toBuffer()
@@ -186,7 +191,6 @@ const uploadPortfolioImages = async (req, res, next) => {
 					type: "portfolioImage",
 					file_name: ref,
 					public_url: file.publicUrl(),
-					// UserId: uid,
 				});
 				// Optimize image, upload to google cloud storage, make image public
 				sharp(path)
@@ -248,7 +252,7 @@ const uploadVideos = async (req, res, next) => {
 				const file = videoBucket.file(ref.slice(4));
 
 				const user_content = await user.createUserContent({
-					type: "portfolioVideos",
+					type: "portfolioVideo",
 					file_name: fileName,
 					public_url: file.publicUrl(),
 				});
@@ -478,7 +482,27 @@ const searchArtists = async (req, res) => {
 		offset: offset ? offset : 0,
 	});
 
-	return users;
+	const userArray = await Promise.all(
+		users.map(async (user) => {
+			const [profileImage, portfolioImages, portfolioVideos] =
+				await Promise.all([
+					user.getUserContents({ where: { type: "profileImage" } }),
+					user.getUserContents({ where: { type: "portfolioImage" } }),
+					user.getUserContents({ where: { type: "portfolioVideo" } }),
+				]);
+			return {
+				...user.dataValues,
+				profileImage: profileImage[0].dataValues,
+				portfolioImages: portfolioImages.map(
+					(image) => image.dataValues
+				),
+				portfolioVideos: portfolioVideos.map(
+					(image) => image.dataValues
+				),
+			};
+		})
+	);
+	return userArray;
 };
 
 const searchGigs = async (req, res) => {

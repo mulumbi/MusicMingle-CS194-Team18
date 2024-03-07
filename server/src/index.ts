@@ -167,6 +167,7 @@ async function seedDummyGigs() {
 // 	.catch((err) => console.log(err));
 
 sequelize
+	//.sync({ force: true })
 	.sync()
 	.then(async () => {
 		console.log("Model Sync Complete");
@@ -582,7 +583,7 @@ app.post(
 			estimate_flat_rate: estimate_flat_rate
 				? parseInt(estimate_flat_rate)
 				: undefined,
-      is_open: true,
+			is_open: true,
 		});
 		await new_gig.save();
 		if (req.gig_profile_image) {
