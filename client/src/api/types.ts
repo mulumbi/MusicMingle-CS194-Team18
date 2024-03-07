@@ -36,6 +36,15 @@ export type Artist = {
 	portfolio_images?: UserContent[]; // Assuming these might exist based on the User type
 };
 
+export type ArtistSearchParams = {
+	name?: string;
+	user_role_tags?: string[];
+	user_genre_tags?: string[];
+	flat_rate_start?: number; 
+	flat_rate_end?: number; 
+};
+
+
 export type GigSearchParams = {
 	name?: string;
 	gig_role_tags?: string[];
