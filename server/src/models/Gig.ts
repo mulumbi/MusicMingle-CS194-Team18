@@ -30,6 +30,10 @@ const getGigModel = (sequelize, { DataTypes }) => {
 			type: DataTypes.ARRAY(DataTypes.STRING),
 			defaultValue: [],
 		},
+		is_open: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: true,
+		},
 	});
 
 	Gig.associate = (models) => {

@@ -497,7 +497,7 @@ const searchGigs = async (req, res) => {
 	if (gig_id) {
 		return await models.Gig.findByPk(gig_id);
 	}
-	const query = [];
+	const query: any = [{ is_open: true }];
 	if (event_start) {
 		query.push({ event_start: { [Op.gt]: event_start } });
 	}
