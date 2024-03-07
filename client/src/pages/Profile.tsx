@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 import { Button } from "@/components/ui/button";
-import EditProfile from "@/components/EditProfile.tsx";
 import PortfolioItem from "@/components/PortfolioItem.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultProfile from "../assets/profile/DefaultProfile.png";
@@ -51,8 +50,10 @@ function Profile() {
 					<div className="profile-left">
 						<img
 							className="profile-photo"
-							src={defaultProfile}
+							src={data?.profileImage ? data?.profileImage[0].public_url : defaultProfile}
 							alt="Profile Photo"
+							onMouseOver={() => {console.log("I am hovered!")}}
+							onClick={() => {console.log("I have been clicked!")}}
 						/>
 					</div>
 					<div className="profile-right">
@@ -67,7 +68,6 @@ function Profile() {
 							>
 								Edit Profile
 							</Button>
-							{/* <EditProfile /> */}
 						</div>
 					</div>
 				</div>

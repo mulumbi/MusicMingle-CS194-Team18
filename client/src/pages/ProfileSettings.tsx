@@ -29,15 +29,15 @@ import { AuthContext } from "../context/AuthContext";
 import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 
 const FormSchema = z.object({
-	// profile_image: z.string(),
+	profile_image: z.instanceof(File).optional(),
 	bio: z.string().optional(),
 	user_role_tags: z.array(z.string()).optional(),
 	user_genre_tags: z.array(z.string()).optional(),
 	estimate_flat_rate: z.coerce.number().optional(),
 	is_artist: z.boolean().optional(),
-	// portfolio_images: z.array(z.string()),
+	portfolio_images: z.array(z.instanceof(File)).optional(),
 	// deleted_portfolio_images: z.array(z.string()),
-	// videos: z.array(z.object({url: z.string(), title: z.string()})),
+	videos: z.array(z.instanceof(File)).optional(),
 	// deleted_videos: z.array(z.object({url: z.string(), title: z.string()})),
 });
 
@@ -122,6 +122,12 @@ export function ProfileSettings() {
 	function onSubmit(formData: z.infer<typeof FormSchema>) {
 		let bodyFormData = new FormData();
 
+		if (formData.profile_image)
+			console.log("formData.profile_image", formData.profile_image);
+			bodyFormData.append(
+				"profile_image",
+				formData.profile_image
+			);
 		bodyFormData.append("bio", formData.bio ? formData.bio : "");
 		if (formData.user_role_tags)
 			bodyFormData.append(
@@ -133,13 +139,8 @@ export function ProfileSettings() {
 				"user_genre_tags",
 				JSON.stringify(formData.user_genre_tags)
 			);
-		// if (formData.estimate_flat_rate)
-		bodyFormData.append(
-			"estimate_flat_rate",
-			formData.estimate_flat_rate
-				? JSON.stringify(formData.estimate_flat_rate)
-				: "0"
-		);
+		if (typeof formData.estimate_flat_rate === "number")
+			bodyFormData.append("estimate_flat_rate", JSON.stringify(formData.estimate_flat_rate));
 		if (typeof formData.is_artist === "boolean")
 			bodyFormData.append("is_artist", String(formData.is_artist));
 
@@ -160,6 +161,35 @@ export function ProfileSettings() {
 				<h1>Edit profile</h1>
 				<Form {...form}>
 					<form onSubmit={handleSubmit(onSubmit)}>
+						<FormField
+							control={control}
+							name="profile_image"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="settings-label">
+										Profile Photo
+									</FormLabel>
+									<div className="settings-image">
+										<FormControl>
+											<Input
+												type="file"
+												accept="image/*"
+												onChange={(e) => {
+													if (e?.target?.files?.length) {
+														setValue(
+															"profile_image",
+															e.target.files[0]
+														);
+													}
+												}}
+												
+											/>
+										</FormControl>
+									</div>
+									<FormMessage className="settings-message" />
+								</FormItem>
+							)}
+						/>
 						<FormField
 							control={control}
 							name="bio"
@@ -200,7 +230,7 @@ export function ProfileSettings() {
 														field.value.length
 															? field.value
 																	.length +
-															  " selected"
+															" selected"
 															: "Select role"}
 														<ChevronsUpDown className="chevrons-icon" />
 													</Button>

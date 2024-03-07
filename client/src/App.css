@@ -303,6 +303,10 @@ button.profile-button:focus {
 	margin: 1rem 0 2rem 0;
 }
 
+.settings-image {	
+	margin: 0.25rem 0 1rem 0;
+}
+
 .settings-input {
 	width: 95%;
 	flex: 1;
@@ -401,8 +405,9 @@ button.submit-button:focus,
 }
 
 .popover-content {
-	flex: 1;
 	background-color: white;
+  max-height: 390px;
+  overflow-y: auto;
 	color: rgb(1, 1, 179);
 	border-color: rgb(70, 129, 247);
 	border-radius: 0.25rem;
