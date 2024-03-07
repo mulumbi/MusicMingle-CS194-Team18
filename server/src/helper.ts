@@ -468,19 +468,23 @@ const searchArtists = async (req, res) => {
 	const query: any = [{ is_artist: true }];
 	if (organization_size_start) {
 		query.push({
-			organization_group_size: { [Op.gt]: organization_size_start },
+			organization_group_size: { [Op.gte]: organization_size_start },
 		});
 	}
 	if (organization_size_end) {
 		query.push({
-			organization_group_size: { [Op.lt]: organization_size_end },
+			organization_group_size: { [Op.lte]: organization_size_end },
 		});
 	}
 	if (flat_rate_start) {
-		query.push({ estimate_flat_rate: { [Op.gt]: flat_rate_start } });
+		query.push({
+			estimate_flat_rate: { [Op.gte]: parseInt(flat_rate_start) },
+		});
 	}
 	if (flat_rate_end) {
-		query.push({ estimate_flat_rate: { [Op.lt]: flat_rate_end } });
+		query.push({
+			estimate_flat_rate: { [Op.lte]: parseInt(flat_rate_end) },
+		});
 	}
 	if (name) {
 		query.push({
@@ -498,7 +502,6 @@ const searchArtists = async (req, res) => {
 			],
 		});
 	}
-	console.log(user_role_tags, "User Role Tags");
 	const parsed_user_role_tags = tagParser(user_role_tags);
 	query.push({
 		user_role_tags: Sequelize.literal(
@@ -542,19 +545,19 @@ const searchGigs = async (req, res) => {
 	}
 	const query: any = [{ is_open: true }];
 	if (event_start) {
-		query.push({ event_start: { [Op.gt]: event_start } });
+		query.push({ event_start: { [Op.gte]: event_start } });
 	}
 	if (event_end) {
-		query.push({ event_end: { [Op.lt]: event_end } });
+		query.push({ event_end: { [Op.lte]: event_end } });
 	}
 	if (flat_rate_start) {
 		query.push({
-			estimate_flat_rate: { [Op.gt]: parseInt(flat_rate_start) },
+			estimate_flat_rate: { [Op.gte]: parseInt(flat_rate_start) },
 		});
 	}
 	if (flat_rate_end) {
 		query.push({
-			estimate_flat_rate: { [Op.lt]: parseInt(flat_rate_end) },
+			estimate_flat_rate: { [Op.lte]: parseInt(flat_rate_end) },
 		});
 	}
 	if (name) {
