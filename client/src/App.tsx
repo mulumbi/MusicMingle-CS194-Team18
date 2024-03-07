@@ -26,11 +26,19 @@ function App() {
 			/>
 			<Route
 				path="my_gigs"
-				element={<MyGigs />}
+				element={
+					<RequireAuth>
+						<MyGigs />
+					</RequireAuth>
+				}
 			/>
 			<Route
 				path="create_gig"
-				element={<CreateGig />}
+				element={
+					<RequireAuth>
+						<CreateGig />
+					</RequireAuth>
+				}
 			/>
 			<Route
 				path="profile"

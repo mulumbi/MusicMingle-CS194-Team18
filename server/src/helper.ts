@@ -125,6 +125,12 @@ const uploadProfileImage = async (req, res, next) => {
 
 			const ref = `${name}-profile.webp`;
 			const file = profileBucket.file(ref);
+			const new_image = await user.createUserContent({
+				type: "profileImage",
+				file_name: ref,
+				public_url: file.publicUrl(),
+			});
+			await new_image.save();
 			sharp(profile_image[0].path)
 				.webp({ quality: 70 })
 				.toBuffer()
@@ -186,7 +192,6 @@ const uploadPortfolioImages = async (req, res, next) => {
 					type: "portfolioImage",
 					file_name: ref,
 					public_url: file.publicUrl(),
-					// UserId: uid,
 				});
 				// Optimize image, upload to google cloud storage, make image public
 				sharp(path)
@@ -248,7 +253,7 @@ const uploadVideos = async (req, res, next) => {
 				const file = videoBucket.file(ref.slice(4));
 
 				const user_content = await user.createUserContent({
-					type: "portfolioVideos",
+					type: "portfolioVideo",
 					file_name: fileName,
 					public_url: file.publicUrl(),
 				});
@@ -478,7 +483,27 @@ const searchArtists = async (req, res) => {
 		offset: offset ? offset : 0,
 	});
 
-	return users;
+	const userArray = await Promise.all(
+		users.map(async (user) => {
+			const [profileImage, portfolioImages, portfolioVideos] =
+				await Promise.all([
+					user.getUserContents({ where: { type: "profileImage" } }),
+					user.getUserContents({ where: { type: "portfolioImage" } }),
+					user.getUserContents({ where: { type: "portfolioVideo" } }),
+				]);
+			return {
+				...user.dataValues,
+				profileImage: profileImage[0].dataValues,
+				portfolioImages: portfolioImages.map(
+					(image) => image.dataValues
+				),
+				portfolioVideos: portfolioVideos.map(
+					(image) => image.dataValues
+				),
+			};
+		})
+	);
+	return userArray;
 };
 
 const searchGigs = async (req, res) => {
@@ -497,7 +522,7 @@ const searchGigs = async (req, res) => {
 	if (gig_id) {
 		return await models.Gig.findByPk(gig_id);
 	}
-	const query = [];
+	const query: any = [{ is_open: true }];
 	if (event_start) {
 		query.push({ event_start: { [Op.gt]: event_start } });
 	}
@@ -505,10 +530,14 @@ const searchGigs = async (req, res) => {
 		query.push({ event_end: { [Op.lt]: event_end } });
 	}
 	if (flat_rate_start) {
-		query.push({ event_end: { [Op.gt]: flat_rate_start } });
+		query.push({
+			estimate_flat_rate: { [Op.gt]: parseInt(flat_rate_start) },
+		});
 	}
 	if (flat_rate_end) {
-		query.push({ event_end: { [Op.lt]: flat_rate_end } });
+		query.push({
+			estimate_flat_rate: { [Op.lt]: parseInt(flat_rate_end) },
+		});
 	}
 	if (name) {
 		query.push({
@@ -535,7 +564,7 @@ const searchGigs = async (req, res) => {
 			),
 		});
 	}
-
+	console.log(query, "Query");
 	const gigs = await models.Gig.findAll({
 		where: {
 			[Op.and]: query,
@@ -544,13 +573,24 @@ const searchGigs = async (req, res) => {
 		limit: limit ? limit : 10,
 		offset: offset ? offset : 0,
 	});
-	const formattedGigs = gigs.map((gig) => {
-		const { UserId, ...data } = gig.dataValues;
-		return {
-			userId: UserId,
-			...data,
-		};
-	});
+	const formattedGigs = await Promise.all(
+		gigs.map(async (gig) => {
+			const content = await gig.getGigImages();
+			const { ...gigData } = gig.dataValues;
+			const values = {
+				...gigData,
+				gigImages: content
+					.filter((image) => image.type === "gigImage")
+					.map((image) => image.dataValues),
+				gigProfileImage: content.find(
+					(image) => image.type === "gigProfileImage"
+				),
+			};
+			return values;
+		})
+	);
+
+	console.log(formattedGigs, "Gigs");
 
 	return formattedGigs;
 };

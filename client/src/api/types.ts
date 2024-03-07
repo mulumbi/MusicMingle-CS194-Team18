@@ -18,44 +18,45 @@ export type UserContent = {
 };
 
 export type Artist = {
-    id: string;
-    uuid: string;
-    name: string;
-    email: string;
-    bio: string;
-    user_genre_tags: string[];
-    user_role_tags: string[];
-    organization_name: string;
-    organization_group_size: number;
-    estimate_flat_rate: number;
-    is_artist: boolean;
-    createdAt: string;
-    updatedAt: string;
-    profile_image?: UserContent; // Optional if you want to include profile images for artists
-    portfolio_videos?: UserContent[]; // Assuming these might exist based on the User type
-    portfolio_images?: UserContent[]; // Assuming these might exist based on the User type
+	id: string;
+	uuid: string;
+	name: string;
+	email: string;
+	bio: string;
+	user_genre_tags: string[];
+	user_role_tags: string[];
+	organization_name: string;
+	organization_group_size: number;
+	estimate_flat_rate: number;
+	is_artist: boolean;
+	createdAt: string;
+	updatedAt: string;
+	profile_image?: UserContent; // Optional if you want to include profile images for artists
+	portfolio_videos?: UserContent[]; // Assuming these might exist based on the User type
+	portfolio_images?: UserContent[]; // Assuming these might exist based on the User type
 };
 
-
 export type GigSearchParams = {
-    name?: string;
-    gig_role_tags?: string[];
-    gig_genre_tags?: string[];
-    event_start?: string;
-    event_end?: string;
-    min_budget?: number; // Added line
-    max_budget?: number; // Added line
+	name?: string;
+	gig_role_tags?: string[];
+	gig_genre_tags?: string[];
+	event_start?: string;
+	event_end?: string;
+	min_budget?: number; // Added line
+	max_budget?: number; // Added line
 };
 
 export type Gig = {
-    id: string;
-    name: string;
-    bio: string;
-    event_start: string;
-    event_end: string;
-    gig_role_tags: string[];
-    gig_genre_tags: string[];
-    estimate_flat_rate: number;
-    imageUrl?: string;
+	id: string;
+	estimate_flat_rate: number;
+	name: string;
+	bio: string;
+	event_start: string;
+	event_end: string;
+	gig_role_tags: [string];
+	gig_genre_tags: [string];
+	createdAt: string;
+	updatedAt: string;
+	user: User;
+	gigImages: [UserContent];
 };
-
