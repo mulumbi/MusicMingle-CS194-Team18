@@ -284,6 +284,67 @@ button.profile-button:focus {
   display: none;
 }
 
+.dialog-overlay {
+  background-color: var(--black-a9);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialog-content {
+  background-color: white;
+  border-radius: 6px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 25%;
+  max-height: 50%;
+  padding: 2rem;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dialog-content:focus {
+  outline: none;
+}
+
+.dialog-title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 20px;
+  color: black;
+}
+
+.dialog-description {
+  margin: 10px 0 20px;
+  font-size: 16px;
+  color: darkslategrey;
+  line-height: 1.5;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.dialog-submit {
+	background-color: rgb(1, 1, 179);
+	color: white;
+	border: none;
+}
+
+.dialog-cancel {
+	background: transparent;
+  color: black;
+	border: none;
+}
+
+button.dialog-submit:focus,
+.dialog-cancel:focus {
+	outline: none;
+}
+
 .profile-settings-page {
 	display: flex;
 	flex-direction: column;
