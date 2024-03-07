@@ -34,7 +34,11 @@ function App() {
 			/>
 			<Route
 				path="create_gig"
-				element={<CreateGig />}
+				element={
+					<RequireAuth>
+						<CreateGig />
+					</RequireAuth>
+				}
 			/>
 			<Route
 				path="profile"
