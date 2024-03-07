@@ -36,8 +36,8 @@ const FormSchema = z.object({
 	estimate_flat_rate: z.coerce.number().optional(),
 	is_artist: z.boolean().optional(),
 	portfolio_media: z.instanceof(FileList).optional(),
-	portfolio_images: z.instanceof(FileList).optional(),
-	videos: z.instanceof(FileList).optional(),
+	// portfolio_images: z.instanceof(FileList).optional(),
+	// videos: z.instanceof(FileList).optional(),
 });
 
 const genres = [
@@ -141,35 +141,21 @@ export function ProfileSettings() {
 			);
 		if (typeof formData.is_artist === "boolean")
 			bodyFormData.append("is_artist", String(formData.is_artist));
-
-		// FILE UPLOAD FOR IMAGE ONLY
-		if (formData.portfolio_images && formData.portfolio_images.length > 0)
-			for (const file of Array.from(formData.portfolio_images)) {
-				bodyFormData.append("portfolio_images", file);
+		if (formData.portfolio_media && formData.portfolio_media.length > 0)
+			for (const file of Array.from(formData.portfolio_media)) {
+				if (file.type.match('image.*'))
+					bodyFormData.append("portfolio_images", file);
+				if (file.type.match('video.*'))
+					bodyFormData.append("videos", file);
 			}
-
-		// FILE UPLOAD FOR VIDEO ONLY
-		if (formData.videos && formData.videos.length > 0)
-			for (const file of Array.from(formData.videos)) {
-				bodyFormData.append("videos", file);
-			}
-
-		// COMBINED FILE UPLOAD FOR IMAGES + VIDEOS
-		// if (formData.portfolio_media && formData.portfolio_media.length > 0)
-		// 	for (const file of Array.from(formData.portfolio_media)) {
-				// if (file.type.match('image.*'))
-				// 	bodyFormData.append("portfolio_images", file);
-				// if (file.type.match('video.*'))
-				// 	bodyFormData.append("videos", file);
-				// console.log(file);
-				// bodyFormData.append("videos", file);
-			// }
 			
 		mutate(bodyFormData);
 	}
 
-	if (isLoading) return <div>Loading...</div>;
-	console.log(data);
+	if (isLoading) return (
+		<div>Loading...</div>
+	);
+	
 	return (
 		<div className="profile-settings-page">
 			<div className="form-container">
@@ -439,7 +425,7 @@ export function ProfileSettings() {
 								</FormItem>
 							)}
 						/>
-						{/* <FormField
+						<FormField
 							control={control}
 							name="portfolio_media"
 							render={({ field }) => (
@@ -469,8 +455,8 @@ export function ProfileSettings() {
 									<FormMessage className="settings-message" />
 								</FormItem>
 							)}
-						/> */}
-						<FormField
+						/>
+						{/* <FormField
 							control={control}
 							name="portfolio_images"
 							render={({ field }) => (
@@ -531,7 +517,7 @@ export function ProfileSettings() {
 									<FormMessage className="settings-message" />
 								</FormItem>
 							)}
-						/>
+						/> */}
 						<FormField
 							control={control}
 							name="is_artist"

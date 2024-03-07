@@ -14,6 +14,7 @@ function Profile() {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [hasDeletedMedia, setHasDeletedMedia] = useState(false);
 
 	// Fetch user data
 	const { data, error, isLoading, refetch } = useQuery({
@@ -26,13 +27,15 @@ function Profile() {
 	useEffect(() => {
 		refetch();
 	}, []);
-
 	// Fetch after profile edits
 	useEffect(() => {
 		if (location && location.state) {
 			refetch();
+		} else if (hasDeletedMedia) {
+			setHasDeletedMedia(false);
+			refetch();
 		}
-	}, [location?.state?.refresh]);
+	}, [location?.state?.refresh, hasDeletedMedia]);
 
 	console.log("loading", isLoading);
 	console.log("data", data);
@@ -154,12 +157,12 @@ function Profile() {
 						<div className="portfolio">
 							{data?.portfolioImages?.map((image, index) => (
 								<div key={index} className="portfolio-item">
-									<PortfolioItem image={image} />
+									<PortfolioItem image={image} setHasDeletedMedia={setHasDeletedMedia} />
 								</div>
 							))}
 							{data?.portfolioVideos?.map((video, index) => (
 								<div key={index} className="portfolio-item">
-									<PortfolioItem video={video} />
+									<PortfolioItem video={video} setHasDeletedMedia={setHasDeletedMedia} />
 								</div>
 							))}
 						</div>

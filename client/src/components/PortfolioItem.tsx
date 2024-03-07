@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext, Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,30 +16,55 @@ import {
 } from "@/components/ui/alert-dialog";
 import { RxCross2 } from "react-icons/rx";
 import { AuthContext } from "../context/AuthContext";
-import { mutateProfileDetails } from "../api/profile.api";
+import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 
 type PortfolioItemProps = {
   image?: { public_url: string, id: string };
   video?: { public_url: string, id: string };
+  setHasDeletedMedia: Dispatch<SetStateAction<boolean>>;
 };
 
 const PortfolioItem: React.FC<PortfolioItemProps> = (props) => {
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
 
+	const { data, isLoading, refetch } = useQuery({
+		queryKey: ["profile_get"],
+		queryFn: () => fetchProfileDetails(currentUser),
+		enabled: false,
+	});
+
+	useEffect(() => {
+		refetch();
+	}, []);
+
 	const { mutate } = useMutation({
 		mutationFn: (bodyFormData: any) =>
 			mutateProfileDetails(currentUser, bodyFormData),
-		onSuccess: () => navigate("/profile", { state: { refresh: true } }),
+		onSuccess: () => props.setHasDeletedMedia(true),
 	});
 
 	function handleDelete() {
-		console.log("delete!");
+		console.log(currentUser);
 		let bodyFormData = new FormData();
 		if (props.image)
 			bodyFormData.append("deleted_portfolio_images", JSON.stringify([props.image.id]));
 		if (props.video)
 			bodyFormData.append("deleted_videos", JSON.stringify([props.video.id]));
+
+		// Keep user role & genre tags the same
+		// TODO: Remove this once BE is updated 
+		if (data?.user_role_tags)
+			bodyFormData.append(
+				"user_role_tags",
+				JSON.stringify(data.user_role_tags)
+			);
+		if (data?.user_genre_tags)
+			bodyFormData.append(
+				"user_genre_tags",
+				JSON.stringify(data.user_genre_tags)
+			);
+
 		mutate(bodyFormData);
 	}
 
