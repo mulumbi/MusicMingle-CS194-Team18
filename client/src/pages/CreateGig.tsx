@@ -17,7 +17,8 @@ import { mutateCreateGig } from "@/api/create_gig.api";
 import { AuthContext } from "../context/AuthContext";
 import { useMutation } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
-import { addDays, format } from "date-fns";
+import { addDays, format, isAfter } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const genres = [
 	{ label: "Pop", value: "Pop" },
@@ -71,9 +72,13 @@ function CreateGig() {
 	);
 	const [profileImage, setGigProfileImages] = useState<File | null>(null);
 	const { currentUser } = useContext(AuthContext);
-	const mutation = useMutation({
+	const navigate = useNavigate();
+	const { mutate } = useMutation({
 		mutationFn: (bodyFormData: any) =>
 			mutateCreateGig(currentUser, bodyFormData),
+		onSuccess: (data) => {
+			navigate("/gig?gig_id=" + data.id);
+		},
 	});
 
 	const onSubmit = () => {
@@ -122,7 +127,7 @@ function CreateGig() {
 		endDate?.setMinutes(parseInt(endMinute));
 		endDate?.setSeconds(0);
 
-		if (startDate < endDate) {
+		if (isAfter(startDate, endDate)) {
 			console.log("Start date is before end date");
 			return;
 		}
@@ -154,7 +159,7 @@ function CreateGig() {
 		for (const pair of bodyFormData.entries()) {
 			console.log(pair[0] + ", " + pair[1]);
 		}
-		mutation.mutate(bodyFormData);
+		mutate(bodyFormData);
 	};
 
 	return (
