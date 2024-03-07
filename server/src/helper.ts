@@ -6,6 +6,7 @@ import fs from "fs";
 import models, { sequelize } from "./db";
 import { Op, Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
+import path from "path";
 
 const bucketStorage = new Storage({
 	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
@@ -18,6 +19,7 @@ const portfolioImageBucket = bucketStorage.bucket(
 const gigImageBucket = bucketStorage.bucket("music-mingle-gig-bucket");
 
 const parseFields = (req, res, next) => {
+	console.log(req.body, "Body");
 	const {
 		user_genre_tags,
 		user_role_tags,
@@ -107,23 +109,25 @@ const isLoggedIn = (req, res, next) => {
 
 // Optimizes profile image for upload, create profile image instance in db, upload image to google cloud storage
 const uploadProfileImage = async (req, res, next) => {
+	console.log(req.files, "Files");
 	if (!req.files || !req.files.profile_image) {
 		next();
 	} else {
 		const { profile_image } = req.files;
 		const { name, uid } = req.user;
-
+		console.log(profile_image, "Profile Image");
 		if (profile_image?.length === 1) {
 			// Delete old image from db
-			const user = await models.UserContent.findOne({
+			const user = await models.User.findOne({
 				where: { uuid: uid },
 			});
 			const old_image = await user.getUserContents({
 				where: { type: "profileImage" },
 			});
-			await old_image.destroy();
-
-			const ref = `${name}-profile.webp`;
+			if (old_image.length > 0) {
+				await old_image[0].destroy();
+			}
+			const ref = `${name}-${profile_image[0].filename}-profile.webp`;
 			const file = profileBucket.file(ref);
 			const new_image = await user.createUserContent({
 				type: "profileImage",
@@ -140,30 +144,30 @@ const uploadProfileImage = async (req, res, next) => {
 							fs.unlink(profile_image[0].path, (err) => {
 								console.log(err);
 							});
-							file.makePublic().catch((err) => {
-								console.log("Error verifying token:", err);
-								res.status(501).json({
-									error: `Profile make public error: ${err}`,
+							file.makePublic()
+								.then(() => next())
+								.catch((err) => {
+									console.log("Error verifying token:", err);
+									res.status(501).json({
+										error: `Profile make public error: ${err}`,
+									});
+									next();
 								});
-							});
 						})
 						.catch((err) => {
 							console.log("Save error:", err);
 							res.status(501).json({
 								error: `Save profile error: ${err}`,
 							});
+							next();
 						});
 				})
 				.catch((err) => {
 					res.status(501).json({
 						error: `Parse profile image error: ${err}`,
 					});
+					next();
 				});
-			req.profile_image = {
-				ref: ref,
-				url: file.publicUrl(),
-			};
-			next();
 		} else {
 			next();
 		}
@@ -192,6 +196,7 @@ const uploadPortfolioImages = async (req, res, next) => {
 					type: "portfolioImage",
 					file_name: ref,
 					public_url: file.publicUrl(),
+					// UserId: uid,
 				});
 				// Optimize image, upload to google cloud storage, make image public
 				sharp(path)
@@ -242,10 +247,9 @@ const uploadVideos = async (req, res, next) => {
 		const { uid } = req.user;
 
 		const user = await models.User.findOne({ where: { uuid: uid } });
-
+		console.log(videos, "videos");
 		if (videos?.length > 0) {
-			const videos_objs = [];
-			videos.forEach(async (video) => {
+			const videoUploadPromises = videos.map(async (video) => {
 				const { path, originalname } = video;
 				const name = req.user?.name || "Jason Mei";
 				const ref = `tmp/${name}-${originalname}.mp4`;
@@ -258,42 +262,76 @@ const uploadVideos = async (req, res, next) => {
 					public_url: file.publicUrl(),
 				});
 
-				ffmpeg()
-					.input(path)
-					.format("mp4")
-					.fps(30)
-					.addOptions(["-crf 28"])
-					.save(ref)
-					.on("error", function (err) {
-						console.log("An error occurred: " + err.message);
-					})
-					.on("end", function () {
-						console.log("unlink");
-						fs.unlink(path, (err) => {
-							if (err)
-								console.log("// Error when uploading", err);
-						});
-						fs.createReadStream(ref)
-							.pipe(file.createWriteStream())
-							.on("error", function (err) {
+				await new Promise((resolve, reject) => {
+					ffmpeg()
+						.input(path)
+						.format("mp4")
+						.fps(30)
+						.addOptions(["-crf 28"])
+						.save(ref)
+						.on("error", reject)
+						.on("end", () => {
+							fs.unlink(path, (err) => {
 								if (err)
-									console.log("// Error when uploading", err);
-							})
-							.on("finish", function () {
-								file.makePublic().catch((err) =>
-									console.log("Video file error public:", err)
-								);
-								fs.unlink(ref, (err) => {
-									if (err)
-										console.log("Video unlink err:", err);
-								});
+									console.log(
+										"// Error when deleting temp file",
+										err
+									);
 							});
-					});
-				videos_objs.push(user_content);
+
+							fs.createReadStream(ref)
+								.pipe(file.createWriteStream())
+								.on("error", reject)
+								.on("finish", async () => {
+									await file.makePublic();
+									fs.unlink(ref, (err) => {
+										if (err)
+											console.log(
+												"Video unlink err:",
+												err
+											);
+									});
+									resolve(true); // Resolve after file is public
+								});
+						});
+				});
+
+				return user_content;
 			});
-			await Promise.allSettled(videos_objs);
-			req.videos = videos_objs;
-			next();
+			Promise.all(videoUploadPromises)
+				.then(() => {
+					fs.readdir("tmp", (err, files) => {
+						if (err) {
+							// Handle errors, such as the folder not existing
+							console.error("Error reading folder:", err);
+						} else {
+							if (files.length > 0) {
+								files.forEach((file) => {
+									const filePath = path.join("tmp", file);
+									fs.unlink(filePath, (err) => {
+										if (err) {
+											console.error(
+												"Error deleting file:",
+												err
+											);
+										} else {
+											console.log(
+												"Deleted file:",
+												filePath
+											);
+										}
+									});
+								});
+							} else {
+								// Folder is already empty
+								console.log("Folder is empty.");
+							}
+						}
+					});
+				})
+				.finally(() => {
+					next();
+				});
 		} else {
 			next();
 		}
@@ -483,27 +521,7 @@ const searchArtists = async (req, res) => {
 		offset: offset ? offset : 0,
 	});
 
-	const userArray = await Promise.all(
-		users.map(async (user) => {
-			const [profileImage, portfolioImages, portfolioVideos] =
-				await Promise.all([
-					user.getUserContents({ where: { type: "profileImage" } }),
-					user.getUserContents({ where: { type: "portfolioImage" } }),
-					user.getUserContents({ where: { type: "portfolioVideo" } }),
-				]);
-			return {
-				...user.dataValues,
-				profileImage: profileImage[0].dataValues,
-				portfolioImages: portfolioImages.map(
-					(image) => image.dataValues
-				),
-				portfolioVideos: portfolioVideos.map(
-					(image) => image.dataValues
-				),
-			};
-		})
-	);
-	return userArray;
+	return users;
 };
 
 const searchGigs = async (req, res) => {

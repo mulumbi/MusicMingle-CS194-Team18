@@ -167,7 +167,7 @@ async function seedDummyGigs() {
 // 	.catch((err) => console.log(err));
 
 sequelize
-	//.sync({ force: true })
+	// .sync({ force: true })
 	.sync()
 	.then(async () => {
 		console.log("Model Sync Complete");
@@ -211,7 +211,7 @@ app.post(
 		isLoggedIn,
 		parseFields,
 		fileUpload.fields([
-			{ name: "profile_image", maxCount: 1 },
+			{ name: "profile_image" },
 			{ name: "portfolio_images" },
 			{ name: "videos" },
 		]),
@@ -236,12 +236,20 @@ app.post(
 		const user = await models.User.findOne({ where: { uuid: uid } });
 		const updated = await user.update({
 			bio,
-			user_genre_tags,
-			user_role_tags,
+			user_genre_tags: user_genre_tags ? JSON.parse(user_genre_tags) : [],
+			user_role_tags: user_role_tags ? JSON.parse(user_role_tags) : [],
 			organization_name,
-			organization_group_size,
-			estimate_flat_rate,
-			is_artist,
+			organization_group_size: organization_group_size
+				? parseInt(organization_group_size)
+				: undefined,
+			estimate_flat_rate: estimate_flat_rate
+				? parseInt(estimate_flat_rate)
+				: undefined,
+			is_artist: is_artist
+				? is_artist === "true"
+					? true
+					: false
+				: undefined,
 		});
 		const promises = [];
 

@@ -27,18 +27,16 @@ import { IoChevronBackSharp } from "react-icons/io5";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
+import Loading from "@/components/Loading.tsx";
 
 const FormSchema = z.object({
-	// profile_image: z.string(),
+	profile_image: z.instanceof(File).optional(),
 	bio: z.string().optional(),
 	user_role_tags: z.array(z.string()).optional(),
 	user_genre_tags: z.array(z.string()).optional(),
 	estimate_flat_rate: z.coerce.number().optional(),
 	is_artist: z.boolean().optional(),
-	// portfolio_images: z.array(z.string()),
-	// deleted_portfolio_images: z.array(z.string()),
-	// videos: z.array(z.object({url: z.string(), title: z.string()})),
-	// deleted_videos: z.array(z.object({url: z.string(), title: z.string()})),
+	portfolio_media: z.instanceof(FileList).optional(),
 });
 
 const genres = [
@@ -113,7 +111,7 @@ export function ProfileSettings() {
 		reset(data);
 	}, [data]);
 
-	const { mutate, error } = useMutation({
+	const { mutate, error, isPending } = useMutation({
 		mutationFn: (bodyFormData: any) =>
 			mutateProfileDetails(currentUser, bodyFormData),
 		onSuccess: () => navigate("/profile", { state: { refresh: true } }),
@@ -122,6 +120,8 @@ export function ProfileSettings() {
 	function onSubmit(formData: z.infer<typeof FormSchema>) {
 		let bodyFormData = new FormData();
 
+		if (formData.profile_image && formData.profile_image.length > 0)
+			bodyFormData.append("profile_image", formData.profile_image);
 		bodyFormData.append("bio", formData.bio ? formData.bio : "");
 		if (formData.user_role_tags)
 			bodyFormData.append(
@@ -133,21 +133,32 @@ export function ProfileSettings() {
 				"user_genre_tags",
 				JSON.stringify(formData.user_genre_tags)
 			);
-		// if (formData.estimate_flat_rate)
-		bodyFormData.append(
-			"estimate_flat_rate",
-			formData.estimate_flat_rate
-				? JSON.stringify(formData.estimate_flat_rate)
-				: "0"
-		);
+		if (typeof formData.estimate_flat_rate === "number")
+			bodyFormData.append(
+				"estimate_flat_rate",
+				JSON.stringify(formData.estimate_flat_rate)
+			);
 		if (typeof formData.is_artist === "boolean")
 			bodyFormData.append("is_artist", String(formData.is_artist));
-
+		if (formData.portfolio_media && formData.portfolio_media.length > 0)
+			for (const file of Array.from(formData.portfolio_media)) {
+				if (file.type.match('image.*'))
+					bodyFormData.append("portfolio_images", file);
+				if (file.type.match('video.*'))
+					bodyFormData.append("videos", file);
+			}
+			
 		mutate(bodyFormData);
 	}
 
-	if (isLoading) return <div>Loading...</div>;
-	console.log(data);
+	if (isLoading) return (
+		<Loading />
+	);
+
+	if (isPending) return (
+		<Loading title="Updating profile..." message="Please do not exit this page. You will be automatically redirected." />
+	)
+	
 	return (
 		<div className="profile-settings-page">
 			<div className="form-container">
@@ -160,6 +171,36 @@ export function ProfileSettings() {
 				<h1>Edit profile</h1>
 				<Form {...form}>
 					<form onSubmit={handleSubmit(onSubmit)}>
+						<FormField
+							control={control}
+							name="profile_image"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="settings-label">
+										Profile Photo
+									</FormLabel>
+									<div className="settings-image">
+										<FormControl>
+											<Input
+												type="file"
+												accept="image/*"
+												onChange={(e) => {
+													if (
+														e?.target?.files?.length
+													) {
+														setValue(
+															"profile_image",
+															e.target.files[0]
+														);
+													}
+												}}
+											/>
+										</FormControl>
+									</div>
+									<FormMessage className="settings-message" />
+								</FormItem>
+							)}
+						/>
 						<FormField
 							control={control}
 							name="bio"
@@ -383,6 +424,37 @@ export function ProfileSettings() {
 											{...field}
 										/>
 									</FormControl>
+									<FormMessage className="settings-message" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="portfolio_media"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="settings-label">
+										Portfolio
+									</FormLabel>
+									<div className="settings-image">
+										<FormControl>
+											<Input
+												type="file"
+												accept="image/*, video/*"
+												multiple
+												onChange={(e) => {
+													if (
+														e?.target?.files?.length
+													) {
+														setValue(
+															"portfolio_media",
+															e.target.files
+														);
+													}
+												}}
+											/>
+										</FormControl>
+									</div>
 									<FormMessage className="settings-message" />
 								</FormItem>
 							)}
