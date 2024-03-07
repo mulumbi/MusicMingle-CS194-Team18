@@ -130,6 +130,7 @@ const uploadProfileImage = async (req, res, next) => {
 				file_name: ref,
 				public_url: file.publicUrl(),
 			});
+			await new_image.save();
 			sharp(profile_image[0].path)
 				.webp({ quality: 70 })
 				.toBuffer()
