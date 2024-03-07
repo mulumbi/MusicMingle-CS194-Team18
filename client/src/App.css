@@ -787,7 +787,7 @@ select:focus {
 }
 
 .select-date {
-	background-color: #008080;
+	background-color: #3697c749;
 	color: #ffffff;
 	padding: 1rem;
 	border-radius: 4px;
@@ -821,7 +821,7 @@ select:focus {
 }
 
 .select-date {
-	background-color: darkcyan;
+	background-color: #3697c749;
 	color: black;
 }
 
