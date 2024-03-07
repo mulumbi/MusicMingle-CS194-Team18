@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 import { Button } from "@/components/ui/button";
+import Loading from "@/components/Loading.tsx";
 import PortfolioItem from "@/components/PortfolioItem.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultProfile from "../assets/profile/DefaultProfile.png";
@@ -40,7 +41,11 @@ function Profile() {
 	console.log("loading", isLoading);
 	console.log("data", data);
 	console.log("error", error);
-
+	
+	if (isLoading) return (
+		<Loading />
+	);
+	
 	return (
 		<div className="profile-page">
 			<img
@@ -59,12 +64,6 @@ function Profile() {
 									: defaultProfile
 							}
 							alt="Profile Photo"
-							onMouseOver={() => {
-								console.log("I am hovered!");
-							}}
-							onClick={() => {
-								console.log("I have been clicked!");
-							}}
 						/>
 					</div>
 					<div className="profile-right">

@@ -27,6 +27,7 @@ import { IoChevronBackSharp } from "react-icons/io5";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
+import Loading from "@/components/Loading.tsx";
 
 const FormSchema = z.object({
 	profile_image: z.instanceof(File).optional(),
@@ -36,8 +37,6 @@ const FormSchema = z.object({
 	estimate_flat_rate: z.coerce.number().optional(),
 	is_artist: z.boolean().optional(),
 	portfolio_media: z.instanceof(FileList).optional(),
-	// portfolio_images: z.instanceof(FileList).optional(),
-	// videos: z.instanceof(FileList).optional(),
 });
 
 const genres = [
@@ -112,7 +111,7 @@ export function ProfileSettings() {
 		reset(data);
 	}, [data]);
 
-	const { mutate, error } = useMutation({
+	const { mutate, error, isPending } = useMutation({
 		mutationFn: (bodyFormData: any) =>
 			mutateProfileDetails(currentUser, bodyFormData),
 		onSuccess: () => navigate("/profile", { state: { refresh: true } }),
@@ -153,8 +152,12 @@ export function ProfileSettings() {
 	}
 
 	if (isLoading) return (
-		<div>Loading...</div>
+		<Loading />
 	);
+
+	if (isPending) return (
+		<Loading title="Updating profile..." message="Please do not exit this page. You will be automatically redirected." />
+	)
 	
 	return (
 		<div className="profile-settings-page">
@@ -456,68 +459,6 @@ export function ProfileSettings() {
 								</FormItem>
 							)}
 						/>
-						{/* <FormField
-							control={control}
-							name="portfolio_images"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="settings-label">
-										Portfolio Images
-									</FormLabel>
-									<div className="settings-image">
-										<FormControl>
-											<Input
-												type="file"
-												accept="image/*"
-												multiple
-												onChange={(e) => {
-													if (
-														e?.target?.files?.length
-													) {
-														setValue(
-															"portfolio_images",
-															e.target.files
-														);
-													}
-												}}
-											/>
-										</FormControl>
-									</div>
-									<FormMessage className="settings-message" />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
-							name="videos"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="settings-label">
-										Portfolio Videos
-									</FormLabel>
-									<div className="settings-image">
-										<FormControl>
-											<Input
-												type="file"
-												accept="video/*"
-												multiple
-												onChange={(e) => {
-													if (
-														e?.target?.files?.length
-													) {
-														setValue(
-															"videos",
-															e.target.files
-														);
-													}
-												}}
-											/>
-										</FormControl>
-									</div>
-									<FormMessage className="settings-message" />
-								</FormItem>
-							)}
-						/> */}
 						<FormField
 							control={control}
 							name="is_artist"
