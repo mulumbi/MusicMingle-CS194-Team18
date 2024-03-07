@@ -4,8 +4,8 @@ import { Artist } from "./types";
 export const fetchArtists = async (searchParams: {
 	name?: string;
 	user_role_tags?: string[];
-	min_flat_rate?: number;
-	max_flat_rate?: number;
+	min_flat_rate?: number | null; 
+	max_flat_rate?: number | null;
 }): Promise<Artist[]> => {
 	console.log(searchParams, "searchParams");
 	const query = new URLSearchParams();
@@ -16,12 +16,13 @@ export const fetchArtists = async (searchParams: {
 			JSON.stringify(searchParams.user_role_tags)
 		);
 
-	if (searchParams.min_flat_rate !== undefined) {
-		query.append("min_flat_rate", searchParams.min_flat_rate.toString());
-	}
-	if (searchParams.max_flat_rate !== undefined) {
-		query.append("max_flat_rate", searchParams.max_flat_rate.toString());
-	}
+		if (searchParams.min_flat_rate !== undefined && searchParams.min_flat_rate !== null) {
+			query.append("min_flat_rate", searchParams.min_flat_rate.toString());
+		}
+		if (searchParams.max_flat_rate !== undefined && searchParams.max_flat_rate !== null) {
+			query.append("max_flat_rate", searchParams.max_flat_rate.toString());
+		}
+		
 	console.log(query, query.toString(), "query");
 	const data = await axios
 		.get(

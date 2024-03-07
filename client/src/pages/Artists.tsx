@@ -15,7 +15,8 @@ import { FilterSidebarArtist } from "../components/Filterbar";
 import GigCard from "@/components/GigCards";
 import { fetchArtists } from "../api/artists.api";
 import { useNavigate } from 'react-router-dom';
-
+import { min } from "date-fns";
+import { Artist } from "../api/types";
 
 
 function Artists() {
@@ -27,8 +28,8 @@ function Artists() {
 	
 	const [searchName, setSearchName] = useState("");
 	const [roleTags, setRoleTags] = useState<string[]>([]);
-	const [minFlatRate, setMinFlatRate] = useState<number>(0);
-  	const [maxFlatRate, setMaxFlatRate] = useState<number>(10000);
+	const [minFlatRate, setMinFlatRate] = useState<number | null>(null);
+	const [maxFlatRate, setMaxFlatRate] = useState<number | null>(null);
 
 
 	const { data, error, isLoading, refetch } = useQuery({
@@ -38,15 +39,27 @@ function Artists() {
 		enabled: false,
 	});
 
+	// useEffect(() => {
+	// 	refetch();
+	// },  [searchName, roleTags, minFlatRate, maxFlatRate]);
+
 	useEffect(() => {
 		refetch();
-	},  [searchName, roleTags, minFlatRate, maxFlatRate]);
+		console.log("Here's the new data after filter: ", data);	
+	}, [searchName, roleTags, minFlatRate, maxFlatRate]); 
+
 
 	const handleSubmit = () => {
 		console.log("refetch");
 		refetch();
 	};
-	console.log(data);
+
+	const handleApplyFilters = (minRate: number | null, maxRate: number | null) => {
+		setMinFlatRate(minRate);
+		setMaxFlatRate(maxRate);
+		refetch();
+	}
+
 	return (
 		<div
 			className="App"
@@ -98,11 +111,8 @@ function Artists() {
 			<FilterSidebarArtist
 				minRate={minFlatRate}
 				maxRate={maxFlatRate}
-				onApplyFilters={(minRate, maxRate) => {
-					setMinFlatRate(minRate);
-					setMaxFlatRate(maxRate);
-					refetch();
-				}}
+				onApplyFilters={handleApplyFilters}
+
 			/>
 		</div>
 	);

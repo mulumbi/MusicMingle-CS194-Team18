@@ -134,9 +134,9 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 
 
 interface FilterSidebarArtistProps {
-  minRate: number;
-  maxRate: number;
-  onApplyFilters: (minRate: number, maxRate: number) => void;
+  minRate: number | null;
+  maxRate: number | null;
+  onApplyFilters: (minRate: number | null, maxRate: number | null) => void;
 };
 
 
@@ -145,8 +145,8 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
   maxRate,
   onApplyFilters,
 }) => {
-  const [localMinRate, setLocalMinRate] = useState<number>(minRate);
-  const [localMaxRate, setLocalMaxRate] = useState<number>(maxRate);
+  const [localMinRate, setLocalMinRate] = useState(minRate);
+  const [localMaxRate, setLocalMaxRate] = useState(maxRate);
 
   const handleApplyFilters = () => {
     onApplyFilters(localMinRate, localMaxRate);
@@ -171,7 +171,7 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
             <Input
               type="number"
               placeholder="Enter min $$$"
-              value={localMinRate}
+              value={localMinRate !== null ? localMinRate : ''}
               onChange={(e) => setLocalMinRate(Number(e.target.value))}
             />
 
@@ -182,19 +182,14 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
             <Input
               type="number"
               placeholder="Enter max $$$"
-              value={localMaxRate}
+              value={localMaxRate !== null ? localMaxRate : ''}
               onChange={(e) => setLocalMaxRate(Number(e.target.value))}
             />
           </div>
 
           {/* slider doesn't work yet, use input temporarily */}
           {/* <Slider defaultValue={[10]} max={40} step={1} /> */}
-        
-
-        {/* <div className="filter-action">
-          <h5>Group Size</h5>
-          <Input placeholder="Number of members" />
-        </div> */}
+      
 
 
         <div className="filter-action" >
@@ -226,16 +221,6 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
             </SelectContent>
           </Select>
         </div>
-
-
-        {/* <div className="filter-action">
-          <h5>Available Dates</h5>
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-          />
-        </div> */}
 
       </div>
       </CardContent>
