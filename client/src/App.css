@@ -1,642 +1,649 @@
 #root {
-  display: flex;
-  align-items: flex-start;
-  align-content: flex-start;
-  flex-direction: column;
-  height: 100vh;
-  width: 100%;
-  margin: 0 auto;
-  align-self: flex-start;
+	display: flex;
+	align-items: flex-start;
+	align-content: flex-start;
+	flex-direction: column;
+	height: 100vh;
+	width: 100%;
+	margin: 0 auto;
+	align-self: flex-start;
 }
 
 .App {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background-image: url('../src/assets/Background.png');
-  background-size: cover; 
-  background-position: center; 
-  background-repeat: no-repeat; 
-  justify-content: space-around;
-
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	background-image: url("../src/assets/Background.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	justify-content: space-around;
 }
 /* Logo spin animation */
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+	a:nth-of-type(2) .logo {
+		animation: logo-spin infinite 20s linear;
+	}
 }
 
 /* Card styling */
 .card {
-  padding: 2em;
+	padding: 2em;
 }
 
 /* Styling for 'read the docs' text */
 .read-the-docs {
-  color: #888;
+	color: #888;
 }
 
 /* Navbar styling */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  background-color: rgb(5, 22, 36);
-  color: #FFFFFF;
-  align-self: flex-start;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	background-color: rgb(5, 22, 36);
+	color: #ffffff;
+	align-self: flex-start;
 }
 
 /* Grouping navbar items */
 .navbar-group {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  padding: 0.75rem 1.25rem;
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	padding: 0.75rem 1.25rem;
 }
 
 /* Navbar logo button styling */
 .navbar-logo {
-  padding:0;
-  margin: 0;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+	padding: 0;
+	margin: 0;
+	background: transparent;
+	border: none;
+	cursor: pointer;
 }
 
 /* Adjusting logo image height */
 .navbar-logo img {
-  height: 2.5rem;
+	height: 2.5rem;
 }
 
 /* Separator styling */
 .navbar-separator {
-  width: 1px;
-  height: 1.5rem;
-  background-color: #ccc;
-  margin: 0 0.9375rem;
+	width: 1px;
+	height: 1.5rem;
+	background-color: #ccc;
+	margin: 0 0.9375rem;
 }
 
 /* Styling navbar items, actions, and sign button */
-.navbar-item, .navbar-action, .navbar-sign {
-  margin-right: 0.625rem;
-  background: transparent;
-  border: none;
-  color: #FFFFFF;
-  cursor: pointer;
+.navbar-item,
+.navbar-action,
+.navbar-sign {
+	margin-right: 0.625rem;
+	background: transparent;
+	border: none;
+	color: #ffffff;
+	cursor: pointer;
 }
 
 .navbar-sign {
-  color: black;
-  background: lightcyan;
-  border: none;
+	color: black;
+	background: lightcyan;
+	border: none;
 }
 
 /* Adjusting navbar action image height */
 .navbar-action img {
-  height: 1.6rem;
+	height: 1.6rem;
 }
 
 /* Aligning navbar actions */
 .navbar-actions {
-  display: flex;
-  align-items: center;
-  border: none;
-  margin-right: 1rem;
+	display: flex;
+	align-items: center;
+	border: none;
+	margin-right: 1rem;
 }
 
 /* Updating hover effect for buttons */
-button.navbar-item:hover, button.navbar-action:hover, button.navbar-sign:hover {
-  background-color: #3697c749;
-  border: none;
+button.navbar-item:hover,
+button.navbar-action:hover,
+button.navbar-sign:hover {
+	background-color: #3697c749;
+	border: none;
 }
 
 /* Styling for active button */
 button.active {
-  color: #3696C7; 
-  border: none;
+	color: #3696c7;
+	border: none;
 }
 
-button.navbar-item:focus, button.navbar-action:focus, button.navbar-sign:focus, button.navbar-logo:focus {
-  outline: none;
+button.navbar-item:focus,
+button.navbar-action:focus,
+button.navbar-sign:focus,
+button.navbar-logo:focus {
+	outline: none;
 }
 
 /* PROFILE PAGE STYLING */
 
 .profile-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
 }
 
 .profile-banner {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 18rem;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 18rem;
 }
 
 .profile-main {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  margin-bottom: 10rem;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	margin-bottom: 10rem;
 }
 
 .profile-row {
-  display: flex;
-  flex-direction: row;
-  padding: 0 2rem;
+	display: flex;
+	flex-direction: row;
+	padding: 0 2rem;
 }
 
 .profile-left {
-  width: 14rem;
-  min-width: 14rem;
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 3rem;
+	width: 14rem;
+	min-width: 14rem;
+	display: flex;
+	justify-content: flex-end;
+	padding-right: 3rem;
 }
 
 .profile-right {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+	justify-content: space-between;
 }
 
 .profile-photo {
-  width: 14rem;
-  height: 14rem;
-  margin-top: -8rem;
-  border-radius: 7rem;
+	width: 14rem;
+	height: 14rem;
+	margin-top: -8rem;
+	border-radius: 7rem;
 }
 
 .profile-button {
-  margin: 1rem 1rem 0 0;
-  border: none;
+	margin: 1rem 1rem 0 0;
+	border: none;
 }
 
 button.profile-button:hover {
-  background-color: #3697c749;
-  border: none;
+	background-color: #3697c749;
+	border: none;
 }
 
 button.profile-button:focus {
-  outline: none;
+	outline: none;
 }
 
 .profile-tag-list {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;  
-  gap: 0.6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	gap: 0.6rem;
 }
 
 .profile-role {
-  align-self: center;
-  height: 2.5rem;
-  padding: 0 1rem;
-  border-radius: 4rem;
-  border: none;
-  color: white;
-  background-color: rgb(1, 1, 179);
+	align-self: center;
+	height: 2.5rem;
+	padding: 0 1rem;
+	border-radius: 4rem;
+	border: none;
+	color: white;
+	background-color: rgb(1, 1, 179);
 }
 
 .profile-genre {
-  align-self: center;
-  height: 2.5rem;
-  padding: 0 1rem;
-  border-radius: 4rem;
-  border: none;
-  color: white;
-  background-color: #046fa5;
+	align-self: center;
+	height: 2.5rem;
+	padding: 0 1rem;
+	border-radius: 4rem;
+	border: none;
+	color: white;
+	background-color: #046fa5;
 }
 
 .bio {
-  padding-top: 0.35rem;
+	padding-top: 0.35rem;
 }
 
 .portfolio {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;  
-  margin-top: 1.2rem;
-  gap: 2rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	margin-top: 1.2rem;
+	gap: 2rem;
 }
 
 .portfolio-item {
-  width: 15rem; 
-  height: 15rem;
-  border-radius: 0.8rem; 
-  background-color: lightgrey;
+	width: 15rem;
+	height: 15rem;
+	border-radius: 0.8rem;
+	background-color: lightgrey;
 }
 
 .portfolio-item img {
-  width: 15rem; 
-  height: 15rem;
-  object-fit: cover; 
+	width: 15rem;
+	height: 15rem;
+	object-fit: cover;
 }
 
 .profile-settings-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	align-items: center;
 }
 
 .back-button {
-  border-radius: 20rem; 
-  background-color: lightgrey;
-  margin: 4rem 0 2rem 0;  
-  height: 3.5rem;
-  width: 3.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	border-radius: 20rem;
+	background-color: lightgrey;
+	margin: 4rem 0 2rem 0;
+	height: 3.5rem;
+	width: 3.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .form-container {
-  width: 50%;
+	width: 50%;
 }
 
 .settings-label {
-  font-size: 16px;
-  font-weight: 500;
-  color: navy;
+	font-size: 16px;
+	font-weight: 500;
+	color: navy;
 }
 
 .settings-description {
-  font-size: 14px;
-  color: rgb(115, 114, 114);
+	font-size: 14px;
+	color: rgb(115, 114, 114);
 }
 
 .settings-switch-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background-color: rgb(217, 227, 247);
-  border-radius: 0.5rem;
-  padding: 1.2rem 1.5rem 0.5rem 1.5rem;
-  margin: 1rem 0 2rem 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	background-color: rgb(217, 227, 247);
+	border-radius: 0.5rem;
+	padding: 1.2rem 1.5rem 0.5rem 1.5rem;
+	margin: 1rem 0 2rem 0;
 }
 
 .settings-input {
-  width: 95%;
-  flex: 1;
-  display: inline-flex;
-  font-size: 16px;
-  line-height: 1.5;
-  min-height: 2.25rem;
-  color: rgb(1, 1, 179);
-  background-color: white;
-  border-color: rgb(70, 129, 247);
-  border-radius: 0.25rem;
-  border-width: 0.1cap;
-  padding: 0 1rem;
-  margin: 0.25rem 0 1rem 0;
+	width: 95%;
+	flex: 1;
+	display: inline-flex;
+	font-size: 16px;
+	line-height: 1.5;
+	min-height: 2.25rem;
+	color: rgb(1, 1, 179);
+	background-color: white;
+	border-color: rgb(70, 129, 247);
+	border-radius: 0.25rem;
+	border-width: 0.1cap;
+	padding: 0 1rem;
+	margin: 0.25rem 0 1rem 0;
 }
 .input:focus {
-  outline: none;
-  box-shadow: 0px 0px 1px 1px rgb(70, 129, 247);
+	outline: none;
+	box-shadow: 0px 0px 1px 1px rgb(70, 129, 247);
 }
 
 .settings-textarea {
-  width: 95%;
-  min-width: 95%;
-  max-width: 95%;
-  flex: 1;
-  display: inline-flex;
-  font-size: 16px;
-  line-height: 1.5;
-  min-height: 2.25rem;
-  color: rgb(1, 1, 179);
-  background-color: white;
-  border-color: rgb(70, 129, 247);
-  border-radius: 0.25rem;
-  border-width: 0.1cap;
-  padding: 0.5rem 1rem;
-  margin: 0.25rem 0 1rem 0;
+	width: 95%;
+	min-width: 95%;
+	max-width: 95%;
+	flex: 1;
+	display: inline-flex;
+	font-size: 16px;
+	line-height: 1.5;
+	min-height: 2.25rem;
+	color: rgb(1, 1, 179);
+	background-color: white;
+	border-color: rgb(70, 129, 247);
+	border-radius: 0.25rem;
+	border-width: 0.1cap;
+	padding: 0.5rem 1rem;
+	margin: 0.25rem 0 1rem 0;
 }
 
 .settings-message {
-  font-size: 12px;
-  line-height: 1;
-  color: darkgrey;
-  margin: 0 0 1rem 0;
+	font-size: 12px;
+	line-height: 1;
+	color: darkgrey;
+	margin: 0 0 1rem 0;
 }
 
 .settings-actions {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  width: 100%;
-  height: 100%;
-  gap: 1rem;
-  margin: 1rem 0 2rem 0;
-
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	width: 100%;
+	height: 100%;
+	gap: 1rem;
+	margin: 1rem 0 2rem 0;
 }
 
 .submit-button {
-  background-color: rgb(1, 1, 179);
-  color: white;
-  border: none;
+	background-color: rgb(1, 1, 179);
+	color: white;
+	border: none;
 }
 
 .cancel-button {
-  background: transparent;
-  border: none;
+	background: transparent;
+	border: none;
 }
 
 .back-button:hover {
-  background-color: #3697c749;
-  border: none;
+	background-color: #3697c749;
+	border: none;
 }
 
-button.submit-button:focus, .back-button:focus {
-  outline: none;
+button.submit-button:focus,
+.back-button:focus {
+	outline: none;
 }
 
 .settings-combobox {
-  flex: 1;
-  display: inline-flex;
-  font-size: 16px;
-  line-height: 1.5;
-  min-height: 2.25rem;
-  color: rgb(1, 1, 179);
-  background-color: white;
-  border-color: rgb(70, 129, 247);
-  border-radius: 0.25rem;
-  border-width: 0.1cap;
-  margin: 0.25rem 0 1rem 0;
-  align-items: center;
-  justify-items: center;
+	flex: 1;
+	display: inline-flex;
+	font-size: 16px;
+	line-height: 1.5;
+	min-height: 2.25rem;
+	color: rgb(1, 1, 179);
+	background-color: white;
+	border-color: rgb(70, 129, 247);
+	border-radius: 0.25rem;
+	border-width: 0.1cap;
+	margin: 0.25rem 0 1rem 0;
+	align-items: center;
+	justify-items: center;
 }
 
 .chevrons-icon {
-  height: 1rem;
-  width: 1rem;
+	height: 1rem;
+	width: 1rem;
 }
 
 .popover-content {
-  flex: 1;
-  background-color: white;
-  color: rgb(1, 1, 179);
-  border-color: rgb(70, 129, 247);
-  border-radius: 0.25rem;
-  border-width: 0.1cap;
-  padding: 1rem;
-  box-shadow: 0px 0px 1px 1px rgb(111, 109, 109);
+	flex: 1;
+	background-color: white;
+	color: rgb(1, 1, 179);
+	border-color: rgb(70, 129, 247);
+	border-radius: 0.25rem;
+	border-width: 0.1cap;
+	padding: 1rem;
+	box-shadow: 0px 0px 1px 1px rgb(111, 109, 109);
 }
 
 .command-item {
-  font-size: 16px;
-  line-height: 1.5;
-  min-height: 2rem;
+	font-size: 16px;
+	line-height: 1.5;
+	min-height: 2rem;
 }
 
 .check-show {
-  height: 1rem;
-  width: 1rem;
-  padding: 0 0.5rem 0 0;
-  opacity: 100%;
+	height: 1rem;
+	width: 1rem;
+	padding: 0 0.5rem 0 0;
+	opacity: 100%;
 }
 
 .check-hide {
-  height: 1rem;
-  width: 1rem;
-  padding: 0 0.5rem 0 0;
-  opacity: 0%;
+	height: 1rem;
+	width: 1rem;
+	padding: 0 0.5rem 0 0;
+	opacity: 0%;
 }
 
 /* PROFILE PAGE STYLING */
 
 .title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #FFFFFF;
-  padding: 0 1rem;
-  margin-top: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: #ffffff;
+	padding: 0 1rem;
+	margin-top: 1rem;
 }
 
 .title h1 {
-  margin-top: 1rem;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+	margin-top: 1rem;
+	font-size: 1.5rem;
+	margin-bottom: 1rem;
 }
 
-.title button { 
-  background: transparent;
-  border: none;
-  color: #3696C7;
-  cursor: pointer;
-  text-decoration: underline;
+.title button {
+	background: transparent;
+	border: none;
+	color: #3696c7;
+	cursor: pointer;
+	text-decoration: underline;
 }
 
 .title button:hover {
-  background-color: rgba(54, 151, 199, 0.25);
+	background-color: rgba(54, 151, 199, 0.25);
 }
 
 .cards {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: 1rem;
 }
 
 .card {
-  background-color: #FFFFFF;
-  display: block;
-  flex-direction: column;
-  width: 17.5rem; 
-  overflow: auto;
-  border-radius: 0.8rem; 
-  padding:1rem;
+	background-color: #ffffff;
+	display: block;
+	flex-direction: column;
+	width: 17.5rem;
+	overflow: auto;
+	border-radius: 0.8rem;
+	padding: 1rem;
 }
 
 .card img {
-  height: 10rem; 
-  width: 100%;
-  object-fit: cover; 
-  margin: 0; 
-  border-radius: 0.44rem; 
-  padding: 0;
+	height: 10rem;
+	width: 100%;
+	object-fit: cover;
+	margin: 0;
+	border-radius: 0.44rem;
+	padding: 0;
 }
 
 .card h2 {
-  color: #3696C7;
-  font-size: 1rem; 
-  margin-bottom: 0;
+	color: #3696c7;
+	font-size: 1rem;
+	margin-bottom: 0;
 }
 
 .card p {
-  color: #000;
-  font-size: 0.875rem; 
-  display: flex; 
-  flex-direction: column; 
-  margin:0;
+	color: #000;
+	font-size: 0.875rem;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
 }
-.card p :first-of-type{
-  margin-top: 0.25rem;
+.card p :first-of-type {
+	margin-top: 0.25rem;
 }
 
-.gig-cards .cards .card:first-child{
-  color: #FFFFFF;
-  background-color: rgb(0, 64, 88);
-  align-items: center;
+.gig-cards .cards .card:first-child {
+	color: #ffffff;
+	background-color: rgb(0, 64, 88);
+	align-items: center;
 }
 
 .gig-cards .cards .card:first-child p {
-  color: rgb(232, 248, 252);
-  padding-top: 0.15rem;
+	color: rgb(232, 248, 252);
+	padding-top: 0.15rem;
 }
 
 .gig-cards .cards .card:first-child img {
-  box-shadow: rgb(255, 255, 255);
-  object-fit:contain;
+	box-shadow: rgb(255, 255, 255);
+	object-fit: contain;
 }
 .gig-cards .cards .card:first-child span {
-  color:rgb(232, 248, 252) ;
+	color: rgb(232, 248, 252);
 }
 
 .gig-cards .cards .card:first-child h2 {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: white;
-  align-items: center;
-  width: 100%;
-  padding-top: 1.5rem;
+	font-weight: bold;
+	font-size: 1.2rem;
+	color: white;
+	align-items: center;
+	width: 100%;
+	padding-top: 1.5rem;
 }
 
 .tag {
-  display: inline-block;
-  background-color: #3697c749;
-  color: #3696C7;
-  padding: 0.5rem 1rem; 
-  margin: 0;
-  margin-top: 0.25rem;
-  margin-right: 0.5rem;
-  font-size: 0.75rem;
-  border-radius: 0.5rem;
+	display: inline-block;
+	background-color: #3697c749;
+	color: #3696c7;
+	padding: 0.5rem 1rem;
+	margin: 0;
+	margin-top: 0.25rem;
+	margin-right: 0.5rem;
+	font-size: 0.75rem;
+	border-radius: 0.5rem;
 }
-  
+
 .Title {
-  /* Styles for the title div */
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #FFFFFF;
-  margin-top: 0;
+	/* Styles for the title div */
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+	color: #ffffff;
+	margin-top: 0;
 }
 
 .Selection-tabs {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  margin-top: 0;
-  margin-bottom: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	margin-top: 0;
+	margin-bottom: 1rem;
 }
 
 .selection-buttons {
-  border-radius: 12px;
-  background: rgba(0,64,88, 0.5);
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  color:#FFFFFF;
+	border-radius: 12px;
+	background: rgba(0, 64, 88, 0.5);
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	transition: background 0.3s ease;
+	color: #ffffff;
 }
 
 .selection-buttons:hover {
-  background: rgba(0,64,88, 0.7);
+	background: rgba(0, 64, 88, 0.7);
 }
 
 .selection-buttons.Active {
-  background: rgba(0,64,88);
+	background: rgba(0, 64, 88);
 }
 
 .my-gigs-cards {
-  /* Styles for the gigs cards container */
+	/* Styles for the gigs cards container */
 }
 
 .page-body {
-  padding: 2.5rem;
-  align-items: flex-start;
-  width: 100%;
+	padding: 2.5rem;
+	align-items: flex-start;
+	width: 100%;
 }
 
-.Title, .Selection-tabs {
-  padding-bottom:1rem;
+.Title,
+.Selection-tabs {
+	padding-bottom: 1rem;
 }
 
 .Selection-tabs {
-  display: flex;
-  flex-direction: row;
-  align-items: left;
-  margin-bottom: 1rem;
-  width: auto; /* Hug content */
+	display: flex;
+	flex-direction: row;
+	align-items: left;
+	margin-bottom: 1rem;
+	width: auto; /* Hug content */
 }
 
 .selection-buttons {
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.5);
-  margin-right: 2.5rem; /* Add space between buttons */
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.5);
+	margin-right: 2.5rem; /* Add space between buttons */
 }
 
 .selection-buttons:last-child {
-  margin-right: 0; /* Remove margin for the last button */
+	margin-right: 0; /* Remove margin for the last button */
 }
 
 .selection-buttons.Active {
-  /* Distinct styling for the active button */
+	/* Distinct styling for the active button */
 }
 
 /* ARTISTS PAGE STYLING */
 #ArtistBody {
-  display: flex;
-  flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
-.Artist-page-cards{
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin: 0;
+.Artist-page-cards {
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	margin: 0;
 }
 
 #ArtistBody .my-gig-cards {
-  width: 100%;
+	width: 100%;
 }
 
-#ArtistPageApp{
-  flex-direction: row;
+#ArtistPageApp {
+	flex-direction: row;
 }
 
 #Filterbar {
-  background-color: #040D11;
-  color: white;
-  display: flex;
-  height: auto;
-  padding: 2rem;
-  flex-direction: column;
+	background-color: #040d11;
+	color: white;
+	display: flex;
+	height: auto;
+	padding: 2rem;
+	flex-direction: column;
 }
 
 .filterbar-header h1, /* Assuming CardTitle uses h1, adjust if it's a different tag */
@@ -644,120 +651,223 @@ button.submit-button:focus, .back-button:focus {
 .filterbar-header h3, /* Adjust according to actual tag used for CardTitle */
 .filterbar-header h4, /* Adjust according to actual tag used for CardTitle */
 .filterbar-header h5, /* Adjust according to actual tag used for CardTitle */
-.filterbar-header h6 { /* Adjust according to actual tag used for CardTitle */
-  font-weight: bold;
-  text-decoration: underline;
+.filterbar-header h6 {
+	/* Adjust according to actual tag used for CardTitle */
+	font-weight: bold;
+	text-decoration: underline;
 }
 
 .filter-action h5 {
-  font-size: 1rem; /* Set h5 size to 1rem */
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin:0;
-  
+	font-size: 1rem; /* Set h5 size to 1rem */
+	padding-top: 0.25rem;
+	padding-bottom: 0.25rem;
+	margin: 0;
 }
 
 .filter-action {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem; /* Ensure spacing around actions, adjust as needed */
-  
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1rem; /* Ensure spacing around actions, adjust as needed */
 }
 
 .filter-action select,
 .filter-action input,
 .filter-action .dropdown, /* Assuming .dropdown is used for select wrappers */
 #Filterbar button {
-  height: auto; /* Allow height to wrap content */
-  width: 100%; /* Set a uniform width, adjust if necessary */
-  padding: 0.5rem; /* Provide some padding inside inputs/buttons for content to fit nicely */
-  box-sizing: border-box; /* Include padding in the height calculation */
+	height: auto; /* Allow height to wrap content */
+	width: 100%; /* Set a uniform width, adjust if necessary */
+	padding: 0.5rem; /* Provide some padding inside inputs/buttons for content to fit nicely */
+	box-sizing: border-box; /* Include padding in the height calculation */
 }
 
 .dropdown {
-  font-size: 1rem; /* Adjusted to 1rem to match h5 size */
-  display: flex; /* Already present, ensure dropdowns are flex containers */
-  justify-content: center; /* Center content, already present */
-  padding: 0.5rem 0; /* Adjust padding to ensure height wraps content */
-  
+	font-size: 1rem; /* Adjusted to 1rem to match h5 size */
+	display: flex; /* Already present, ensure dropdowns are flex containers */
+	justify-content: center; /* Center content, already present */
+	padding: 0.5rem 0; /* Adjust padding to ensure height wraps content */
 }
 
 .fillDropdown {
-  width: 100%; /* Ensure dropdowns fill the width of the parent */
-  background-color: white; /* Ensure dropdowns have a white background */
-  color: black;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  align-items: center; /* Center items horizontally */
+	width: 100%; /* Ensure dropdowns fill the width of the parent */
+	background-color: white; /* Ensure dropdowns have a white background */
+	color: black;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column; /* Stack items vertically */
+	align-items: center; /* Center items horizontally */
 }
 
 #Filterbar button {
-  display: inline-flex; /* Use inline-flex to align button text properly */
-  align-items: center; /* Center button content vertically */
-  justify-content: center; /* Center button content horizontally */
+	display: inline-flex; /* Use inline-flex to align button text properly */
+	align-items: center; /* Center button content vertically */
+	justify-content: center; /* Center button content horizontally */
 }
 
 /* Additional styles for uniform button and select heights */
-button, .dropdown select {
-  height: 2.5rem; /* Example fixed height, adjust as needed */
-  
+button,
+.dropdown select {
+	height: 2.5rem; /* Example fixed height, adjust as needed */
 }
 
 /* Ensure all form controls have the same width */
 .filter-action input,
 .filter-action button,
 .filter-action .dropdown {
-  width: auto; /* Adjust as needed to ensure uniform width */
+	width: auto; /* Adjust as needed to ensure uniform width */
 }
 
 /* GIGS PAGE STYLING */
 
-
-/* CREATE GIG PAGE */
-
-.NewGigTitle {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #FFFFFF;
-  margin-top: 0;
-  width: 100%;
-  text-align: center; /* Center the text horizontally */
-  margin: 1rem 0; /* Add margin above and below the title */
+.create_gig {
+	display: flex;
+	justify-self: left;
+	flex-direction: column;
+	background-color: #ffffff;
+	padding: 1rem 2rem;
+	width: 75%;
+	margin: 1rem auto;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
 }
-
-.create_gig_body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  height: 100%;
-  align-content: center;
-  color: white;
-  
+.NewGigTitle {
+	display: flex;
+	font-size: 1.8rem;
+	font-weight: bold;
+	padding: 1rem;
+	color: #004058;
+	margin-top: 0;
+	background-color: #ffffff;
+	text-align: center;
+	justify-content: left;
+	border-bottom: 2px solid #3696c7;
 }
 
 .new-gig-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem; /* Adjust the gap between fields */
-  width: 100%;
-  color: white;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	width: 100%;
+	color: #004058;
 }
 
-.new-gig-fields .Label {
-  margin-bottom: 1rem; /* Add margin between each field */
+.entryLabel {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	font-size: 1rem;
+	color: #004058;
 }
 
-.new-gig-fields .Button {
-  margin-top: 1rem; /* Add margin above the button */
+input[type="text"],
+input[type="file"],
+input[type="time"],
+textarea,
+select {
+	padding: 0.5rem;
+	border: 1px solid #cfd8dc; /* Soft border color */
+	border-radius: 4px;
+	font-size: 1rem;
+	color: #004058;
+	background-color: #f0f4f8;
 }
 
-
+/* Hover and focus states for interactive elements */
+input[type="text"]:hover,
+input[type="file"]:hover,
+input[type="time"]:hover,
+textarea:hover,
+select:hover,
+input[type="text"]:focus,
+input[type="file"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+	border-color: #3696c7;
+}
 
 .select-date {
-  background-color: darkcyan;
-  color: black;
+	background-color: #008080;
+	color: #ffffff;
+	padding: 1rem;
+	border-radius: 4px;
+}
+.datetime-picker {
+	margin-right: 1rem;
+}
+
+#create_gig_button {
+	background-color: #3696c7;
+	color: #ffffff;
+	padding: 2rem 4.5rem;
+	border: none;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: background-color 0.3s;
+	margin: 0rem auto;
+	width: 100%;
+	margin-top: 0.75rem;
+}
+
+.button_container {
+	display: flex;
+	width: 100%;
+	justify-self: center;
+	justify-content: center;
+}
+
+#Button:hover {
+	background-color: #0074a2; /* Darker shade on hover for feedback */
+}
+
+.select-date {
+	background-color: darkcyan;
+	color: black;
+}
+
+.page-body {
+	display: flex;
+	flex-direction: column;
+	height: 100%; /* Adjust this as needed; could be 100vh for full viewport height */
+}
+
+.Title,
+.Selection-tabs {
+	height: 5%;
+	display: flex;
+	align-items: center; /* This vertically centers the content */
+	justify-content: center; /* This horizontally centers the content */
+}
+
+.my-gigs-cards {
+	height: 82.5%;
+	width: 95%;
+	overflow-y: auto; /* Makes the content scrollable when it overflows vertically */
+}
+
+/* Additional styling for active state and buttons for better UX */
+.selection-buttons {
+	cursor: pointer;
+	padding: 10px;
+	margin: 5px;
+	border: none;
+	background-color: #f0f0f0; /* Light grey background */
+}
+
+.selection-buttons.active {
+	background-color: #d1d1d1; /* Slightly darker background for active state */
+}
+
+/* Ensure the parent container of .page-body has a defined height */
+/* This could be the <div className="App"> or directly on the body */
+.App,
+body,
+html {
+	height: 100%;
+}
+
+/* Reset margin and padding for the body to remove default browser spacing */
+body {
+	margin: 0;
+	padding: 0;
 }
