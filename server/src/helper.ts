@@ -18,6 +18,7 @@ const portfolioImageBucket = bucketStorage.bucket(
 const gigImageBucket = bucketStorage.bucket("music-mingle-gig-bucket");
 
 const parseFields = (req, res, next) => {
+	console.log(req.body, "Body");
 	const {
 		user_genre_tags,
 		user_role_tags,
@@ -107,23 +108,25 @@ const isLoggedIn = (req, res, next) => {
 
 // Optimizes profile image for upload, create profile image instance in db, upload image to google cloud storage
 const uploadProfileImage = async (req, res, next) => {
+	console.log(req.files, "Files");
 	if (!req.files || !req.files.profile_image) {
 		next();
 	} else {
 		const { profile_image } = req.files;
 		const { name, uid } = req.user;
-
+		console.log(profile_image, "Profile Image");
 		if (profile_image?.length === 1) {
 			// Delete old image from db
-			const user = await models.UserContent.findOne({
+			const user = await models.User.findOne({
 				where: { uuid: uid },
 			});
 			const old_image = await user.getUserContents({
 				where: { type: "profileImage" },
 			});
-			await old_image.destroy();
-
-			const ref = `${name}-profile.webp`;
+			if (old_image.length > 0) {
+				await old_image[0].destroy();
+			}
+			const ref = `${name}-${profile_image[0].filename}-profile.webp`;
 			const file = profileBucket.file(ref);
 			const new_image = await user.createUserContent({
 				type: "profileImage",
@@ -140,30 +143,30 @@ const uploadProfileImage = async (req, res, next) => {
 							fs.unlink(profile_image[0].path, (err) => {
 								console.log(err);
 							});
-							file.makePublic().catch((err) => {
-								console.log("Error verifying token:", err);
-								res.status(501).json({
-									error: `Profile make public error: ${err}`,
+							file.makePublic()
+								.then(() => next())
+								.catch((err) => {
+									console.log("Error verifying token:", err);
+									res.status(501).json({
+										error: `Profile make public error: ${err}`,
+									});
+									next();
 								});
-							});
 						})
 						.catch((err) => {
 							console.log("Save error:", err);
 							res.status(501).json({
 								error: `Save profile error: ${err}`,
 							});
+							next();
 						});
 				})
 				.catch((err) => {
 					res.status(501).json({
 						error: `Parse profile image error: ${err}`,
 					});
+					next();
 				});
-			req.profile_image = {
-				ref: ref,
-				url: file.publicUrl(),
-			};
-			next();
 		} else {
 			next();
 		}
@@ -192,6 +195,7 @@ const uploadPortfolioImages = async (req, res, next) => {
 					type: "portfolioImage",
 					file_name: ref,
 					public_url: file.publicUrl(),
+					// UserId: uid,
 				});
 				// Optimize image, upload to google cloud storage, make image public
 				sharp(path)
@@ -253,7 +257,7 @@ const uploadVideos = async (req, res, next) => {
 				const file = videoBucket.file(ref.slice(4));
 
 				const user_content = await user.createUserContent({
-					type: "portfolioVideo",
+					type: "portfolioVideos",
 					file_name: fileName,
 					public_url: file.publicUrl(),
 				});
@@ -483,27 +487,7 @@ const searchArtists = async (req, res) => {
 		offset: offset ? offset : 0,
 	});
 
-	const userArray = await Promise.all(
-		users.map(async (user) => {
-			const [profileImage, portfolioImages, portfolioVideos] =
-				await Promise.all([
-					user.getUserContents({ where: { type: "profileImage" } }),
-					user.getUserContents({ where: { type: "portfolioImage" } }),
-					user.getUserContents({ where: { type: "portfolioVideo" } }),
-				]);
-			return {
-				...user.dataValues,
-				profileImage: profileImage[0].dataValues,
-				portfolioImages: portfolioImages.map(
-					(image) => image.dataValues
-				),
-				portfolioVideos: portfolioVideos.map(
-					(image) => image.dataValues
-				),
-			};
-		})
-	);
-	return userArray;
+	return users;
 };
 
 const searchGigs = async (req, res) => {

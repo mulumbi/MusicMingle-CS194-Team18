@@ -124,10 +124,7 @@ export function ProfileSettings() {
 
 		if (formData.profile_image)
 			console.log("formData.profile_image", formData.profile_image);
-			bodyFormData.append(
-				"profile_image",
-				formData.profile_image
-			);
+		bodyFormData.append("profile_image", formData.profile_image);
 		bodyFormData.append("bio", formData.bio ? formData.bio : "");
 		if (formData.user_role_tags)
 			bodyFormData.append(
@@ -140,7 +137,10 @@ export function ProfileSettings() {
 				JSON.stringify(formData.user_genre_tags)
 			);
 		if (typeof formData.estimate_flat_rate === "number")
-			bodyFormData.append("estimate_flat_rate", JSON.stringify(formData.estimate_flat_rate));
+			bodyFormData.append(
+				"estimate_flat_rate",
+				JSON.stringify(formData.estimate_flat_rate)
+			);
 		if (typeof formData.is_artist === "boolean")
 			bodyFormData.append("is_artist", String(formData.is_artist));
 
@@ -175,14 +175,15 @@ export function ProfileSettings() {
 												type="file"
 												accept="image/*"
 												onChange={(e) => {
-													if (e?.target?.files?.length) {
+													if (
+														e?.target?.files?.length
+													) {
 														setValue(
 															"profile_image",
 															e.target.files[0]
 														);
 													}
 												}}
-												
 											/>
 										</FormControl>
 									</div>
@@ -230,7 +231,7 @@ export function ProfileSettings() {
 														field.value.length
 															? field.value
 																	.length +
-															" selected"
+															  " selected"
 															: "Select role"}
 														<ChevronsUpDown className="chevrons-icon" />
 													</Button>

@@ -50,10 +50,18 @@ function Profile() {
 					<div className="profile-left">
 						<img
 							className="profile-photo"
-							src={data?.profileImage ? data?.profileImage[0].public_url : defaultProfile}
+							src={
+								data?.profileImage.length > 0
+									? data?.profileImage[0].public_url
+									: defaultProfile
+							}
 							alt="Profile Photo"
-							onMouseOver={() => {console.log("I am hovered!")}}
-							onClick={() => {console.log("I have been clicked!")}}
+							onMouseOver={() => {
+								console.log("I am hovered!");
+							}}
+							onClick={() => {
+								console.log("I have been clicked!");
+							}}
 						/>
 					</div>
 					<div className="profile-right">
