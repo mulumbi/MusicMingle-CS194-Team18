@@ -246,7 +246,7 @@ const uploadVideos = async (req, res, next) => {
 		const { uid } = req.user;
 
 		const user = await models.User.findOne({ where: { uuid: uid } });
-
+		console.log(videos, "videos");
 		if (videos?.length > 0) {
 			const videos_objs = [];
 			videos.forEach(async (video) => {
@@ -257,7 +257,7 @@ const uploadVideos = async (req, res, next) => {
 				const file = videoBucket.file(ref.slice(4));
 
 				const user_content = await user.createUserContent({
-					type: "portfolioVideos",
+					type: "portfolioVideo",
 					file_name: fileName,
 					public_url: file.publicUrl(),
 				});
