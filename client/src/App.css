@@ -186,6 +186,8 @@ button.navbar-logo:focus {
 .profile-photo {
 	width: 14rem;
 	height: 14rem;
+  object-fit: cover;
+  object-position: center;
 	margin-top: -8rem;
 	border-radius: 7rem;
 }
@@ -241,21 +243,34 @@ button.profile-button:focus {
 	flex-direction: row;
 	justify-content: flex-start;
 	flex-wrap: wrap;
-	margin-top: 1.2rem;
+	margin: 1.2rem 0 3rem 0;
 	gap: 2rem;
 }
 
 .portfolio-item {
 	width: 15rem;
 	height: 15rem;
-	border-radius: 0.8rem;
-	background-color: lightgrey;
+  border-radius: 0.8rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .portfolio-item img {
 	width: 15rem;
 	height: 15rem;
-	object-fit: cover;
+  border-radius: 0.8rem;
+  object-fit: cover;
+  object-position: center;
+}
+
+.icon-button {
+  position: absolute;
+  color: white;
+  background-color: transparent;
+  padding: 0.8rem;
+}
+.icon-button:hover {
+  border: none;
 }
 
 .profile-settings-page {
@@ -300,7 +315,7 @@ button.profile-button:focus {
 	background-color: rgb(217, 227, 247);
 	border-radius: 0.5rem;
 	padding: 1.2rem 1.5rem 0.5rem 1.5rem;
-	margin: 1rem 0 2rem 0;
+	margin: 1.5rem 0 2rem 0;
 }
 
 .settings-image {	

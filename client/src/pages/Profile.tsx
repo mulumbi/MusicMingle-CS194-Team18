@@ -152,15 +152,11 @@ function Profile() {
 					</div>
 					<div className="profile-right">
 						<div className="portfolio">
-							<div className="portfolio-item">
-								<PortfolioItem />
-							</div>
-							<div className="portfolio-item">
-								<PortfolioItem />
-							</div>
-							<div className="portfolio-item">
-								<PortfolioItem />
-							</div>
+							{data?.portfolioImages?.map((image, index) => (
+								<div className="portfolio-item">
+									<PortfolioItem image={image} />
+								</div>
+							))}
 						</div>
 					</div>
 				</div>

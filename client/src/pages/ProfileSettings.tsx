@@ -35,9 +35,10 @@ const FormSchema = z.object({
 	user_genre_tags: z.array(z.string()).optional(),
 	estimate_flat_rate: z.coerce.number().optional(),
 	is_artist: z.boolean().optional(),
-	portfolio_images: z.array(z.instanceof(File)).optional(),
+	portfolio_media: z.instanceof(FileList).optional(),
+	portfolio_images: z.instanceof(FileList).optional(),
+	videos: z.instanceof(FileList).optional(),
 	// deleted_portfolio_images: z.array(z.string()),
-	videos: z.array(z.instanceof(File)).optional(),
 	// deleted_videos: z.array(z.object({url: z.string(), title: z.string()})),
 });
 
@@ -122,9 +123,8 @@ export function ProfileSettings() {
 	function onSubmit(formData: z.infer<typeof FormSchema>) {
 		let bodyFormData = new FormData();
 
-		if (formData.profile_image)
-			console.log("formData.profile_image", formData.profile_image);
-		bodyFormData.append("profile_image", formData.profile_image);
+		if (formData.profile_image && formData.profile_image.length > 0)
+			bodyFormData.append("profile_image", formData.profile_image);
 		bodyFormData.append("bio", formData.bio ? formData.bio : "");
 		if (formData.user_role_tags)
 			bodyFormData.append(
@@ -144,6 +144,32 @@ export function ProfileSettings() {
 		if (typeof formData.is_artist === "boolean")
 			bodyFormData.append("is_artist", String(formData.is_artist));
 
+		// FILE UPLOAD FOR IMAGE ONLY
+		if (formData.portfolio_images && formData.portfolio_images.length > 0)
+			for (const file of Array.from(formData.portfolio_images)) {
+				bodyFormData.append("portfolio_images", file);
+			}
+
+		// FILE UPLOAD FOR VIDEO ONLY
+		if (formData.videos && formData.videos.length > 0)
+			for (const file of Array.from(formData.videos)) {
+				bodyFormData.append("videos", file);
+			}
+
+		// COMBINED FILE UPLOAD FOR IMAGES + VIDEOS
+		// if (formData.portfolio_media && formData.portfolio_media.length > 0)
+		// 	for (const file of Array.from(formData.portfolio_media)) {
+				// if (file.type.match('image.*'))
+				// 	bodyFormData.append("portfolio_images", file);
+				// if (file.type.match('video.*'))
+				// 	bodyFormData.append("videos", file);
+				// console.log(file);
+				// bodyFormData.append("videos", file);
+			// }
+		
+		// const deleted_portfolio_images = ["c0f6fcc6-57e6-48a1-962b-540a6bd2bcf4"];
+		// bodyFormData.append("deleted_portfolio_images", JSON.stringify(deleted_portfolio_images));
+			
 		mutate(bodyFormData);
 	}
 
@@ -414,6 +440,99 @@ export function ProfileSettings() {
 											{...field}
 										/>
 									</FormControl>
+									<FormMessage className="settings-message" />
+								</FormItem>
+							)}
+						/>
+						{/* <FormField
+							control={control}
+							name="portfolio_media"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="settings-label">
+										Portfolio
+									</FormLabel>
+									<div className="settings-image">
+										<FormControl>
+											<Input
+												type="file"
+												accept="image/*, video/*"
+												multiple
+												onChange={(e) => {
+													if (
+														e?.target?.files?.length
+													) {
+														setValue(
+															"portfolio_media",
+															e.target.files
+														);
+													}
+												}}
+											/>
+										</FormControl>
+									</div>
+									<FormMessage className="settings-message" />
+								</FormItem>
+							)}
+						/> */}
+						<FormField
+							control={control}
+							name="portfolio_images"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="settings-label">
+										Portfolio Images
+									</FormLabel>
+									<div className="settings-image">
+										<FormControl>
+											<Input
+												type="file"
+												accept="image/*"
+												multiple
+												onChange={(e) => {
+													if (
+														e?.target?.files?.length
+													) {
+														setValue(
+															"portfolio_images",
+															e.target.files
+														);
+													}
+												}}
+											/>
+										</FormControl>
+									</div>
+									<FormMessage className="settings-message" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="videos"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="settings-label">
+										Portfolio Videos
+									</FormLabel>
+									<div className="settings-image">
+										<FormControl>
+											<Input
+												type="file"
+												accept="video/*"
+												multiple
+												onChange={(e) => {
+													if (
+														e?.target?.files?.length
+													) {
+														setValue(
+															"videos",
+															e.target.files
+														);
+													}
+												}}
+											/>
+										</FormControl>
+									</div>
 									<FormMessage className="settings-message" />
 								</FormItem>
 							)}
