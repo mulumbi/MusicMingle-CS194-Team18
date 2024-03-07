@@ -4,7 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 
 type PortfolioItemProps = {
   image?: { public_url: string };
-  video?: { url: string; title: string };
+  video?: { public_url: string };
 };
 
 const PortfolioItem: React.FC<PortfolioItemProps> = (props) => (
@@ -16,7 +16,9 @@ const PortfolioItem: React.FC<PortfolioItemProps> = (props) => (
         <img src={props.image.public_url} />
     }
     { props.video && 
-        <img src={props.video.url} />
+        <video width="400" preload="metadata" controls={true}>
+          <source src={props.video.public_url} type="video/mp4" />
+        </video>
     }
   </div>
 );

@@ -167,8 +167,11 @@ export function ProfileSettings() {
 				// bodyFormData.append("videos", file);
 			// }
 		
-		// const deleted_portfolio_images = ["c0f6fcc6-57e6-48a1-962b-540a6bd2bcf4"];
+		// const deleted_portfolio_images = ["90956828-6eef-44dd-b0d2-be794d432c84", "b6a0ab38-1597-40a5-a8c0-c6186d618791"];
 		// bodyFormData.append("deleted_portfolio_images", JSON.stringify(deleted_portfolio_images));
+
+		// const deleted_videos = ["b949f34b-a876-4910-91a0-931b94af1fc0"];
+		// bodyFormData.append("deleted_videos", JSON.stringify(deleted_videos));
 			
 		mutate(bodyFormData);
 	}

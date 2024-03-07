@@ -153,8 +153,13 @@ function Profile() {
 					<div className="profile-right">
 						<div className="portfolio">
 							{data?.portfolioImages?.map((image, index) => (
-								<div className="portfolio-item">
+								<div key={index} className="portfolio-item">
 									<PortfolioItem image={image} />
+								</div>
+							))}
+							{data?.portfolioVideos?.map((video, index) => (
+								<div key={index} className="portfolio-item">
+									<PortfolioItem video={video} />
 								</div>
 							))}
 						</div>
