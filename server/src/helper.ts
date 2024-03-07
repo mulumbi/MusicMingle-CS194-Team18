@@ -6,6 +6,7 @@ import fs from "fs";
 import models, { sequelize } from "./db";
 import { Op, Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
+import path from "path";
 
 const bucketStorage = new Storage({
 	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
@@ -248,8 +249,7 @@ const uploadVideos = async (req, res, next) => {
 		const user = await models.User.findOne({ where: { uuid: uid } });
 		console.log(videos, "videos");
 		if (videos?.length > 0) {
-			const videos_objs = [];
-			videos.forEach(async (video) => {
+			const videoUploadPromises = videos.map(async (video) => {
 				const { path, originalname } = video;
 				const name = req.user?.name || "Jason Mei";
 				const ref = `tmp/${name}-${originalname}.mp4`;
@@ -262,42 +262,76 @@ const uploadVideos = async (req, res, next) => {
 					public_url: file.publicUrl(),
 				});
 
-				ffmpeg()
-					.input(path)
-					.format("mp4")
-					.fps(30)
-					.addOptions(["-crf 28"])
-					.save(ref)
-					.on("error", function (err) {
-						console.log("An error occurred: " + err.message);
-					})
-					.on("end", function () {
-						console.log("unlink");
-						fs.unlink(path, (err) => {
-							if (err)
-								console.log("// Error when uploading", err);
-						});
-						fs.createReadStream(ref)
-							.pipe(file.createWriteStream())
-							.on("error", function (err) {
+				await new Promise((resolve, reject) => {
+					ffmpeg()
+						.input(path)
+						.format("mp4")
+						.fps(30)
+						.addOptions(["-crf 28"])
+						.save(ref)
+						.on("error", reject)
+						.on("end", () => {
+							fs.unlink(path, (err) => {
 								if (err)
-									console.log("// Error when uploading", err);
-							})
-							.on("finish", function () {
-								file.makePublic().catch((err) =>
-									console.log("Video file error public:", err)
-								);
-								fs.unlink(ref, (err) => {
-									if (err)
-										console.log("Video unlink err:", err);
-								});
+									console.log(
+										"// Error when deleting temp file",
+										err
+									);
 							});
-					});
-				videos_objs.push(user_content);
+
+							fs.createReadStream(ref)
+								.pipe(file.createWriteStream())
+								.on("error", reject)
+								.on("finish", async () => {
+									await file.makePublic();
+									fs.unlink(ref, (err) => {
+										if (err)
+											console.log(
+												"Video unlink err:",
+												err
+											);
+									});
+									resolve(true); // Resolve after file is public
+								});
+						});
+				});
+
+				return user_content;
 			});
-			await Promise.allSettled(videos_objs);
-			req.videos = videos_objs;
-			next();
+			Promise.all(videoUploadPromises)
+				.then(() => {
+					fs.readdir("tmp", (err, files) => {
+						if (err) {
+							// Handle errors, such as the folder not existing
+							console.error("Error reading folder:", err);
+						} else {
+							if (files.length > 0) {
+								files.forEach((file) => {
+									const filePath = path.join("tmp", file);
+									fs.unlink(filePath, (err) => {
+										if (err) {
+											console.error(
+												"Error deleting file:",
+												err
+											);
+										} else {
+											console.log(
+												"Deleted file:",
+												filePath
+											);
+										}
+									});
+								});
+							} else {
+								// Folder is already empty
+								console.log("Folder is empty.");
+							}
+						}
+					});
+				})
+				.finally(() => {
+					next();
+				});
 		} else {
 			next();
 		}
