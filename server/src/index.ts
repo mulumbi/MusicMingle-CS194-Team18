@@ -236,8 +236,12 @@ app.post(
 		const user = await models.User.findOne({ where: { uuid: uid } });
 		const updated = await user.update({
 			bio,
-			user_genre_tags: user_genre_tags ? JSON.parse(user_genre_tags) : [],
-			user_role_tags: user_role_tags ? JSON.parse(user_role_tags) : [],
+			user_genre_tags: user_genre_tags
+				? JSON.parse(user_genre_tags)
+				: undefined,
+			user_role_tags: user_role_tags
+				? JSON.parse(user_role_tags)
+				: undefined,
 			organization_name,
 			organization_group_size: organization_group_size
 				? parseInt(organization_group_size)
