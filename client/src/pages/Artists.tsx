@@ -93,10 +93,7 @@ function Artists() {
 						{data?.map((artist, index) => (
 							<GigCard
 								key={index}
-								// imageUrl={artist.profile_image}
-								imageUrl={
-									artist.profile_image?.public_url || ""
-								}
+								imageUrl={artist.profileImage?.public_url || ""}
 								title={artist.name}
 								bio={artist.bio}
 								tags={artist.user_genre_tags.concat(
