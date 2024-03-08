@@ -17,7 +17,6 @@ import { fetchArtists } from "../api/artists.api";
 import { useNavigate } from 'react-router-dom';
 
 
-
 function Artists() {
 	const navigate = useNavigate();
 	const viewProfile = (artistId: string) => { 
@@ -54,16 +53,10 @@ function Artists() {
 			className="App"
 			id="ArtistPageApp"
 		>
-			<div>
-				<div
-					className="Title"
-					style={{ margin: "20px" }}
-				>
-					Discover Artists
-				</div>
-				<div id="ArtistBody">
-					<div className="Artist-page-cards">
-						<div style={{ textAlign: "center" }}>
+			<div className="main-artist-page">
+				<div className="header-search">
+					<h2  className="Title">Discover Artists </h2>
+					<div className="searchbar">
 							<Input
 								placeholder="Search"
 								value={searchName}
@@ -76,6 +69,9 @@ function Artists() {
 								<PiMagnifyingGlassBold />
 							</Button>
 						</div>
+				</div>
+				<div id="ArtistBody">
+					<div className="Artist-page-cards">
 
 						{data?.map((artist, index) => (
 							<GigCard
