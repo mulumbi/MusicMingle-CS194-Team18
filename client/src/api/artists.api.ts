@@ -1,18 +1,30 @@
 import axios from "axios";
-import { Artist } from "./types";
+import { Artist, ArtistSearchParams } from "./types";
 
-export const fetchArtists = async (searchParams: {
-	name?: string;
-	user_role_tags?: string[];
-}): Promise<Artist[]> => {
+export const fetchArtists = async (
+	searchParams: ArtistSearchParams
+): Promise<Artist[]> => {
 	console.log(searchParams, "searchParams");
 	const query = new URLSearchParams();
 	if (searchParams.name) query.append("name", searchParams.name);
+	if (searchParams.user_genre_tags)
+		query.append(
+			"user_genre_tags",
+			JSON.stringify(searchParams.user_genre_tags)
+		);
 	if (searchParams.user_role_tags)
 		query.append(
 			"user_role_tags",
 			JSON.stringify(searchParams.user_role_tags)
 		);
+	if (searchParams.flat_rate_start)
+		query.append(
+			"flat_rate_start",
+			searchParams?.flat_rate_start?.toString()
+		);
+	if (searchParams.flat_rate_end)
+		query.append("flat_rate_end", searchParams?.flat_rate_end?.toString());
+
 	console.log(query, query.toString(), "query");
 	const data = await axios
 		.get(

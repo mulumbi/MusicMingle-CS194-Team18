@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 import { Button } from "@/components/ui/button";
-import EditProfile from "@/components/EditProfile.tsx";
+import Loading from "@/components/Loading.tsx";
 import PortfolioItem from "@/components/PortfolioItem.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultProfile from "../assets/profile/DefaultProfile.png";
@@ -15,6 +15,7 @@ function Profile() {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [hasDeletedMedia, setHasDeletedMedia] = useState(false);
 
 	// Fetch user data
 	const { data, error, isLoading, refetch } = useQuery({
@@ -27,18 +28,24 @@ function Profile() {
 	useEffect(() => {
 		refetch();
 	}, []);
-
 	// Fetch after profile edits
 	useEffect(() => {
 		if (location && location.state) {
 			refetch();
+		} else if (hasDeletedMedia) {
+			setHasDeletedMedia(false);
+			refetch();
 		}
-	}, [location?.state?.refresh]);
+	}, [location?.state?.refresh, hasDeletedMedia]);
 
 	console.log("loading", isLoading);
 	console.log("data", data);
 	console.log("error", error);
-
+	
+	if (isLoading) return (
+		<Loading />
+	);
+	
 	return (
 		<div className="profile-page">
 			<img
@@ -51,7 +58,11 @@ function Profile() {
 					<div className="profile-left">
 						<img
 							className="profile-photo"
-							src={defaultProfile}
+							src={
+								data?.profileImage.length > 0
+									? data?.profileImage[0].public_url
+									: defaultProfile
+							}
 							alt="Profile Photo"
 						/>
 					</div>
@@ -67,7 +78,6 @@ function Profile() {
 							>
 								Edit Profile
 							</Button>
-							{/* <EditProfile /> */}
 						</div>
 					</div>
 				</div>
@@ -144,15 +154,16 @@ function Profile() {
 					</div>
 					<div className="profile-right">
 						<div className="portfolio">
-							<div className="portfolio-item">
-								<PortfolioItem />
-							</div>
-							<div className="portfolio-item">
-								<PortfolioItem />
-							</div>
-							<div className="portfolio-item">
-								<PortfolioItem />
-							</div>
+							{data?.portfolioImages?.map((image, index) => (
+								<div key={index} className="portfolio-item">
+									<PortfolioItem image={image} setHasDeletedMedia={setHasDeletedMedia} />
+								</div>
+							))}
+							{data?.portfolioVideos?.map((video, index) => (
+								<div key={index} className="portfolio-item">
+									<PortfolioItem video={video} setHasDeletedMedia={setHasDeletedMedia} />
+								</div>
+							))}
 						</div>
 					</div>
 				</div>
