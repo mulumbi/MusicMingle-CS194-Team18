@@ -616,105 +616,182 @@ button.submit-button:focus,
 }
 
 /* ARTISTS PAGE STYLING */
-#ArtistBody {
-	display: flex;
-	flex-direction: row;
-}
-
-.Artist-page-cards {
-	width: 90%;
-	display: flex;
-	flex-direction: column;
-	padding: 0;
-	margin: 0;
-}
-
-#ArtistBody .my-gig-cards {
-	width: 100%;
+body, #ArtistPageApp {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 #ArtistPageApp {
-	flex-direction: row;
+  display: flex;
+  flex-direction: row; 
+  gap: 20px; 
 }
+
+#ArtistBody {
+  display: flex;
+  width: 100%;
+}
+.main-artist-page, #Filterbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+}
+
+.main-artist-page {
+  width: 80%; 
+}
+
+.header-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start; 
+  margin-bottom: 10px; 
+}
+
+h2 .Title{
+  margin: 2rem; 
+  flex-shrink: 0; 
+  padding-left: 1rem;
+  padding-top: 1rem;
+}
+
+.searchbar {
+  display: flex;
+  flex-grow: 0.8;
+  align-items: center;
+  margin-left:1rem;
+  gap: 10px; 
+}
+
+.searchbar input {
+  width: calc(100% - 60px); 
+  padding: 0.5rem 1rem; 
+  font-size: 1rem; 
+  border: 2px solid #cccccc; 
+  border-radius: 4px; 
+  background-color: #fff; 
+  color: #333; 
+  outline: none; 
+}
+
+.searchbar input:focus {
+  border-color: #007bff; 
+}
+
+.searchbar button {
+  padding: 0.5rem 1rem; 
+  background-color: #007bff; 
+  color: #ffffff; 
+  border: none; 
+  border-radius: 4px; 
+  cursor: pointer;
+  font-size: 1rem; 
+  line-height: 1.5; 
+  outline: none; 
+}
+
+.searchbar button:hover {
+  background-color: #0056b3; 
+}
+
+.searchbar button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); 
+}
+
+
+.Artist-page-cards {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 0; 
+}
+
+/* FILTER BAR STYLES */
 
 #Filterbar {
-	background-color: #040d11;
-	color: white;
-	display: flex;
-	height: auto;
-	padding: 2rem;
-	flex-direction: column;
+  width: 20%;
+  background: linear-gradient(145deg, #2b3036, #3c444d);
+  color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
 }
 
-.filterbar-header h1, /* Assuming CardTitle uses h1, adjust if it's a different tag */
-.filterbar-header h2, /* Adjust according to actual tag used for CardTitle */
-.filterbar-header h3, /* Adjust according to actual tag used for CardTitle */
-.filterbar-header h4, /* Adjust according to actual tag used for CardTitle */
-.filterbar-header h5, /* Adjust according to actual tag used for CardTitle */
-.filterbar-header h6 {
-	/* Adjust according to actual tag used for CardTitle */
-	font-weight: bold;
-	text-decoration: underline;
+/* Header within the filter bar */
+.filterbar-header {
+  margin-bottom: 1rem;
 }
 
-.filter-action h5 {
-	font-size: 1rem; /* Set h5 size to 1rem */
-	padding-top: 0.25rem;
-	padding-bottom: 0.25rem;
-	margin: 0;
+.filterbar-header h1, .filterbar-header h2, .filterbar-header h3,
+.filterbar-header h4, .filterbar-header h5, .filterbar-header h6 {
+  color: #29b6f6; 
+  margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 
-.filter-action {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 1rem; /* Ensure spacing around actions, adjust as needed */
-}
-
-.filter-action select,
-.filter-action input,
-.filter-action .dropdown, /* Assuming .dropdown is used for select wrappers */
+/* Styling for interactive elements */
+.filter-action select, .filter-action input, .filter-action .dropdown,
 #Filterbar button {
-	height: auto; /* Allow height to wrap content */
-	width: 100%; /* Set a uniform width, adjust if necessary */
-	padding: 0.5rem; /* Provide some padding inside inputs/buttons for content to fit nicely */
-	box-sizing: border-box; /* Include padding in the height calculation */
+  background-color: #39424e; 
+  color: #f8f9fa;
+  border: 1px solid #51606e; 
+  padding: 10px 15px; 
+  margin-bottom: 10px;
+  border-radius: 4px; 
+  width: calc(100% - 30px); 
 }
 
-.dropdown {
-	font-size: 1rem; /* Adjusted to 1rem to match h5 size */
-	display: flex; /* Already present, ensure dropdowns are flex containers */
-	justify-content: center; /* Center content, already present */
-	padding: 0.5rem 0; /* Adjust padding to ensure height wraps content */
+/* Enhancements for hover states */
+#Filterbar button:hover, .filter-action select:hover, .filter-action input:hover {
+  background-color: #505c69; 
+  color: #ffffff;
+  border-color: #29b6f6; 
 }
 
+/* Focus states for improved accessibility */
+.filter-action select:focus, .filter-action input:focus,
+#Filterbar button:focus {
+  outline: 2px solid #29b6f6;
+  outline-offset: 2px;
+}
+
+/* Custom styling for the dropdown arrow */
+.dropdown::after {
+  content: '▼';
+  color: #adb5bd; 
+  position: absolute;
+  right: 15px; 
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Dropdown menu styling */
 .fillDropdown {
-	width: 100%; /* Ensure dropdowns fill the width of the parent */
-	background-color: white; /* Ensure dropdowns have a white background */
-	color: black;
-	padding: 0.5rem;
-	border-radius: 0.5rem;
-	display: flex;
-	flex-direction: column; /* Stack items vertically */
-	align-items: center; /* Center items horizontally */
+  background-color: #f8f9fa; 
+  color: #39424e; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  border-radius: 4px; 
+  padding: 5px 0; 
 }
 
-#Filterbar button {
-	display: inline-flex; /* Use inline-flex to align button text properly */
-	align-items: center; /* Center button content vertically */
-	justify-content: center; /* Center button content horizontally */
-}
-
-/* Additional styles for uniform button and select heights */
-button,
-.dropdown select {
-	height: 2.5rem; /* Example fixed height, adjust as needed */
-}
-
-/* Ensure all form controls have the same width */
-.filter-action input,
-.filter-action button,
-.filter-action .dropdown {
-	width: auto; /* Adjust as needed to ensure uniform width */
+.apply-button{
+  margin-top: 2rem;
+  background-color: #29b6f6;
+  color: white;
 }
 
 /* GIGS PAGE STYLING */
