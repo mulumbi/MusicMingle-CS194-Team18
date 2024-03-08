@@ -63,8 +63,8 @@ const roles = [
 interface FilterSidebarGigProps {
 	minBudget: number; // Define the expected type for minBudget
 	maxBudget: number; // Define the expected type for maxBudget
-	selectedGenres: string; // Define the expected type for selectedGenres
-	selectedRoles: string; // Define the expected type for selectedRoles
+	selectedGenres: string[]; // Define the expected type for selectedGenres
+	selectedRoles: string[]; // Define the expected type for selectedRoles
 	onApplyFilters: (minBudget: number, maxBudget: number, selectedGenres: string, selectedRoles: string) => void; 
 }
 
@@ -160,6 +160,8 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 interface FilterSidebarArtistProps {
 	minRate: number;
 	maxRate: number;
+	selectedGenres: string[];	
+	selectedRoles: string[];
 	onApplyFilters: (minRate: number, maxRate: number) => void;
 }
 
