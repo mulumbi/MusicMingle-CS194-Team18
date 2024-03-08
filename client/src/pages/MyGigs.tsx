@@ -97,22 +97,25 @@ const MyGigs = () => {
 								eventStart={gig.event_start}
 								eventEnd={gig.event_end}
 								tags={gig.gig_role_tags}
-								buttonText1={
+								popupButtonText={
 									"View Applicants"
 								}
-								onButtonClick1={() => {
-									/* handle button click */
-								}}
-								buttonText2={
+								popupContent={
+									(gig.applicants).map((app, index) => (
+										<Link to="/artists/artist_id=${app.user.id}">
+											<p>{app.user.name}</p>
+										</Link>
+								))}
+								buttonText1={
 									"Edit Gig"
 								}
-								onButtonClick2={() => {
+								onButtonClick1={() => {
 									/* TODO: wire mygigs/edit */
 								}}
-								buttonText3={
+								buttonText2={
 									"Close Gig"
 								}
-								onButtonClick3={() => {
+								onButtonClick2={() => {
 									/* handle button click */
 								}}
 							/>
