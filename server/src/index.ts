@@ -167,8 +167,8 @@ async function seedDummyGigs() {
 // 	.catch((err) => console.log(err));
 
 sequelize
-	// .sync({ force: true })
-	.sync()
+    .sync({ force: true })
+	//.sync()
 	.then(async () => {
 		console.log("Model Sync Complete");
 		testDbConnection();
