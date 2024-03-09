@@ -461,9 +461,24 @@ const searchArtists = async (req, res) => {
 		artist_id,
 	} = req.query;
 	if (artist_id) {
-		return await models.User.findOne({
+		const user = await models.User.findOne({
 			where: { is_artist: true, id: artist_id },
 		});
+		const profileImage = await user.getUserContents({
+			where: { type: "profileImage" },
+		});
+		const portfolioImages = await user.getUserContents({
+			where: { type: "portfolioImage" },
+		});
+		const portfolioVideos = await user.getUserContents({
+			where: { type: "portfolioVideo" },
+		});
+		return {
+			...user.dataValues,
+			profileImage,
+			portfolioImages,
+			portfolioVideos,
+		};
 	}
 	const query: any = [{ is_artist: true }];
 	if (organization_size_start) {
@@ -524,7 +539,22 @@ const searchArtists = async (req, res) => {
 		offset: offset ? offset : 0,
 	});
 
-	return users;
+	const formattedUsers = await Promise.all(
+		users.map(async (user) => {
+			const userModel = await models.User.findOne({
+				where: { id: user.id },
+			});
+			const profileImage = await userModel.getUserContents({
+				where: { type: "profileImage" },
+			});
+			return {
+				...user.dataValues,
+				profileImage,
+			};
+		})
+	);
+
+	return formattedUsers;
 };
 
 const searchGigs = async (req, res) => {

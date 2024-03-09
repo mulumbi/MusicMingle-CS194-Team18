@@ -55,7 +55,10 @@ const client = new Client({
 	port: 5432,
 });
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = [
+	"http://localhost:5173",
+	"https://musicmingle-cabf2.web.app/",
+];
 const corsOptions = {
 	origin: (origin, callback) => {
 		if (!origin) return callback(null, true);
