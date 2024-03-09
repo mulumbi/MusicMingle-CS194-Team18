@@ -37,6 +37,7 @@ export type Artist = {
 };
 
 export type ArtistSearchParams = {
+	artist_id?: string;
 	name?: string;
 	user_role_tags?: string[];
 	user_genre_tags?: string[];

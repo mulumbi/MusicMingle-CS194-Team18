@@ -21,7 +21,8 @@ import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 type PortfolioItemProps = {
   image?: { public_url: string, id: string };
   video?: { public_url: string, id: string };
-  setHasDeletedMedia: Dispatch<SetStateAction<boolean>>;
+  setHasDeletedMedia?: Dispatch<SetStateAction<boolean>>;
+  viewOnly?: boolean;
 };
 
 const PortfolioItem: React.FC<PortfolioItemProps> = (props) => {
@@ -78,30 +79,32 @@ const PortfolioItem: React.FC<PortfolioItemProps> = (props) => {
 					<source src={props.video.public_url} type="video/mp4" />
 				</video>
 			}
-			<AlertDialog>
-				<AlertDialogTrigger className="icon-button">
-					<RxCross2/>
-				</AlertDialogTrigger>
-				<AlertDialogPortal>
-					<AlertDialogOverlay className="dialog-overlay" />
-					<AlertDialogContent className="dialog-content">
-						<AlertDialogHeader>
-							<AlertDialogTitle className="dialog-title">Remove from portfolio?</AlertDialogTitle>
-							<AlertDialogDescription className="dialog-description">
-								This will delete your file from our servers.
-							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<div className="dialog-footer">
-								<AlertDialogCancel className="dialog-cancel">Cancel</AlertDialogCancel>
-								<AlertDialogAction className="dialog-submit" onClick={handleDelete}>
-									Remove
-								</AlertDialogAction>
-							</div>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogPortal>
-			</AlertDialog>
+			{ !props.viewOnly && 
+				<AlertDialog>
+					<AlertDialogTrigger className="icon-button">
+						<RxCross2/>
+					</AlertDialogTrigger>
+					<AlertDialogPortal>
+						<AlertDialogOverlay className="dialog-overlay" />
+						<AlertDialogContent className="dialog-content">
+							<AlertDialogHeader>
+								<AlertDialogTitle className="dialog-title">Remove from portfolio?</AlertDialogTitle>
+								<AlertDialogDescription className="dialog-description">
+									This will delete your file from our servers.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<div className="dialog-footer">
+									<AlertDialogCancel className="dialog-cancel">Cancel</AlertDialogCancel>
+									<AlertDialogAction className="dialog-submit" onClick={handleDelete}>
+										Remove
+									</AlertDialogAction>
+								</div>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialogPortal>
+				</AlertDialog>
+			}
 		</div>
 	  );
 }

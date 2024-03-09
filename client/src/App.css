@@ -719,7 +719,7 @@ button.submit-button:focus,
 /* ARTISTS PAGE STYLING */
 body, #ArtistPageApp {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f4f4;
+  /* background-color: #f4f4f4; */
   color: #333;
   line-height: 1.6;
   margin: 0;

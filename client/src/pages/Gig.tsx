@@ -1,26 +1,23 @@
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import { fetchProfileDetails, mutateProfileDetails } from "../api/profile.api";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loading.tsx";
 import PortfolioItem from "@/components/PortfolioItem.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultProfile from "../assets/profile/DefaultProfile.png";
+import { fetchArtist } from "../api/artists.api";
 
-function Profile() {
-	const { currentUser } = useContext(AuthContext);
-	const queryClient = useQueryClient();
+function Gig() {
+    const { id } = useParams();
 	const navigate = useNavigate();
-	const location = useLocation();
-	const [hasDeletedMedia, setHasDeletedMedia] = useState(false);
 
 	// Fetch user data
-	const { data, error, isLoading, refetch } = useQuery({
-		queryKey: ["profile_get"],
-		queryFn: () => fetchProfileDetails(currentUser),
+    const { data, error, isLoading, refetch } = useQuery({
+		queryKey: ["artist_get"],
+		queryFn: () =>
+			fetchArtist(id),
 		enabled: false,
 	});
 
@@ -28,15 +25,6 @@ function Profile() {
 	useEffect(() => {
 		refetch();
 	}, []);
-	// Fetch after profile edits
-	useEffect(() => {
-		if (location && location.state) {
-			refetch();
-		} else if (hasDeletedMedia) {
-			setHasDeletedMedia(false);
-			refetch();
-		}
-	}, [location?.state?.refresh, hasDeletedMedia]);
 
 	console.log("loading", isLoading);
 	console.log("data", data);
@@ -58,8 +46,9 @@ function Profile() {
 					<div className="profile-left">
 						<img
 							className="profile-photo"
+                            src={defaultProfile}
 							src={
-								data?.profileImage.length > 0
+								data?.profileImage?.length > 0
 									? data?.profileImage[0].public_url
 									: defaultProfile
 							}
@@ -67,16 +56,20 @@ function Profile() {
 						/>
 					</div>
 					<div className="profile-right">
-						<div>
-							<h2>{data?.name}</h2>
+						<div>    
+                            <h2>{data?.name}</h2>
 							<p>{data?.email}</p>
 						</div>
 						<div>
 							<Button
 								className="profile-button"
-								onClick={() => navigate("/profile_settings")}
 							>
-								Edit Profile
+								Message
+							</Button>
+                            <Button
+								className="profile-button"
+							>
+								Share
 							</Button>
 						</div>
 					</div>
@@ -91,7 +84,7 @@ function Profile() {
 							<p>{data.bio}</p>
 						) : (
 							<p>
-								<i>Tell us about yourself!</i>
+								<i>Nothing to see here!</i>
 							</p>
 						)}
 					</div>
@@ -156,12 +149,12 @@ function Profile() {
 						<div className="portfolio">
 							{data?.portfolioImages?.map((image, index) => (
 								<div key={index} className="portfolio-item">
-									<PortfolioItem image={image} viewOnly={false} setHasDeletedMedia={setHasDeletedMedia} />
+									<PortfolioItem image={image} viewOnly={true} />
 								</div>
 							))}
 							{data?.portfolioVideos?.map((video, index) => (
 								<div key={index} className="portfolio-item">
-									<PortfolioItem video={video}  viewOnly={false} setHasDeletedMedia={setHasDeletedMedia} />
+									<PortfolioItem video={video} viewOnly={true} />
 								</div>
 							))}
 						</div>
@@ -171,4 +164,4 @@ function Profile() {
 		</div>
 	);
 }
-export default Profile;
+export default Gig;

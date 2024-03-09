@@ -13,7 +13,7 @@ import { fetchGigs } from "../api/gigs.api";
 function EventsList() {
 	const navigate = useNavigate(); // Get the navigate function
 	const viewProfile = (gigId: string) => {
-		navigate(`/gigs/gig_id=${gigId}`);
+		navigate(`/gigs/${gigId}`);
 	}
 
 	// Define a function to handle the button click

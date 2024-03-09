@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 function Artists() {
 	const navigate = useNavigate();
 	const viewProfile = (artistId: string) => { 
-		navigate(`/artists/artist_id=${artistId}`);
+		navigate(`/artists/${artistId}`);
 	};
 
 	const [searchName, setSearchName] = useState("");

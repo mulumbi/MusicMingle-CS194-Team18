@@ -77,7 +77,7 @@ function CreateGig() {
 		mutationFn: (bodyFormData: any) =>
 			mutateCreateGig(currentUser, bodyFormData),
 		onSuccess: (data) => {
-			navigate("/gig?gig_id=" + data.id);
+			navigate("/gigs/" + data.id);
 		},
 	});
 
