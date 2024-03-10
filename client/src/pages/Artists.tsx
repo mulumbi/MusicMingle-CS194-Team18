@@ -18,7 +18,7 @@ import { fetchArtists } from "../api/artists.api";
 
 function Artists() {
 	const navigate = useNavigate();
-	const viewProfile = (artistId: string) => { 
+	const viewProfile = (artistId: string) => {
 		navigate(`/artists/${artistId}`);
 	};
 
@@ -26,22 +26,27 @@ function Artists() {
 	const [minFlatRate, setMinFlatRate] = useState<number>(0);
 	const [maxFlatRate, setMaxFlatRate] = useState<number>(10000);
 
-
 	const { data, error, isLoading, refetch } = useQuery({
-		queryKey: ["artists", {name: searchName,  flat_rate_start: minFlatRate, flat_rate_end: maxFlatRate},],
+		queryKey: [
+			"artists",
+			{
+				name: searchName,
+				flat_rate_start: minFlatRate,
+				flat_rate_end: maxFlatRate,
+			},
+		],
 		queryFn: () =>
-			fetchArtists({ 
-				name: searchName, 
-				flat_rate_start: minFlatRate, 
-				flat_rate_end: maxFlatRate}),
+			fetchArtists({
+				name: searchName,
+				flat_rate_start: minFlatRate,
+				flat_rate_end: maxFlatRate,
+			}),
 		enabled: false,
 	});
 
-
 	useEffect(() => {
 		refetch();
-	}, [searchName, minFlatRate, maxFlatRate]); 
-
+	}, [searchName, minFlatRate, maxFlatRate]);
 
 	const handleSubmit = () => {
 		refetch();
@@ -56,35 +61,35 @@ function Artists() {
 				<div className="header-search">
 					<h2 className="header-title">Discover Artists </h2>
 					<div className="searchbar">
-							<Input
-								placeholder="Search"
-								value={searchName}
-								onChange={(e) => setSearchName(e.target.value)}
-							/>
-							<Button
-								type="submit"
-								onClick={() => handleSubmit()}
-							>
-								<PiMagnifyingGlassBold />
-							</Button>
-						</div>
+						<Input
+							placeholder="Search"
+							value={searchName}
+							onChange={(e) => setSearchName(e.target.value)}
+						/>
+						<Button
+							type="submit"
+							onClick={() => handleSubmit()}
+						>
+							<PiMagnifyingGlassBold />
+						</Button>
+					</div>
 				</div>
 				<div id="ArtistBody">
 					<div className="Artist-page-cards">
-
 						{data?.map((artist, index) => (
 							<Link to={"/artists/" + artist.id}>
 								<GigCard
 									key={index}
-									imageUrl={artist.profileImage[0]?.public_url || ""}
+									imageUrl={
+										artist.profileImage[0]?.public_url || ""
+									}
 									title={artist.name}
 									bio={artist.bio}
 									tags={artist.user_genre_tags.concat(
 										artist.user_role_tags
 									)}
 									buttonText="View Profile"
-									onButtonClick={() =>
-										viewProfile(artist.id)}
+									onButtonClick={() => viewProfile(artist.id)}
 								/>
 							</Link>
 						))}
@@ -100,7 +105,6 @@ function Artists() {
 					refetch();
 					console.log("data after filters", data);
 				}}
-
 			/>
 		</div>
 	);

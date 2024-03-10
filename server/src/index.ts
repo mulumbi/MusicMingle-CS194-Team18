@@ -170,7 +170,7 @@ async function seedDummyGigs() {
 // 	.catch((err) => console.log(err));
 
 sequelize
-    // .sync({ force: true })
+	// .sync({ force: true })
 	.sync()
 	.then(async () => {
 		console.log("Model Sync Complete");
@@ -358,11 +358,11 @@ app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
 					application.dataValues;
 				const profileImage = await Gig.getGigImages();
 				return {
-					gig: Gig,
-					gig_profile_image: profileImage.find(
+					...Gig.dataValues,
+					gigProfileImage: profileImage.find(
 						(image) => image.type === "gigProfileImage"
 					),
-					gig_images: profileImage.filter(
+					gigImages: profileImage.filter(
 						(image) => image.type === "gigImage"
 					),
 					...values,

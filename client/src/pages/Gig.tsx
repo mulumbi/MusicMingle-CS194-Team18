@@ -9,20 +9,32 @@ import SharePage from "@/components/SharePage";
 import ComingSoon from "@/components/ComingSoon.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultGig from "../assets/gigs/DefaultGig.png";
-import { fetchGig } from "../api/gigs.api";
+import { fetchGig, mutateApplication } from "../api/gigs.api";
 import { fetchArtist } from "../api/artists.api";
+import { signInWithGooglePopup } from "../firebase/firebase";
+import { AuthContext } from "../context/AuthContext";
 
 function Gig() {
 	const { id } = useParams();
 	console.log("id", id);
 	const navigate = useNavigate();
+	const { currentUser } = useContext(AuthContext);
 
 	// Fetch gig data
-	const { data, error, isLoading, refetch } = useQuery({
+	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["gig_get"],
-		queryFn: () => fetchGig(id),
+		queryFn: () => fetchGig(id, currentUser),
 		enabled: false,
 	});
+
+	const { mutate, error, isPending } = useMutation({
+		mutationFn: () => mutateApplication(currentUser, id),
+		onSuccess: () => refetch(),
+	});
+
+	const onApply = () => {
+		mutate();
+	};
 
 	// Fetch on first page load
 	useEffect(() => {
@@ -99,7 +111,14 @@ function Gig() {
 							</div>
 						</div>
 						<div className="profile-actions">
-							<ComingSoon name="Apply" />
+							<Button
+								className="pending-button"
+								onClick={() => onApply()}
+							>
+								{data?.application
+									? "Remove Application"
+									: "Apply"}
+							</Button>
 							<SharePage
 								id={id}
 								category="gigs"

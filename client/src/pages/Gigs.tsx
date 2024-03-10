@@ -15,7 +15,7 @@ function EventsList() {
 	const navigate = useNavigate(); // Get the navigate function
 	const viewProfile = (gigId: string) => {
 		navigate(`/gigs/${gigId}`);
-	}
+	};
 	const { currentUser } = useContext(AuthContext);
 
 	// Define a function to handle the button click
@@ -26,7 +26,6 @@ function EventsList() {
 	const [searchName, setSearchName] = useState("");
 	const [minBudget, setMinBudget] = useState<number>(0);
 	const [maxBudget, setMaxBudget] = useState<number>(10000);
-
 
 	const {
 		data: gigs,
@@ -43,7 +42,6 @@ function EventsList() {
 				name: searchName,
 				min_budget: minBudget,
 				max_budget: maxBudget,
-
 			}),
 		enabled: false,
 	});
@@ -66,17 +64,23 @@ function EventsList() {
 			const token = await currentUser.getIdToken();
 
 			// Post application using the retrieved gig ID
-			await axios.post(`${import.meta.env.VITE_BACKEND_URL}/gigs/application/?gig_id=${gigId}`, {}, {
-				headers: {
-					'Authorization': `Bearer ${token}`, // Assuming Bearer token is required; adjust as necessary
-					'Content-Type': 'application/json'
+			await axios.post(
+				`${
+					import.meta.env.VITE_BACKEND_URL
+				}/gigs/application/?gig_id=${gigId}`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`, // Assuming Bearer token is required; adjust as necessary
+						"Content-Type": "application/json",
+					},
 				}
-			});
+			);
 
-			alert('Application submitted successfully!');
+			alert("Application submitted successfully!");
 		} catch (error) {
-			console.error('Error applying to gig:', error);
-			alert('Failed to submit application.');
+			console.error("Error applying to gig:", error);
+			alert("Failed to submit application.");
 		}
 	};
 
@@ -115,37 +119,44 @@ function EventsList() {
 							/>
 						</Link>
 
-						{gigs?.map((gig, index) => (
-							<Link to={"/gigs/" + gig.id}>
-								<GigCard
-									key={index}
-									imageUrl={gig?.gigProfileImage?.public_url || ""}
-									title={gig.name}
-									bio={gig.bio}
-									eventStart={gig.event_start}
-									eventEnd={gig.event_end}
-									tags={gig.gig_role_tags.concat(gig.gig_genre_tags)}
-									buttonText="Apply Now"
-									onButtonClick={() => applyToGig(gig.name, currentUser)}
-								/>
-							</Link>
-							
-						))}
+						{gigs?.map((gig, index) => {
+							return (
+								<Link to={"/gigs/" + gig.id}>
+									<GigCard
+										key={index}
+										imageUrl={
+											gig?.gigProfileImage?.public_url ||
+											""
+										}
+										title={gig.name}
+										bio={gig.bio}
+										tags={gig.gig_role_tags.concat(
+											gig.gig_genre_tags
+										)}
+										eventStart={gig.event_start}
+										eventEnd={gig.event_end}
+										buttonText="Apply Now"
+										onButtonClick={() =>
+											// applyToGig(gig.name, currentUser)
+											navigate(`/gigs/${gig.id}`)
+										}
+									/>
+								</Link>
+							);
+						})}
 					</div>
 				</div>
 			</div>
 			<FilterSidebarGig
 				minBudget={minBudget}
 				maxBudget={maxBudget}
-
 				onApplyFilters={(newMinBudget, newMaxBudget) => {
 					setMinBudget(newMinBudget);
 					setMaxBudget(newMaxBudget);
 					refetch();
-
-				}} />
+				}}
+			/>
 		</div>
-
 	);
 }
 

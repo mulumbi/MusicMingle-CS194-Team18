@@ -23,12 +23,26 @@ const GigCard: React.FC<GigCardProps> = ({
 }) => {
 	// Parse date and times
 	const startDateTime = new Date(eventStart);
-	const startDate = startDateTime.toLocaleDateString('en-US', { month: "short", day: "numeric", weekday: "short" });
-	const startTime = startDateTime.toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }); 	
+	const startDate = startDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const startTime = startDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
 	const endDateTime = new Date(eventEnd);
-	const endDate = endDateTime.toLocaleDateString('en-US', { month: "short", day: "numeric", weekday: "short" });
-	const endTime = endDateTime.toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }); 	
+	const endDate = endDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const endTime = endDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
 	return (
 		<div className="my-gig-cards">
@@ -41,21 +55,17 @@ const GigCard: React.FC<GigCardProps> = ({
 					<div className="gig-title">{title}</div>
 					{eventStart && (
 						<div className="date-time-row">
-							<div className="date">
-								{startDate}
-							</div>
-							{startTime + ' - '}
-							{(endDate != startDate) && 
-								<div className="date">
-									{endDate}
-								</div>
-							}
+							<div className="date">{startDate}</div>
+							{startTime + " - "}
+							{endDate != startDate && (
+								<div className="date">{endDate}</div>
+							)}
 							{endTime}
 						</div>
 					)}
 					<p className="gig-bio">{bio}</p>
 				</div>
-						
+
 				<div className="gig-footer">
 					<div className="gig-tags">
 						{/* Dynamically generate spans for each tag */}
@@ -68,7 +78,12 @@ const GigCard: React.FC<GigCardProps> = ({
 							</span>
 						))}
 					</div>
-					<button className="gig-footer-button" onClick={onButtonClick}>{buttonText}</button>
+					<button
+						className="gig-footer-button"
+						onClick={onButtonClick}
+					>
+						{buttonText}
+					</button>
 				</div>
 			</div>
 		</div>

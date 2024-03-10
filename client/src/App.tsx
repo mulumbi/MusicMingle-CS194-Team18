@@ -19,12 +19,28 @@ function App() {
 				element={<Home />}
 			/>
 			<Route path="gigs">
-				<Route index element={<Gigs />} />
-				<Route path=":id" element={<Gig />} />
+				<Route
+					index
+					element={<Gigs />}
+				/>
+				<Route
+					path=":id"
+					element={
+						<RequireAuth>
+							<Gig />
+						</RequireAuth>
+					}
+				/>
 			</Route>
 			<Route path="artists">
-				<Route index element={<Artists />} />
-				<Route path=":id" element={<Artist />} />
+				<Route
+					index
+					element={<Artists />}
+				/>
+				<Route
+					path=":id"
+					element={<Artist />}
+				/>
 			</Route>
 			<Route
 				path="my_gigs"
