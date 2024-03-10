@@ -55,6 +55,7 @@ export type Gig = {
 	event_end: string;
 	gig_role_tags: [string];
 	gig_genre_tags: [string];
+	is_open: boolean;
 	createdAt: string;
 	updatedAt: string;
 	user: User;
