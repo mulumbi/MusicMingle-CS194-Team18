@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User, UserContent } from "./types";
+import { User, UserContent, Gig } from "./types";
 
 // Fetch the gigs data for the current user
 export const fetchGigsData = async (currentUser: any): Promise<any> => {
