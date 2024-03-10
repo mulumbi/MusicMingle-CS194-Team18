@@ -163,7 +163,7 @@ function Profile() {
 							))}
 							{data?.portfolioVideos?.map((video, index) => (
 								<div key={index} className="portfolio-item">
-									<PortfolioItem video={video}  viewOnly={false} setHasDeletedMedia={setHasDeletedMedia} />
+									<PortfolioItem video={video} viewOnly={false} setHasDeletedMedia={setHasDeletedMedia} />
 								</div>
 							))}
 						</div>

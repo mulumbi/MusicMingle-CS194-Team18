@@ -54,7 +54,7 @@ function Artists() {
 		>
 			<div className="main-artist-page">
 				<div className="header-search">
-					<h2  className="Title">Discover Artists </h2>
+					<h2 className="header-title">Discover Artists </h2>
 					<div className="searchbar">
 							<Input
 								placeholder="Search"
@@ -76,7 +76,7 @@ function Artists() {
 							<Link to={"/artists/" + artist.id}>
 								<GigCard
 									key={index}
-									imageUrl={artist.profileImage?.public_url || ""}
+									imageUrl={artist.profileImage[0]?.public_url || ""}
 									title={artist.name}
 									bio={artist.bio}
 									tags={artist.user_genre_tags.concat(

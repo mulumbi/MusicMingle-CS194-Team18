@@ -74,8 +74,8 @@ function Gig() {
 						<img
 							className="gig-photo"
 							src={
-								data?.profileImage?.length > 0
-									? data?.profileImage[0].public_url
+								data?.gigProfileImage
+									? data?.gigProfileImage.public_url
 									: defaultGig
 							}
 							alt="Gig Photo"
@@ -183,23 +183,18 @@ function Gig() {
 					</div>
 				</div>
 
-				{(data?.portfolioImages || data?.portfolioVideos) && (
+				{data?.gigImages && (
 					<div className="profile-row">
 						<div className="profile-left">
 							<h3>Gallery</h3>
 						</div>
 						<div className="profile-right">
 							<div className="portfolio">
-								{/* {data?.portfolioImages?.map((image, index) => (
+								{data?.gigImages?.map((image, index) => (
 									<div key={index} className="portfolio-item">
 										<PortfolioItem image={image} viewOnly={true} />
 									</div>
 								))}
-								{data?.portfolioVideos?.map((video, index) => (
-									<div key={index} className="portfolio-item">
-										<PortfolioItem video={video} viewOnly={true} />
-									</div>
-								))} */}
 							</div>
 						</div>
 					</div>
