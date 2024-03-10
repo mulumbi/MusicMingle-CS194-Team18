@@ -23,6 +23,24 @@ import React from "react";
 import { CustomSlider } from "@/components/CustomSlider";
 import * as Slider from "@radix-ui/react-slider";
 import { useState, useEffect } from "react";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const genres = [
 	{ label: "Pop", value: "Pop" },
@@ -59,31 +77,47 @@ const roles = [
 	{ label: "Recording Artist", value: "Recording Artist" },
 ] as const;
 
+const FormSchema = z.object({
+	minBudget: z.number().optional(),
+	maxBudget: z.number().optional(),
+	selectedGenres: z.array(z.string()).optional(),
+	selectedRoles: z.array(z.string()).optional(),
+});
 
 interface FilterSidebarGigProps {
 	minBudget: number; // Define the expected type for minBudget
 	maxBudget: number; // Define the expected type for maxBudget
 	selectedGenres: string[]; // Define the expected type for selectedGenres
 	selectedRoles: string[]; // Define the expected type for selectedRoles
-	onApplyFilters: (minBudget: number, maxBudget: number, selectedGenres: string, selectedRoles: string) => void; 
+	onApplyFilters: (
+		minBudget: number,
+		maxBudget: number,
+		selectedRoles: string[],
+		selectedGenres: string[]
+	) => void;
 }
 
 const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 	minBudget,
 	maxBudget,
 	selectedGenres,
-    selectedRoles,
+	selectedRoles,
 	onApplyFilters,
 }) => {
 	const [localMinBudget, setLocalMinBudget] = React.useState(minBudget);
 	const [localMaxBudget, setLocalMaxBudget] = React.useState(maxBudget);
-	const [localSelectedGenres, setLocalSelectedGenres] = React.useState(selectedGenres);
-    const [localSelectedRoles, setLocalSelectedRoles] = React.useState(selectedRoles);
-
+	const [localRoles, setLocalRoles] = React.useState(selectedRoles);
+	const [localGenres, setLocalGenres] = React.useState(selectedGenres);
+	const { control, setValue } = useForm({
+		defaultValues: {
+			selectedGenres: selectedGenres,
+			selectedRoles: selectedRoles,
+		},
+	});
 
 	const handleApplyFilters = () => {
-        onApplyFilters(localMinBudget, localMaxBudget, localSelectedGenres, localSelectedRoles);
-    };
+		onApplyFilters(localMinBudget, localMaxBudget, localRoles, localGenres);
+	};
 
 	return (
 		<Card id="Filterbar">
@@ -115,34 +149,122 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 						/>
 					</div>
 
-					<div className="filter-action">
-						<h3>Genre</h3>
-						<Select onChange={(e) => setLocalSelectedGenres(e.target.value)}>
-							<SelectTrigger >
-								<SelectValue placeholder="Choose genre" />
-							</SelectTrigger >
-							<SelectContent className="fillDropdown" >
-								{genres.map(genre => (
-									<SelectItem key={genre.value} value={genre.value} >{genre.label}</SelectItem>
-								))}
-							</SelectContent >
-						</Select>
-					</div>
+					<FormField
+						control={control}
+						name="selectedRoles"
+						render={({ field }) => (
+							<div className="filter-action">
+								<Popover>
+									<PopoverTrigger asChild>
+										<Button>Select Roles</Button>
+									</PopoverTrigger>
+									<PopoverContent className="popover-content">
+										<Command>
+											<CommandGroup>
+												{roles.map((role) => (
+													<CommandItem
+														value={role.label}
+														key={role.value}
+														className="command-item"
+														onSelect={() => {
+															const newRoles =
+																localRoles.includes(
+																	role.value
+																)
+																	? localRoles.filter(
+																			(
+																				r
+																			) =>
+																				r !==
+																				role.value
+																	  )
+																	: [
+																			...localRoles,
+																			role.value,
+																	  ];
+															setLocalRoles(
+																newRoles
+															);
+														}}
+													>
+														<Check
+															className={
+																localRoles.includes(
+																	role.value
+																)
+																	? "check-show"
+																	: "check-hide"
+															}
+														/>
+														{role.label}
+													</CommandItem>
+												))}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+							</div>
+						)}
+					/>
 
-					<div className="filter-action">
-						<h3>Role</h3>
-						<Select onChange={(e) => setLocalSelectedRoles(e.target.value)}>
-							<SelectTrigger>
-								<SelectValue placeholder="Choose role" />
-							</SelectTrigger>
-							<SelectContent className="fillDropdown">
-								{roles.map(role => (
-									<SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
-									
-								))}
-							</SelectContent>
-						</Select>
-					</div>
+					<FormField
+						control={control}
+						name="selectedGenres"
+						render={({ field }) => (
+							<div className="filter-action">
+								<Popover>
+									<PopoverTrigger asChild>
+										<Button>Select Genres</Button>
+									</PopoverTrigger>
+									<PopoverContent className="popover-content">
+										<Command>
+											<CommandGroup>
+												{genres.map((genre) => (
+													<CommandItem
+														value={genre.label}
+														key={genre.value}
+														className="command-item"
+														onSelect={() => {
+															const newGenres =
+																localGenres.includes(
+																	genre.value
+																)
+																	? localGenres.filter(
+																			(
+																				g
+																			) =>
+																				g !==
+																				genre.value
+																	  )
+																	: [
+																			...localGenres,
+																			genre.value,
+																	  ];
+															setLocalGenres(
+																newGenres
+															);
+														}}
+													>
+														<Check
+															className={
+																localGenres.includes(
+																	genre.value
+																)
+																	? "check-show"
+																	: "check-hide"
+															}
+														/>
+														{genre.label}
+													</CommandItem>
+												))}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+							</div>
+						)}
+					/>
+        
 				</div>
 			</CardContent>
 			<CardFooter>
@@ -160,7 +282,7 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 interface FilterSidebarArtistProps {
 	minRate: number;
 	maxRate: number;
-	selectedGenres: string[];	
+	selectedGenres: string[];
 	selectedRoles: string[];
 	onApplyFilters: (minRate: number, maxRate: number) => void;
 }
@@ -214,8 +336,13 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 								<SelectValue placeholder="Choose genre" />
 							</SelectTrigger>
 							<SelectContent className="fillDropdown">
-								{genres.map(genre => (
-									<SelectItem key={genre.value} value={genre.value}>{genre.label}</SelectItem>
+								{genres.map((genre) => (
+									<SelectItem
+										key={genre.value}
+										value={genre.value}
+									>
+										{genre.label}
+									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
@@ -228,8 +355,13 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 								<SelectValue placeholder="Choose role" />
 							</SelectTrigger>
 							<SelectContent className="fillDropdown">
-								{roles.map(role => (
-									<SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
+								{roles.map((role) => (
+									<SelectItem
+										key={role.value}
+										value={role.value}
+									>
+										{role.label}
+									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>

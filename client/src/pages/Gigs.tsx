@@ -26,6 +26,8 @@ function EventsList() {
 	const [searchName, setSearchName] = useState("");
 	const [minBudget, setMinBudget] = useState<number>(0);
 	const [maxBudget, setMaxBudget] = useState<number>(10000);
+	const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+	const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
 	const {
 		data: gigs,
@@ -35,22 +37,25 @@ function EventsList() {
 	} = useQuery({
 		queryKey: [
 			"gigs",
-			{ name: searchName, min_budget: minBudget, max_budget: maxBudget },
+			{ name: searchName, min_budget: minBudget, max_budget: maxBudget, selectedRoles, selectedGenres },
 		],
 		queryFn: () =>
 			fetchGigs({
 				name: searchName,
 				min_budget: minBudget,
 				max_budget: maxBudget,
+				gig_role_tags: selectedRoles,
+				gig_genre_tags: selectedGenres,
 			}),
 		enabled: false,
 	});
 
 	useEffect(() => {
 		refetch();
-	}, [searchName, minBudget, maxBudget]);
+	}, [searchName, minBudget, maxBudget, selectedRoles, selectedGenres]);
 
 	const handleSubmit = () => {
+		console.log({"Here is after filter": searchName, minBudget, maxBudget, selectedRoles, selectedGenres});
 		refetch();
 	};
 
@@ -150,12 +155,17 @@ function EventsList() {
 			<FilterSidebarGig
 				minBudget={minBudget}
 				maxBudget={maxBudget}
-				onApplyFilters={(newMinBudget, newMaxBudget) => {
+				selectedRoles={selectedRoles}
+				selectedGenres={selectedGenres}
+				onApplyFilters={(newMinBudget, newMaxBudget, newSelectedRoles, newSelectedGenres) => {
 					setMinBudget(newMinBudget);
 					setMaxBudget(newMaxBudget);
+					setSelectedRoles(newSelectedRoles);
+					setSelectedGenres(newSelectedGenres);
 					refetch();
 				}}
 			/>
+
 		</div>
 	);
 }
