@@ -120,7 +120,7 @@ export function ProfileSettings() {
 	function onSubmit(formData: z.infer<typeof FormSchema>) {
 		let bodyFormData = new FormData();
 
-		if (formData.profile_image && formData.profile_image.length > 0)
+		if (formData.profile_image)
 			bodyFormData.append("profile_image", formData.profile_image);
 		bodyFormData.append("bio", formData.bio ? formData.bio : "");
 		if (formData.user_role_tags)
