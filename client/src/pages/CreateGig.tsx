@@ -19,6 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
 import { addDays, format, isAfter } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import Loading  from "@/components/Loading";
 
 const genres = [
 	{ label: "Pop", value: "Pop" },
@@ -73,6 +74,10 @@ function CreateGig() {
 	const [profileImage, setGigProfileImages] = useState<File | null>(null);
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
+	const [isLoading, setIsLoading] = useState(false); // State to control the display of the Loading component
+	const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State to control the display of the success popup
+
+
 	const { mutate } = useMutation({
 		mutationFn: (bodyFormData: any) =>
 			mutateCreateGig(currentUser, bodyFormData),
@@ -81,7 +86,9 @@ function CreateGig() {
 		},
 	});
 
+
 	const onSubmit = () => {
+		setIsLoading(true);
 		console.log("onSubmit");
 		console.log(
 			gigTitle,
@@ -159,14 +166,29 @@ function CreateGig() {
 		for (const pair of bodyFormData.entries()) {
 			console.log(pair[0] + ", " + pair[1]);
 		}
-		mutate(bodyFormData);
+		mutate(bodyFormData), {
+			onSuccess: (data) => {
+				setIsLoading(false); // Hide loading indicator
+				setShowSuccessPopup(true); // Show success popup
+				// navigate("/gig?gig_id=" + data.id); // Navigate to the gig page
+			},
+			onError: () => {
+				setIsLoading(false); // Hide loading indicator on error
+				// Optionally show an error message to the user
+			}
+		};
 	};
+
+
+
+
 
 	return (
 		<div
 			className="App"
 			id="CreateGigPage"
 		>
+			{isLoading && <Loading />}
 			<div className="create_gig">
 				<h2 className="NewGigTitle">Create New Gig</h2>
 				<div className="new-gig-fields">
@@ -389,15 +411,20 @@ function CreateGig() {
 					</Popover>
 
 					<div className="button_container">
-						<Button
-							onClick={() => onSubmit()}
-							id="create_gig_buttton"
-						>
+						<Button onClick={onSubmit} id="create_gig_button">
 							Create Gig
 						</Button>
 					</div>
 				</div>
+				{showSuccessPopup && (
+					<div>
+						<p>Gig created successfully!</p>
+						<button onClick={() => navigate("/gigs")}>Go to Gigs Page</button>
+						<button onClick={() => navigate("/my-gigs")}>Go to My Gigs</button>
+					</div>
+				)}
 			</div>
+
 		</div>
 	);
 }

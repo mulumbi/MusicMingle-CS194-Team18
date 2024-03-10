@@ -28,3 +28,13 @@ export const fetchGigs = async (
 	);
 	return response.data;
 };
+
+export const fetchGigByName = async (name: string): Promise<Gig> => {
+	const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/search_gigs?name=${name}`);
+	if (response.data && response.data.length > 0) {
+	  return response.data[0];
+	}
+	throw new Error('Gig not found');
+  };
+
+  
