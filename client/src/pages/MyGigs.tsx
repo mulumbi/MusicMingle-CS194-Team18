@@ -79,7 +79,7 @@ const MyGigs = () => {
 									"View Applicants"
 								}
 								popupContent={
-									(gig.applicants).map((app) => (
+									(gig.applications).map((app) => (
 										<Link to="/artists/${app.user.id}">
 											<p>{app.user.name}</p>
 										</Link>
