@@ -88,7 +88,7 @@ function EventsList() {
 		>
 			<div className="main-artist-page">
 				<div className="header-search">
-					<h2 className="Title">Discover Gigs </h2>
+					<h2 className="header-title">Discover Gigs</h2>
 					<div className="searchbar">
 						<Input
 							placeholder="Search"
@@ -110,7 +110,6 @@ function EventsList() {
 								imageUrl={NewGig} // Placeholder image
 								title="Create New Gig"
 								bio="Set up your own gig here now!"
-								tags={["Create", "New"]} // Placeholder tags
 								buttonText="Create"
 								onButtonClick={goToCreateGig}
 							/>
@@ -123,6 +122,8 @@ function EventsList() {
 									imageUrl={gig?.gigProfileImage?.public_url || ""}
 									title={gig.name}
 									bio={gig.bio}
+									eventStart={gig.event_start}
+									eventEnd={gig.event_end}
 									tags={gig.gig_role_tags.concat(gig.gig_genre_tags)}
 									buttonText="Apply Now"
 									onButtonClick={() => applyToGig(gig.name, currentUser)}

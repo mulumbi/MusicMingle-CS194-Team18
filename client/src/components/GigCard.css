@@ -1,18 +1,23 @@
 .my-gig-cards {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Ensure content is aligned in the center vertically */
-    gap: 20px; /* Adds some space between the image and the details */
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 2rem; /* Adds some space between the image and the details */
     background-color: #ffffff;
-    padding: 1rem 2rem;
-    width: 90%;
+    padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
   }
   
   .my-gig-cards img {
-    height: 160px;
-    width: 240px;
+    height: 11rem;
+    width: 11rem;
+    min-height: 11rem;
+    min-width: 11rem;
+    border-radius: 4px;
+    object-fit: cover;
+    object-position: center;
     box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5); /* Add drop shadow with a blur of 12 */
   }
   
@@ -20,56 +25,56 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-  }
-  
-  .gig-header {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px; /* Adds some space before the bio */
-  }
-  
-  .gig-bio {
-    font-size: 14px;
-    color: black; /* Explicitly set the text color to black */
-  }
-  
-  .gig-bottoms {
-    display: flex;
-    flex-direction: row;
-    width:100%;
+    height: 11rem;
     justify-content: space-between;
   }
   
-  .gig-tabs {
+  .gig-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 4px; /* Adds some space before the bio */
+  }
+  
+  .gig-bio {
+    font-size: 16px;
+    color: black; /* Explicitly set the text color to black */
+  }
+  
+  .gig-footer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  
+  .gig-tags {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    width: 85%; 
+    flex-flow: row wrap;
   }
   
-  .tab {
+  .tag {
     display: inline-block;
     background-color: #3697c749;
     color: rgb(54, 150, 199);
-    padding: 0.33rem 1.5rem; 
-    margin: 0;
-    margin-top: 0.25rem;
-    margin-right: 0.5rem;
     font-size: 1rem;
+    padding: 0.33rem 1.5rem; 
     border-radius: 0.5rem;
   }
-  .bottom-buttons button {
+  .gig-footer-button {
+    height: 2.4rem;
     border-radius: 8px; /* Rounded corners */
     color: white; /* White text */
-    background-color: #007bff; /* Example background color, adjust as needed */
+    font-weight: 500;
+    background-color: rgb(1, 1, 189);; /* Example background color, adjust as needed */
     padding: 10px 20px; /* Padding around the text */
     border: none; /* Remove default border */
     cursor: pointer; /* Change cursor to pointer on hover */
-    justify-self: flex-end;
-    align-self: flex-end;
   }
   
-  .bottom-buttons button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+  .gig-footer-button:hover {
+    background-color: rgb(1, 1, 119); /* Darker shade on hover */
   }
   
