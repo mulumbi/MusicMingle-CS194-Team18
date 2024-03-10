@@ -571,7 +571,30 @@ const searchGigs = async (req, res) => {
 		gig_id,
 	} = req.query;
 	if (gig_id) {
-		return await models.Gig.findByPk(gig_id);
+		const token =
+			req.headers.authorization || req?.body?.headers?.authorization;
+		const decodedToken = await getAuth().verifyIdToken(token);
+		const user = await models.User.findOne({ uuid: decodedToken.uid });
+		const application = await models.Application.findOne({
+			where: {
+				gigId: gig_id,
+				userId: user.id,
+			},
+		});
+		console.log(application, gig_id, "Application");
+		const gig = await models.Gig.findByPk(gig_id);
+		const content = gig ? await gig?.getGigImages() : [];
+		const { ...gigData } = gig.dataValues;
+		return {
+			...gigData,
+			application: application ? application.dataValues : null,
+			gigImages: content
+				.filter((image) => image.type === "gigImage")
+				.map((image) => image.dataValues),
+			gigProfileImage: content.find(
+				(image) => image.type === "gigProfileImage"
+			),
+		};
 	}
 	const query: any = [{ is_open: true }];
 	if (event_start) {

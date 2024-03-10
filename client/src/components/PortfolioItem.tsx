@@ -53,19 +53,6 @@ const PortfolioItem: React.FC<PortfolioItemProps> = (props) => {
 		if (props.video)
 			bodyFormData.append("deleted_videos", JSON.stringify([props.video.id]));
 
-		// Keep user role & genre tags the same
-		// TODO: Remove this once BE is updated 
-		if (data?.user_role_tags)
-			bodyFormData.append(
-				"user_role_tags",
-				JSON.stringify(data.user_role_tags)
-			);
-		if (data?.user_genre_tags)
-			bodyFormData.append(
-				"user_genre_tags",
-				JSON.stringify(data.user_genre_tags)
-			);
-
 		mutate(bodyFormData);
 	}
 
@@ -79,9 +66,9 @@ const PortfolioItem: React.FC<PortfolioItemProps> = (props) => {
 					<source src={props.video.public_url} type="video/mp4" />
 				</video>
 			}
-			{ !props.viewOnly && 
+			{ !props.viewOnly && (
 				<AlertDialog>
-					<AlertDialogTrigger className="icon-button">
+					<AlertDialogTrigger className="portfolio-delete-button">
 						<RxCross2/>
 					</AlertDialogTrigger>
 					<AlertDialogPortal>
@@ -104,7 +91,7 @@ const PortfolioItem: React.FC<PortfolioItemProps> = (props) => {
 						</AlertDialogContent>
 					</AlertDialogPortal>
 				</AlertDialog>
-			}
+			)}
 		</div>
 	  );
 }

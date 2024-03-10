@@ -16,9 +16,7 @@ const MyGigs = () => {
 		queryFn: () => fetchGigsData(currentUser),
 	});
 
-	if (isLoading) return (
-		<Loading />
-	);
+	if (isLoading) return <Loading />;
 
 	return (
 		<div className="App">
@@ -50,27 +48,29 @@ const MyGigs = () => {
 					{(activeTab === "APPLIED"
 						? data?.my_applications || []
 						: data?.my_gigs || []
-					).map((gig, index) => (
-						<Link to={"/gigs/" + gig.id}>
-							<GigCard
-								key={index}
-								imageUrl={gig.gigProfileImage}
-								title={gig.name}
-								bio={gig.bio}
-								eventStart={gig.event_start}
-								eventEnd={gig.event_end}
-								tags={gig.gig_role_tags}
-								buttonText={
-									activeTab === "APPLIED"
-										? "Withdraw Application"
-										: "View Applicants"
-								}
-								onButtonClick={() => {
-									/* handle button click */
-								}}
-							/>
-						</Link>
-					))}
+					).map((gig, index) => {
+						return (
+							<Link to={"/gigs/" + gig.id}>
+								<GigCard
+									key={index}
+									imageUrl={gig.gigProfileImage.public_url}
+									title={gig.name}
+									bio={gig.bio}
+									eventStart={gig.event_start}
+									eventEnd={gig.event_end}
+									tags={gig.gig_role_tags}
+									buttonText={
+										activeTab === "APPLIED"
+											? "Withdraw Application"
+											: "View Applicants"
+									}
+									onButtonClick={() => {
+										/* handle button click */
+									}}
+								/>
+							</Link>
+						);
+					})}
 				</div>
 			</div>
 		</div>

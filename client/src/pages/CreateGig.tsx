@@ -19,7 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
 import { addDays, format, isAfter } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import Loading  from "@/components/Loading";
+import Loading from "@/components/Loading";
 
 const genres = [
 	{ label: "Pop", value: "Pop" },
@@ -77,15 +77,19 @@ function CreateGig() {
 	const [isLoading, setIsLoading] = useState(false); // State to control the display of the Loading component
 	const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State to control the display of the success popup
 
-
 	const { mutate } = useMutation({
 		mutationFn: (bodyFormData: any) =>
 			mutateCreateGig(currentUser, bodyFormData),
 		onSuccess: (data) => {
+			setIsLoading(false);
+			setShowSuccessPopup(true);
 			navigate("/gigs/" + data.id);
 		},
+		onError: (error) => {
+			setIsLoading(false); // Hide loading indicator on error
+			console.log(error);
+		},
 	});
-
 
 	const onSubmit = () => {
 		setIsLoading(true);
@@ -108,16 +112,19 @@ function CreateGig() {
 			!startTime ||
 			!endTime
 		) {
+			setIsLoading(false);
 			console.log("Invalid date or time");
 			return;
 		}
 
 		if (!profileImage) {
+			setIsLoading(false);
 			console.log("Profile image is required");
 			return;
 		}
 
 		if (!budget || isNaN(parseInt(budget))) {
+			setIsLoading(false);
 			console.log("Budget is not valid");
 			return;
 		}
@@ -135,6 +142,7 @@ function CreateGig() {
 		endDate?.setSeconds(0);
 
 		if (isAfter(startDate, endDate)) {
+			setIsLoading(false);
 			console.log("Start date is before end date");
 			return;
 		}
@@ -166,22 +174,8 @@ function CreateGig() {
 		for (const pair of bodyFormData.entries()) {
 			console.log(pair[0] + ", " + pair[1]);
 		}
-		mutate(bodyFormData), {
-			onSuccess: (data) => {
-				setIsLoading(false); // Hide loading indicator
-				setShowSuccessPopup(true); // Show success popup
-				// navigate("/gig?gig_id=" + data.id); // Navigate to the gig page
-			},
-			onError: () => {
-				setIsLoading(false); // Hide loading indicator on error
-				// Optionally show an error message to the user
-			}
-		};
+		mutate(bodyFormData);
 	};
-
-
-
-
 
 	return (
 		<div
@@ -411,7 +405,10 @@ function CreateGig() {
 					</Popover>
 
 					<div className="button_container">
-						<Button onClick={onSubmit} id="create_gig_button">
+						<Button
+							onClick={onSubmit}
+							id="create_gig_button"
+						>
 							Create Gig
 						</Button>
 					</div>
@@ -419,12 +416,15 @@ function CreateGig() {
 				{showSuccessPopup && (
 					<div>
 						<p>Gig created successfully!</p>
-						<button onClick={() => navigate("/gigs")}>Go to Gigs Page</button>
-						<button onClick={() => navigate("/my-gigs")}>Go to My Gigs</button>
+						<button onClick={() => navigate("/gigs")}>
+							Go to Gigs Page
+						</button>
+						<button onClick={() => navigate("/my-gigs")}>
+							Go to My Gigs
+						</button>
 					</div>
 				)}
 			</div>
-
 		</div>
 	);
 }

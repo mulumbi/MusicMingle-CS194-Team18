@@ -9,21 +9,33 @@ import SharePage from "@/components/SharePage";
 import ComingSoon from "@/components/ComingSoon.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultGig from "../assets/home/placeholderEvent.jpg";
-import { fetchGig } from "../api/gigs.api";
+// import defaultGig from "../assets/gigs/DefaultGig.png";
+import { fetchGig, mutateApplication } from "../api/gigs.api";
 import { fetchArtist } from "../api/artists.api";
+import { signInWithGooglePopup } from "../firebase/firebase";
+import { AuthContext } from "../context/AuthContext";
 
 function Gig() {
-    const { id } = useParams();
+	const { id } = useParams();
 	console.log("id", id);
 	const navigate = useNavigate();
+	const { currentUser } = useContext(AuthContext);
 
 	// Fetch gig data
-    const { data, error, isLoading, refetch } = useQuery({
+	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["gig_get"],
-		queryFn: () =>
-			fetchGig(id),
+		queryFn: () => fetchGig(id, currentUser),
 		enabled: false,
 	});
+
+	const { mutate, error, isPending } = useMutation({
+		mutationFn: () => mutateApplication(currentUser, id),
+		onSuccess: () => refetch(),
+	});
+
+	const onApply = () => {
+		mutate();
+	};
 
 	// Fetch on first page load
 	useEffect(() => {
@@ -35,10 +47,9 @@ function Gig() {
 	console.log("error", error);
 
 	// Fetch organizer user data
-    const organizerResults = useQuery({
+	const organizerResults = useQuery({
 		queryKey: ["artist_get"],
-		queryFn: () =>
-			fetchArtist(data.UserId),
+		queryFn: () => fetchArtist(data.UserId),
 		enabled: false,
 	});
 
@@ -49,18 +60,30 @@ function Gig() {
 
 	// Parse date and times
 	const startDateTime = new Date(data?.event_start);
-	const startDate = startDateTime.toLocaleDateString('en-US', { month: "short", day: "numeric", weekday: "short" });
-	const startTime = startDateTime.toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }); 	
+	const startDate = startDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const startTime = startDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
 	const endDateTime = new Date(data?.event_end);
-	const endDate = endDateTime.toLocaleDateString('en-US', { month: "short", day: "numeric", weekday: "short" });
-	const endTime = endDateTime.toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }); 	
+	const endDate = endDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const endTime = endDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
 	// Loading screen
-	if (isLoading) return (
-		<Loading />
-	);
-	
+	if (isLoading) return <Loading />;
+
 	return (
 		<div className="profile-page">
 			<img
@@ -74,23 +97,33 @@ function Gig() {
 						<img
 							className="gig-photo"
 							src={
-								data?.profileImage?.length > 0
-									? data?.profileImage[0].public_url
+								data?.gigProfileImage
+									? data?.gigProfileImage.public_url
 									: defaultGig
 							}
 							alt="Gig Photo"
 						/>
 					</div>
 					<div className="profile-right">
-						<div>    
-                            <h1>{data?.name}</h1>
+						<div>
+							<h1>{data?.name}</h1>
 							<div className="organizer-row">
 								Posted by {organizerResults?.data?.name}
 							</div>
 						</div>
 						<div className="profile-actions">
-							<ComingSoon name="Apply" />
-							<SharePage id={id} category="gigs" />
+							<Button
+								className="pending-button"
+								onClick={() => onApply()}
+							>
+								{data?.application
+									? "Remove Application"
+									: "Apply"}
+							</Button>
+							<SharePage
+								id={id}
+								category="gigs"
+							/>
 						</div>
 					</div>
 				</div>
@@ -102,15 +135,11 @@ function Gig() {
 					<div className="profile-right">
 						{data?.event_start && (
 							<div className="date-time-row">
-								<div className="date">
-									{startDate}
-								</div>
-								{startTime + ' - '}
-								{(endDate != startDate) && 
-									<div className="date">
-										{endDate}
-									</div>
-								}
+								<div className="date">{startDate}</div>
+								{startTime + " - "}
+								{endDate != startDate && (
+									<div className="date">{endDate}</div>
+								)}
 								{endTime}
 							</div>
 						)}
@@ -183,28 +212,22 @@ function Gig() {
 					</div>
 				</div>
 
-				{(data?.portfolioImages || data?.portfolioVideos) && (
+				{data?.gigImages && (
 					<div className="profile-row">
 						<div className="profile-left">
 							<h3>Gallery</h3>
 						</div>
 						<div className="profile-right">
 							<div className="portfolio">
-								{/* {data?.portfolioImages?.map((image, index) => (
+								{data?.gigImages?.map((image, index) => (
 									<div key={index} className="portfolio-item">
 										<PortfolioItem image={image} viewOnly={true} />
 									</div>
 								))}
-								{data?.portfolioVideos?.map((video, index) => (
-									<div key={index} className="portfolio-item">
-										<PortfolioItem video={video} viewOnly={true} />
-									</div>
-								))} */}
 							</div>
 						</div>
 					</div>
 				)}
-
 			</div>
 		</div>
 	);
