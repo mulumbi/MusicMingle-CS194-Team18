@@ -571,7 +571,18 @@ const searchGigs = async (req, res) => {
 		gig_id,
 	} = req.query;
 	if (gig_id) {
-		return await models.Gig.findByPk(gig_id);
+		const gig = await models.Gig.findByPk(gig_id);
+		const content = await gig.getGigImages();
+		const { ...gigData } = gig.dataValues;
+		return {
+			...gigData,
+			gigImages: content
+				.filter((image) => image.type === "gigImage")
+				.map((image) => image.dataValues),
+			gigProfileImage: content.find(
+				(image) => image.type === "gigProfileImage"
+			),
+		};
 	}
 	const query: any = [{ is_open: true }];
 	if (event_start) {
