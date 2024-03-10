@@ -8,20 +8,19 @@ import PortfolioItem from "@/components/PortfolioItem.tsx";
 import SharePage from "@/components/SharePage";
 import ComingSoon from "@/components/ComingSoon.tsx";
 import defaultBanner from "../assets/Background.png";
-import defaultGig from "../assets/gigs/defaultGig.png";
+import defaultGig from "../assets/gigs/DefaultGig.png";
 import { fetchGig } from "../api/gigs.api";
 import { fetchArtist } from "../api/artists.api";
 
 function Gig() {
-    const { id } = useParams();
+	const { id } = useParams();
 	console.log("id", id);
 	const navigate = useNavigate();
 
 	// Fetch gig data
-    const { data, error, isLoading, refetch } = useQuery({
+	const { data, error, isLoading, refetch } = useQuery({
 		queryKey: ["gig_get"],
-		queryFn: () =>
-			fetchGig(id),
+		queryFn: () => fetchGig(id),
 		enabled: false,
 	});
 
@@ -35,10 +34,9 @@ function Gig() {
 	console.log("error", error);
 
 	// Fetch organizer user data
-    const organizerResults = useQuery({
+	const organizerResults = useQuery({
 		queryKey: ["artist_get"],
-		queryFn: () =>
-			fetchArtist(data.UserId),
+		queryFn: () => fetchArtist(data.UserId),
 		enabled: false,
 	});
 
@@ -49,18 +47,30 @@ function Gig() {
 
 	// Parse date and times
 	const startDateTime = new Date(data?.event_start);
-	const startDate = startDateTime.toLocaleDateString('en-US', { month: "short", day: "numeric", weekday: "short" });
-	const startTime = startDateTime.toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }); 	
+	const startDate = startDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const startTime = startDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
 	const endDateTime = new Date(data?.event_end);
-	const endDate = endDateTime.toLocaleDateString('en-US', { month: "short", day: "numeric", weekday: "short" });
-	const endTime = endDateTime.toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }); 	
+	const endDate = endDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const endTime = endDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
 	// Loading screen
-	if (isLoading) return (
-		<Loading />
-	);
-	
+	if (isLoading) return <Loading />;
+
 	return (
 		<div className="profile-page">
 			<img
@@ -82,15 +92,18 @@ function Gig() {
 						/>
 					</div>
 					<div className="profile-right">
-						<div>    
-                            <h1>{data?.name}</h1>
+						<div>
+							<h1>{data?.name}</h1>
 							<div className="organizer-row">
 								Posted by {organizerResults?.data?.name}
 							</div>
 						</div>
 						<div className="profile-actions">
 							<ComingSoon name="Apply" />
-							<SharePage id={id} category="gigs" />
+							<SharePage
+								id={id}
+								category="gigs"
+							/>
 						</div>
 					</div>
 				</div>
@@ -102,15 +115,11 @@ function Gig() {
 					<div className="profile-right">
 						{data?.event_start && (
 							<div className="date-time-row">
-								<div className="date">
-									{startDate}
-								</div>
-								{startTime + ' - '}
-								{(endDate != startDate) && 
-									<div className="date">
-										{endDate}
-									</div>
-								}
+								<div className="date">{startDate}</div>
+								{startTime + " - "}
+								{endDate != startDate && (
+									<div className="date">{endDate}</div>
+								)}
 								{endTime}
 							</div>
 						)}
@@ -204,7 +213,6 @@ function Gig() {
 						</div>
 					</div>
 				)}
-
 			</div>
 		</div>
 	);
