@@ -58,13 +58,12 @@ export const fetchArtist = async (
 				query.toString()
 		)
 		.then((res) => {
-			console.log(res);
 			const artist: [Artist] = res.data;
 			console.log("artist", artist);
 			return artist;
 		})
 		.catch((err) => {
-			console.error("Error fetching artists: ", err);
+			console.error("Error fetching artist: ", err);
 			throw err;
 		});
 	return data;

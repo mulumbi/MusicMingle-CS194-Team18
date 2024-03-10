@@ -197,8 +197,33 @@ button.navbar-logo:focus {
 	height: 14rem;
   object-fit: cover;
   object-position: center;
-	margin-top: -8rem;
+	margin-top: -6rem;
 	border-radius: 7rem;
+}
+
+.gig-photo {
+	width: 14rem;
+	height: 14rem;
+  object-fit: cover;
+  object-position: center;
+	margin-top: -6rem;
+	border-radius: 2rem;
+  background-color: #666666;
+}
+
+.organizer-row {
+  margin: -1.5rem 0 1rem 0;
+}
+
+.date-time-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date {
+  font-weight: bold;
 }
 
 .profile-button {
@@ -211,6 +236,7 @@ button.navbar-logo:focus {
   flex-direction: row;
   height: 3.4rem;
   line-height: 1rem;
+  margin: 1rem 0 0 0;
 }
 
 button.profile-button:hover {

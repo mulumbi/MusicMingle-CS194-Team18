@@ -1,12 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import FilterSidebarGig from "@/components/Filterbar";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import GigCard from "@/components/GigCards";
 import NewGig from "../assets/gigs/add.png";
-import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGigs, fetchGigByName } from "../api/gigs.api";
 import { AuthContext } from "../context/AuthContext";
@@ -118,15 +117,18 @@ function EventsList() {
 						</Link>
 
 						{gigs?.map((gig, index) => (
-							<GigCard
-								key={index}
-								imageUrl={gig?.gigProfileImage?.public_url || ""}
-								title={gig.name}
-								bio={gig.bio}
-								tags={gig.gig_role_tags.concat(gig.gig_genre_tags)}
-								buttonText="Apply Now"
-								onButtonClick={() => applyToGig(gig.name, currentUser)}
-							/>
+							<Link to={"/gigs/" + gig.id}>
+								<GigCard
+									key={index}
+									imageUrl={gig?.gigProfileImage?.public_url || ""}
+									title={gig.name}
+									bio={gig.bio}
+									tags={gig.gig_role_tags.concat(gig.gig_genre_tags)}
+									buttonText="Apply Now"
+									onButtonClick={() => applyToGig(gig.name, currentUser)}
+								/>
+							</Link>
+							
 						))}
 					</div>
 				</div>

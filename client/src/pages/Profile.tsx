@@ -51,7 +51,7 @@ function Profile() {
 			<img
 				className="profile-banner"
 				src={defaultBanner}
-				alt="Profile Photo"
+				alt="Profile Banner"
 			/>
 			<div className="profile-main">
 				<div className="profile-row">
@@ -68,8 +68,10 @@ function Profile() {
 					</div>
 					<div className="profile-right">
 						<div>
-							<h2>{data?.name}</h2>
-							<p>{data?.email}</p>
+							<h1>{data?.name}</h1>
+							<div className="organizer-row">
+								{data?.email}
+							</div>
 						</div>
 						<div>
 							<Button

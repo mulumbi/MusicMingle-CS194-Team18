@@ -6,21 +6,27 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { RxCross2 } from "react-icons/rx";
-import './ShareProfile.css';
+import './SharePage.css';
 
-type ShareProfileProps = {
+type SharePageProps = {
     id?: string;
+	category?: string;
 };
+ 
+const defaultProps: SharePageProps = {
+	category: 'artists',
+}
 
-const ShareProfile: React.FC<ShareProfileProps> = (props) => {
+const SharePage: React.FC<SharePageProps> = (props) => {
 	const [open, setOpen] = React.useState(false);
 	const [isCopied, setIsCopied] = React.useState(false);
-	const shareUrl = "https://musicmingle-cabf2.web.app/artists/" + props?.id;
+	const shareUrl = "https://musicmingle-cabf2.web.app/" + props.category + "/" + props?.id;
 
 	useEffect(() => {
 		setIsCopied(false);
 	}, [open]);
 
+	console.log("props.category", props.category);
 	return (
 		<Dialog.Root open={open} onOpenChange={setOpen}>
 			<Dialog.Trigger asChild>
@@ -29,7 +35,9 @@ const ShareProfile: React.FC<ShareProfileProps> = (props) => {
 			<Dialog.Portal>
 				<Dialog.Overlay className="dialog-overlay" />
 				<Dialog.Content className="dialog-content">
-							<Dialog.Title className="dialog-title">Share profile</Dialog.Title>
+							<Dialog.Title className="dialog-title">
+								Share {props.category == "artists" ? "profile" : "gig"}
+							</Dialog.Title>
 							<Dialog.Description>
 								<div className="dialog-description">
 									<Input disabled className="input" placeholder={shareUrl} />
@@ -58,4 +66,6 @@ const ShareProfile: React.FC<ShareProfileProps> = (props) => {
 	);
 }
 
-export default ShareProfile;
+SharePage.defaultProps = defaultProps;
+
+export default SharePage;
