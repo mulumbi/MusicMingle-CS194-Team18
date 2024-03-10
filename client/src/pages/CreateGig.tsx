@@ -142,11 +142,11 @@ function CreateGig() {
 			bodyFormData.append("estimate_flat_rate", budget); // Budget already a string
 		}
 		if (genre.length > 0) {
-			bodyFormData.append("gig_role_tags", JSON.stringify(genre)); // Convert the array to a string as we need to pass as ["Musician", "Singer]
+			bodyFormData.append("gig_genre_tags", JSON.stringify(genre)); // Convert the array to a string as we need to pass as ["Musician", "Singer]
 		}
 		if (instrumentRole.length > 0) {
 			bodyFormData.append(
-				"gig_genre_tags",
+				"gig_role_tags",
 				JSON.stringify(instrumentRole)
 			); // Convert the array to a string as we need to pass as ["Musician", "Singer]
 		}
