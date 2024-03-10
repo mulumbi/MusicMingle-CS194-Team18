@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,13 +8,16 @@ import GigCard from "@/components/GigCards";
 import NewGig from "../assets/gigs/add.png";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchGigs } from "../api/gigs.api";
+import { fetchGigs, fetchGigByName } from "../api/gigs.api";
+import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
 
 function EventsList() {
 	const navigate = useNavigate(); // Get the navigate function
 	const viewProfile = (gigId: string) => {
 		navigate(`/gigs/${gigId}`);
 	}
+	const { currentUser } = useContext(AuthContext);
 
 	// Define a function to handle the button click
 	const goToCreateGig = () => {
@@ -53,35 +56,56 @@ function EventsList() {
 	const handleSubmit = () => {
 		refetch();
 	};
+
+	const applyToGig = async (gigTitle, currentUser) => {
+		try {
+			// Use fetchGigByName to get the gig object
+			const gig = await fetchGigByName(gigTitle);
+			const gigId = gig.id; // Assuming the 'id' field is present in the gig object
+
+			// Ensure currentUser is available and has a method to get an ID token
+			const token = await currentUser.getIdToken();
+
+			// Post application using the retrieved gig ID
+			await axios.post(`${import.meta.env.VITE_BACKEND_URL}/gigs/application/?gig_id=${gigId}`, {}, {
+				headers: {
+					'Authorization': `Bearer ${token}`, // Assuming Bearer token is required; adjust as necessary
+					'Content-Type': 'application/json'
+				}
+			});
+
+			alert('Application submitted successfully!');
+		} catch (error) {
+			console.error('Error applying to gig:', error);
+			alert('Failed to submit application.');
+		}
+	};
+
 	console.log(gigs);
 	return (
 		<div
 			className="App"
 			id="ArtistPageApp"
 		>
-			<div>
-				<div
-					className="Title"
-					style={{ margin: "20px" }}
-				>
-					Discover Gigs
+			<div className="main-artist-page">
+				<div className="header-search">
+					<h2 className="Title">Discover Gigs </h2>
+					<div className="searchbar">
+						<Input
+							placeholder="Search"
+							value={searchName}
+							onChange={(e) => setSearchName(e.target.value)}
+						/>
+						<Button
+							type="submit"
+							onClick={handleSubmit}
+						>
+							<PiMagnifyingGlassBold />
+						</Button>
+					</div>
 				</div>
-				<div id="ArtistsBody">
+				<div id="ArtistBody">
 					<div className="Artist-page-cards">
-						<div style={{ textAlign: "center" }}>
-							<Input
-								placeholder="Search"
-								value={searchName}
-								onChange={(e) => setSearchName(e.target.value)}
-							/>
-							<Button
-								type="submit"
-								onClick={handleSubmit}
-							>
-								<PiMagnifyingGlassBold />
-							</Button>
-						</div>
-
 						<Link to="/create_gig">
 							<GigCard
 								imageUrl={NewGig} // Placeholder image
@@ -100,10 +124,8 @@ function EventsList() {
 								title={gig.name}
 								bio={gig.bio}
 								tags={gig.gig_role_tags.concat(gig.gig_genre_tags)}
-								buttonText="Learn More"
-								onButtonClick={() =>
-									viewProfile(gig.id)
-								}
+								buttonText="Apply Now"
+								onButtonClick={() => applyToGig(gig.name, currentUser)}
 							/>
 						))}
 					</div>
