@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import FilterSidebarGig from "@/components/Filterbar";
 import { PiMagnifyingGlassBold } from "react-icons/pi";
 import GigCard from "@/components/GigCards";
-import NewGig from "../assets/gigs/add.png";
+import NewGig from "../assets/home/add.png";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGigs, fetchGigByName } from "../api/gigs.api";
 import { AuthContext } from "../context/AuthContext";

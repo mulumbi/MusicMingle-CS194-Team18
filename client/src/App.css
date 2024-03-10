@@ -606,7 +606,7 @@ button.submit-button:focus,
 .cards {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: flex-start;
 	padding: 1rem;
 }
 
@@ -618,6 +618,7 @@ button.submit-button:focus,
 	overflow: auto;
 	border-radius: 0.8rem;
 	padding: 1rem;
+	margin-right: 2.5rem;
 }
 
 .card img {
