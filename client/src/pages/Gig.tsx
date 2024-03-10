@@ -8,7 +8,7 @@ import PortfolioItem from "@/components/PortfolioItem.tsx";
 import SharePage from "@/components/SharePage";
 import ComingSoon from "@/components/ComingSoon.tsx";
 import defaultBanner from "../assets/Background.png";
-import defaultGig from "../assets/gigs/defaultGig.png";
+import defaultGig from "../assets/home/placeholderEvent.jpg";
 import { fetchGig } from "../api/gigs.api";
 import { fetchArtist } from "../api/artists.api";
 
