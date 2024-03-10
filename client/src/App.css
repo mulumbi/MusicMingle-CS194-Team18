@@ -206,6 +206,13 @@ button.navbar-logo:focus {
 	border: none;
 }
 
+.profile-actions {
+  display: flex;
+  flex-direction: row;
+  height: 3.4rem;
+  line-height: 1rem;
+}
+
 button.profile-button:hover {
 	background-color: #3697c749;
 	border: none;

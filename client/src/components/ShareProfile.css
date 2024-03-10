@@ -3,24 +3,37 @@
 @import '@radix-ui/colors/mauve.css';
 @import '@radix-ui/colors/violet.css';
 
-.edit-button {
+.share-button {
     margin-top: 1rem;
     border: none;
     outline: none;
 }
-.edit-button:hover {
+.share-button:hover {
     background-color: #3697c749;
-    border: none;
-}
-
-.save-button {
-    border: none;
     outline: none;
 }
-.save-button:hover {
-    background-color: #3697c7;
-    border: none;
+.share-button:focus {
+    outline: none;
 }
+
+.copy-button {
+    font-size: 16px;
+    line-height: 1;
+    height: 2.39rem;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--violet-11);
+    border-radius: 0 0.25rem 0.25rem 0;
+    outline: none;
+}
+.copy-button:hover {
+    outline: none;
+}
+.copy-button:focus {
+    outline: none;
+}
+
 .save-row {
     display: flex;
     margin-top: 1.5rem;
@@ -37,9 +50,14 @@
     padding: 0.5rem 0.8rem 0.2rem 0.8rem;
     align-content: center;
     justify-content: center;
+    border: none;
+    outline: none;
 }
 .icon-button:hover {
-    border: none;
+    outline: none;
+}
+.icon-button:focus {
+    outline: none;
 }
 
 .edit-button:focus, .save-button:focus, .icon-button:focus {
@@ -78,8 +96,16 @@
 }
 
 .dialog-description {
-    margin: 10px 0 20px;
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 10px;
     font-size: 16px;
+    color: darkslategrey;
+    line-height: 1.5;
+}
+
+.dialog-message {
+    font-size: 12px;
     color: darkslategrey;
     line-height: 1.5;
 }
@@ -112,7 +138,7 @@
     color: var(--violet-11);
     background-color: white;
     border-color: var(--violet-8);
-    border-radius: 0.25rem;
+    border-radius: 0.25rem 0 0 0.25rem;
     border-width: 0.1cap;
     padding: 0 1rem;
 }

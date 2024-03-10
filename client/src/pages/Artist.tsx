@@ -5,6 +5,8 @@ import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loading.tsx";
 import PortfolioItem from "@/components/PortfolioItem.tsx";
+import ShareProfile from "@/components/ShareProfile.tsx";
+import ComingSoon from "@/components/ComingSoon.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultProfile from "../assets/profile/DefaultProfile.png";
 import { fetchArtist } from "../api/artists.api";
@@ -60,17 +62,9 @@ function Artist() {
                             <h2>{data?.name}</h2>
 							<p>{data?.email}</p>
 						</div>
-						<div>
-							<Button
-								className="profile-button"
-							>
-								Message
-							</Button>
-                            <Button
-								className="profile-button"
-							>
-								Share
-							</Button>
+						<div className="profile-actions">
+							<ComingSoon name="Message" />
+							<ShareProfile id={id} />
 						</div>
 					</div>
 				</div>
