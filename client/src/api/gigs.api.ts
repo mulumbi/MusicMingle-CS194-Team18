@@ -28,3 +28,70 @@ export const fetchGigs = async (
 	);
 	return response.data;
 };
+
+export const fetchGig = async (
+	gig_id: string,
+	currentUser: any
+): Promise<Gig> => {
+	const query = new URLSearchParams();
+	query.append("gig_id", gig_id);
+	const token = await currentUser.getIdToken();
+	const response = await axios
+		.get(
+			`${
+				import.meta.env.VITE_BACKEND_URL
+			}/search_gigs?${query.toString()}`,
+			{
+				headers: {
+					authorization: token,
+					"Content-Type": "application/json",
+				},
+			}
+		)
+		.then((res) => {
+			const gig: Gig = res.data;
+			console.log("gig", gig);
+			return gig;
+		})
+		.catch((err) => {
+			console.error("Error fetching gig: ", err);
+			throw err;
+		});
+	return response;
+};
+
+export const mutateApplication = async (currentUser: any, id: string) => {
+	const token = await currentUser.getIdToken();
+	const query = new URLSearchParams();
+	query.append("gig_id", id);
+	console.log("query", query.toString());
+	const data = await axios
+		.post(
+			`${
+				import.meta.env.VITE_BACKEND_URL
+			}/gigs/application?${query.toString()}`,
+			{
+				headers: {
+					authorization: token,
+					"Content-Type": "application/json",
+				},
+			}
+		)
+		.then((res) => {
+			const application = res.data;
+			console.log(application, "application");
+			return application;
+		})
+		.catch((err) => console.log("create application mutate error: ", err));
+	return data;
+};
+
+export const fetchGigByName = async (name: string): Promise<Gig> => {
+	const response = await axios.get(
+		`${import.meta.env.VITE_BACKEND_URL}/search_gigs?name=${name}`
+	);
+	if (response.data && response.data.length > 0) {
+		return response.data[0];
+	}
+	throw new Error("Gig not found");
+};

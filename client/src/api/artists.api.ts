@@ -44,3 +44,27 @@ export const fetchArtists = async (
 		});
 	return data;
 };
+
+export const fetchArtist = async (
+	artist_id: string
+): Promise<Artist> => {
+	const query = new URLSearchParams();
+	query.append("artist_id", artist_id);
+	const data = await axios
+		.get(
+			import.meta.env.VITE_BACKEND_URL +
+				"/artists" +
+				"?" +
+				query.toString()
+		)
+		.then((res) => {
+			const artist: [Artist] = res.data;
+			console.log("artist", artist);
+			return artist;
+		})
+		.catch((err) => {
+			console.error("Error fetching artist: ", err);
+			throw err;
+		});
+	return data;
+};

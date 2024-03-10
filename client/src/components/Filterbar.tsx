@@ -125,10 +125,10 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 				<CardTitle>Filters</CardTitle>
 			</CardHeader>
 
-			<CardContent>
+			<CardContent className="filter-content">
 				<div>
 					<div className="filter-action">
-						<h5>Min Budget</h5>
+						<h3>Min Budget</h3>
 						<Input
 							type="number"
 							placeholder="Enter min $$$"
@@ -139,7 +139,7 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 					</div>
 
 					<div className="filter-action">
-						<h5>Max Budget</h5>
+						<h3>Max Budget</h3>
 						<Input
 							type="number"
 							placeholder="Enter max SSS"
@@ -264,6 +264,7 @@ const FilterSidebarGig: React.FC<FilterSidebarGigProps> = ({
 							</div>
 						)}
 					/>
+        
 				</div>
 			</CardContent>
 			<CardFooter>
@@ -304,10 +305,10 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 				<CardTitle>Filters</CardTitle>
 			</CardHeader>
 
-			<CardContent>
+			<CardContent className="filter-content">
 				<div>
 					<div className="filter-action">
-						<h5>Flat Rate Min</h5>
+						<h3>Flat Rate Min</h3>
 						<Input
 							type="number"
 							placeholder="Enter min $$$"
@@ -318,7 +319,7 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 					</div>
 
 					<div className="filter-action">
-						<h5>Flat Rate Max</h5>
+						<h3>Flat Rate Max</h3>
 						<Input
 							type="number"
 							placeholder="Enter max $$$"
@@ -329,7 +330,7 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 					</div>
 
 					<div className="filter-action">
-						<h5>Genre</h5>
+						<h3>Genre</h3>
 						<Select>
 							<SelectTrigger>
 								<SelectValue placeholder="Choose genre" />
@@ -348,7 +349,7 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 					</div>
 
 					<div className="filter-action">
-						<h5>Role</h5>
+						<h3>Role</h3>
 						<Select>
 							<SelectTrigger>
 								<SelectValue placeholder="Choose role" />

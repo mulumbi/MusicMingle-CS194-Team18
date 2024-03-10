@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { fetchGigsData } from "../api/mygigs.api";
-import GigCard from "@/components/GigCards";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import GigCard from "@/components/GigCards";
+import Loading from "@/components/Loading.tsx";
+import { fetchGigsData } from "../api/mygigs.api";
 
 const MyGigs = () => {
 	const [activeTab, setActiveTab] = useState("APPLIED");
@@ -15,9 +16,7 @@ const MyGigs = () => {
 		queryFn: () => fetchGigsData(currentUser),
 	});
 
-	if (isLoading) {
-		return <div>Loading...</div>;
-	}
+	if (isLoading) return <Loading />;
 
 	return (
 		<div className="App">
@@ -49,25 +48,29 @@ const MyGigs = () => {
 					{(activeTab === "APPLIED"
 						? data?.my_applications || []
 						: data?.my_gigs || []
-					).map((gig, index) => (
-						<GigCard
-							key={index}
-							imageUrl={gig.gigProfileImage}
-							title={gig.name}
-							bio={gig.bio}
-							eventStart={gig.event_start}
-							eventEnd={gig.event_end}
-							tags={gig.gig_role_tags}
-							buttonText={
-								activeTab === "APPLIED"
-									? "Withdraw Application"
-									: "View Applicants"
-							}
-							onButtonClick={() => {
-								/* handle button click */
-							}}
-						/>
-					))}
+					).map((gig, index) => {
+						return (
+							<Link to={"/gigs/" + gig.id}>
+								<GigCard
+									key={index}
+									imageUrl={gig.gigProfileImage.public_url}
+									title={gig.name}
+									bio={gig.bio}
+									eventStart={gig.event_start}
+									eventEnd={gig.event_end}
+									tags={gig.gig_role_tags}
+									buttonText={
+										activeTab === "APPLIED"
+											? "Withdraw Application"
+											: "View Applicants"
+									}
+									onButtonClick={() => {
+										/* handle button click */
+									}}
+								/>
+							</Link>
+						);
+					})}
 				</div>
 			</div>
 		</div>

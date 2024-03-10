@@ -55,7 +55,10 @@ const client = new Client({
 	port: 5432,
 });
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = [
+	"http://localhost:5173",
+	// "https://musicmingle-cabf2.web.app/",
+];
 const corsOptions = {
 	origin: (origin, callback) => {
 		if (!origin) return callback(null, true);
@@ -355,11 +358,11 @@ app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
 					application.dataValues;
 				const profileImage = await Gig.getGigImages();
 				return {
-					gig: Gig,
-					gig_profile_image: profileImage.find(
+					...Gig.dataValues,
+					gigProfileImage: profileImage.find(
 						(image) => image.type === "gigProfileImage"
 					),
-					gig_images: profileImage.filter(
+					gigImages: profileImage.filter(
 						(image) => image.type === "gigImage"
 					),
 					...values,
