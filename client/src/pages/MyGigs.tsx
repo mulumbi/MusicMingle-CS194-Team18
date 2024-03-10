@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { fetchGigsData } from "../api/mygigs.api";
+import { fetchGigsData, mutateCloseGig, mutateWithdrawApp } from "../api/mygigs.api";
 import GigCard from "@/components/GigCards";
 import PostedGigCard from "@/components/PostedGigCards";
 import { useQuery } from "@tanstack/react-query";
@@ -47,29 +47,6 @@ const MyGigs = () => {
 					</button>
 				</div>
 				<div className="my-gigs-cards">
-{/* 					{(activeTab === "APPLIED"
-						? data?.my_applications || []
-						: data?.my_gigs || []
-					).map((gig, index) => (
-						<GigCard
-							key={index}
-							imageUrl={gig.gigProfileImage}
-							title={gig.name}
-							bio={gig.bio}
-							eventStart={gig.event_start}
-							eventEnd={gig.event_end}
-							tags={gig.gig_role_tags}
-							buttonText={
-								activeTab === "APPLIED"
-									? "Withdraw Application"
-									: "View Applicants"
-							}
-							onButtonClick={() => {
-								/* handle button click */
-							}}
-						/>
-					))} */}
-
 					{(activeTab === "APPLIED"
 					  	? (data?.my_applications).map((app, index) => (
 							<GigCard
@@ -84,7 +61,8 @@ const MyGigs = () => {
 									"Withdraw Application"
 								}
 								onButtonClick={() => {
-									/* handle button click */
+									mutateWithdrawApp(app.gig.id);
+									refetch();
 								}}
 							/>
 						))
@@ -101,8 +79,8 @@ const MyGigs = () => {
 									"View Applicants"
 								}
 								popupContent={
-									(gig.applicants).map((app, index) => (
-										<Link to="/artists/artist_id=${app.user.id}">
+									(gig.applicants).map((app) => (
+										<Link to="/artists/${app.user.id}">
 											<p>{app.user.name}</p>
 										</Link>
 								))}
@@ -116,10 +94,12 @@ const MyGigs = () => {
 									"Close Gig"
 								}
 								onButtonClick2={() => {
-									/* handle button click */
+									mutateCloseGig(gig.id);
+									refetch();
 								}}
 							/>
-						))}
+						))
+					  )}
 				</div>
 			</div>
 		</div>
