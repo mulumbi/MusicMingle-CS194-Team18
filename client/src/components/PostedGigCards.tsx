@@ -4,7 +4,7 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/ui/popover";
+} from "@/components/ui/popover";
 
 interface PostedGigCardProps {
         title: string;
