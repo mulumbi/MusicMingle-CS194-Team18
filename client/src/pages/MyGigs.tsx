@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { fetchGigsData, mutateCloseGig, mutateWithdrawApp } from "../api/mygigs.api";
@@ -11,10 +11,14 @@ const MyGigs = () => {
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
 
-	const { data, isLoading } = useQuery({
+	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["my_gigs_get"],
 		queryFn: () => fetchGigsData(currentUser),
 	});
+
+	useEffect(() => {
+		refetch();
+	}, []);
 
 	if (isLoading) {
 		return <div>Loading...</div>;
@@ -61,8 +65,7 @@ const MyGigs = () => {
 									"Withdraw Application"
 								}
 								onButtonClick={() => {
-									mutateWithdrawApp(app.gig.id);
-									refetch();
+									mutateWithdrawApp(currentUser, app.gig.id);
 								}}
 							/>
 						))
@@ -94,8 +97,7 @@ const MyGigs = () => {
 									"Close Gig"
 								}
 								onButtonClick2={() => {
-									mutateCloseGig(gig.id);
-									refetch();
+									mutateCloseGig(currentUser, gig.id);
 								}}
 							/>
 						))
