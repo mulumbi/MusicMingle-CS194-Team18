@@ -1,7 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Gigs from "./pages/Gigs.tsx";
+import Gig from "./pages/Gig.tsx";
 import Artists from "./pages/Artists.tsx";
+import Artist from "./pages/Artist.tsx";
 import MyGigs from "./pages/MyGigs.tsx";
 import Profile from "./pages/Profile.tsx";
 import ProfileSettings from "./pages/ProfileSettings.tsx";
@@ -16,14 +18,14 @@ function App() {
 				index
 				element={<Home />}
 			/>
-			<Route
-				path="gigs"
-				element={<Gigs />}
-			/>
-			<Route
-				path="artists"
-				element={<Artists />}
-			/>
+			<Route path="gigs">
+				<Route index element={<Gigs />} />
+				<Route path=":id" element={<Gig />} />
+			</Route>
+			<Route path="artists">
+				<Route index element={<Artists />} />
+				<Route path=":id" element={<Artist />} />
+			</Route>
 			<Route
 				path="my_gigs"
 				element={

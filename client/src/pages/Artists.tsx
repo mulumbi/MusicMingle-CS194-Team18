@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,13 +15,11 @@ import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FilterSidebarArtist } from "../components/Filterbar";
 import GigCard from "@/components/GigCards";
 import { fetchArtists } from "../api/artists.api";
-import { useNavigate } from 'react-router-dom';
-
 
 function Artists() {
 	const navigate = useNavigate();
 	const viewProfile = (artistId: string) => { 
-		navigate(`/artists/artist_id=${artistId}`);
+		navigate(`/artists/${artistId}`);
 	};
 
 	const [searchName, setSearchName] = useState("");
@@ -74,18 +73,20 @@ function Artists() {
 					<div className="Artist-page-cards">
 
 						{data?.map((artist, index) => (
-							<GigCard
-								key={index}
-								imageUrl={artist.profileImage?.public_url || ""}
-								title={artist.name}
-								bio={artist.bio}
-								tags={artist.user_genre_tags.concat(
-									artist.user_role_tags
-								)}
-								buttonText="View Profile"
-								onButtonClick={() =>
-									viewProfile(artist.id)}
-							/>
+							<Link to={"/artists/" + artist.id}>
+								<GigCard
+									key={index}
+									imageUrl={artist.profileImage?.public_url || ""}
+									title={artist.name}
+									bio={artist.bio}
+									tags={artist.user_genre_tags.concat(
+										artist.user_role_tags
+									)}
+									buttonText="View Profile"
+									onButtonClick={() =>
+										viewProfile(artist.id)}
+								/>
+							</Link>
 						))}
 					</div>
 				</div>

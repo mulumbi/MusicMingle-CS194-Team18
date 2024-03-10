@@ -29,6 +29,25 @@ export const fetchGigs = async (
 	return response.data;
 };
 
+export const fetchGig = async (
+	gig_id: string
+): Promise<Gig> => {
+	const query = new URLSearchParams();
+	query.append("gig_id", gig_id);
+	const response = await axios.get(
+		`${import.meta.env.VITE_BACKEND_URL}/search_gigs?${query.toString()}`
+	).then((res) => {
+		const gig: [Gig] = res.data;
+		console.log("gig", gig);
+		return gig;
+	})
+	.catch((err) => {
+		console.error("Error fetching gig: ", err);
+		throw err;
+	});
+	return response;
+};
+
 export const fetchGigByName = async (name: string): Promise<Gig> => {
 	const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/search_gigs?name=${name}`);
 	if (response.data && response.data.length > 0) {

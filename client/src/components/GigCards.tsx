@@ -39,36 +39,38 @@ const GigCard: React.FC<GigCardProps> = ({
 	tags,
 	buttonText,
 	onButtonClick,
-}) => (
-	<div className="my-gig-cards">
-		<img
-			src={imageUrl}
-			alt="Gig"
-		/>
-		<div className="gig-details">
-			<div className="gig-header">{title}</div>
-			<p className="gig-bio">{bio}</p>
-			<p>
-				{formatDateTime(eventStart)} to {formatDateTime(eventEnd)}
-			</p>
-			<div className="gig-bottoms">
-				<div className="gig-tabs">
-					{/* Dynamically generate spans for each tag */}
-					{tags?.map((tag, index) => (
-						<span
-							key={index}
-							className="tab"
-						>
-							{tag}
-						</span>
-					))}
-				</div>
-				<div className="bottom-buttons">
-					<button onClick={onButtonClick}>{buttonText}</button>
+}) => {
+	return (
+		<div className="my-gig-cards">
+			<img
+				src={imageUrl}
+				alt="Gig"
+			/>
+			<div className="gig-details">
+				<div className="gig-header">{title}</div>
+				<p className="gig-bio">{bio}</p>
+				<p>
+					{formatDateTime(eventStart)} to {formatDateTime(eventEnd)}
+				</p>
+				<div className="gig-bottoms">
+					<div className="gig-tabs">
+						{/* Dynamically generate spans for each tag */}
+						{tags?.map((tag, index) => (
+							<span
+								key={index}
+								className="tab"
+							>
+								{tag}
+							</span>
+						))}
+					</div>
+					<div className="bottom-buttons">
+						<button onClick={onButtonClick}>{buttonText}</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-);
+	);
+};
 
 export default GigCard;

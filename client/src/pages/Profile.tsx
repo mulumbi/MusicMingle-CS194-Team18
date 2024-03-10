@@ -51,7 +51,7 @@ function Profile() {
 			<img
 				className="profile-banner"
 				src={defaultBanner}
-				alt="Profile Photo"
+				alt="Profile Banner"
 			/>
 			<div className="profile-main">
 				<div className="profile-row">
@@ -68,8 +68,10 @@ function Profile() {
 					</div>
 					<div className="profile-right">
 						<div>
-							<h2>{data?.name}</h2>
-							<p>{data?.email}</p>
+							<h1>{data?.name}</h1>
+							<div className="organizer-row">
+								{data?.email}
+							</div>
 						</div>
 						<div>
 							<Button
@@ -156,12 +158,12 @@ function Profile() {
 						<div className="portfolio">
 							{data?.portfolioImages?.map((image, index) => (
 								<div key={index} className="portfolio-item">
-									<PortfolioItem image={image} setHasDeletedMedia={setHasDeletedMedia} />
+									<PortfolioItem image={image} viewOnly={false} setHasDeletedMedia={setHasDeletedMedia} />
 								</div>
 							))}
 							{data?.portfolioVideos?.map((video, index) => (
 								<div key={index} className="portfolio-item">
-									<PortfolioItem video={video} setHasDeletedMedia={setHasDeletedMedia} />
+									<PortfolioItem video={video}  viewOnly={false} setHasDeletedMedia={setHasDeletedMedia} />
 								</div>
 							))}
 						</div>
