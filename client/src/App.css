@@ -911,6 +911,7 @@ h2 .Title{
   outline-offset: 2px;
 }
 
+
 /* Custom styling for the dropdown arrow */
 .dropdown::after {
   content: '▼';

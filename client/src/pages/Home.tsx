@@ -59,6 +59,8 @@ function Home() {
           <h1>Discover Gigs</h1>
           <button onClick={() => navigate("/gigs")}>Show all</button>
         </div>
+
+        
         <div className="cards">
         <div className="card">
               <button onClick={() => navigate("/creategig")} style={{ width: '100%', border: 'none', background: 'none', padding: 0, margin: 0 }}>

@@ -16,6 +16,7 @@ const Card: React.FC<CardProps> = ({ gig }) => {
   const handleClick = () => {
     navigate(`/gigs/${gig.id}`);
   };
+  
 
   return (
     <div className="card">
