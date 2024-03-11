@@ -8,6 +8,7 @@
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.3);
   }
   
   .my-gig-cards img {
@@ -30,13 +31,12 @@
   }
   
   .gig-title {
-    font-size: 24px;
+    font-size: 1.25rem;
     font-weight: bold;
-    margin-bottom: 4px; /* Adds some space before the bio */
   }
   
   .gig-bio {
-    font-size: 16px;
+    font-size: 1rem;
     color: black; /* Explicitly set the text color to black */
   }
   
@@ -68,13 +68,13 @@
     border-radius: 8px; /* Rounded corners */
     color: white; /* White text */
     font-weight: 500;
-    background-color: rgb(1, 1, 189);; /* Example background color, adjust as needed */
-    padding: 10px 20px; /* Padding around the text */
-    border: none; /* Remove default border */
-    cursor: pointer; /* Change cursor to pointer on hover */
+    background-color: #3696c7; 
+    padding: 10px 20px; 
+    border: none; 
+    cursor: pointer; 
   }
   
   .gig-footer-button:hover {
-    background-color: rgb(1, 1, 119); /* Darker shade on hover */
+    background-color: #1e5f80; 
   }
   

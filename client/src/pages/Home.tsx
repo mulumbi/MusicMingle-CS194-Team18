@@ -7,7 +7,7 @@ import "../App.css";
 import { Gig, Artist, UserContent } from "../api/types";
 import { fetchArtists } from "../api/artists.api";
 import { fetchGigs } from "../api/gigs.api";
-import Add from "../assets/home/add.png";
+import Add from "../assets/home/addsign.png";
 
 
 function Home() {
@@ -54,13 +54,14 @@ function Home() {
 
   return (
     <div className="App">
+
+      <div className="homebody">
+
       <div className="gig-cards">
-        <div className="title">
+      <div className="title">
           <h1>Discover Gigs</h1>
           <button onClick={() => navigate("/create-gig")}>Show all</button>
         </div>
-
-
         <div className="cards">
         <div className="card">
               <button onClick={() => navigate("/create_gig")} style={{ width: '100%', border: 'none', background: 'none', padding: 0, margin: 0 }}>
@@ -70,7 +71,7 @@ function Home() {
                 />
               </button>
               <h2>Create New Gig</h2>
-              <p>Date: Discover local artists in your area!</p>
+              <p>Do you have an upcoming event? Discover local artists in your area!</p>
               <div className="tags">
                 <span className="tag">Tag</span>
               </div>
@@ -80,6 +81,7 @@ function Home() {
           ))}
         </div>
       </div>
+      
       <div className="artist-cards">
         <div className="title">
           <h1>Discover Artists</h1>
@@ -91,6 +93,7 @@ function Home() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }

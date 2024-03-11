@@ -16,7 +16,7 @@ const Card: React.FC<CardProps> = ({ gig }) => {
   const handleClick = () => {
     navigate(`/gigs/${gig.id}`);
   };
-  
+
 
   return (
     <div className="card">
@@ -30,7 +30,7 @@ const Card: React.FC<CardProps> = ({ gig }) => {
       <p>Date: {eventDate}</p>
       <p>Time: {eventTime}</p>
       <div className="tags">
-        {gig.gig_role_tags.concat(gig.gig_genre_tags).map((tag, index) => (
+        {gig.gig_role_tags.concat(gig.gig_genre_tags).slice(0, 2).map((tag, index) => (
           <span key={index} className="tag">{tag}</span>
         ))}
       </div>
