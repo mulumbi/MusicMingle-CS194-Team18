@@ -95,3 +95,22 @@ export const fetchGigByName = async (name: string): Promise<Gig> => {
 	}
 	throw new Error("Gig not found");
 };
+
+export const ApplyToGig = async (gig_id: string, applicationDetails: any, currentUser: any): Promise<any> => {
+    const token = await currentUser.getIdToken(); 
+    const endpoint = `${import.meta.env.VITE_BACKEND_URL}/gigs/application/?gig_id=${gig_id}`; 
+
+    try {
+        const response = await axios.post(endpoint, applicationDetails, {
+            headers: {
+                'authorization': token, 
+                'Content-Type': 'application/json', 
+            },
+        });
+        console.log("Application submitted successfully:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error applying to gig:", error);
+        throw error;
+    }
+};

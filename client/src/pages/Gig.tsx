@@ -10,7 +10,7 @@ import ComingSoon from "@/components/ComingSoon.tsx";
 import defaultBanner from "../assets/Background.png";
 import defaultGig from "../assets/home/placeholderEvent.jpg";
 // import defaultGig from "../assets/gigs/DefaultGig.png";
-import { fetchGig, mutateApplication } from "../api/gigs.api";
+import { fetchGig, mutateApplication, ApplyToGig } from "../api/gigs.api";
 import { fetchArtist } from "../api/artists.api";
 import { signInWithGooglePopup } from "../firebase/firebase";
 import { AuthContext } from "../context/AuthContext";
@@ -20,6 +20,7 @@ function Gig() {
 	console.log("id", id);
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AuthContext);
+	const [showSuccessModal, setShowSuccessModal] = useState(false);
 
 	// Fetch gig data
 	const { data, isLoading, refetch } = useQuery({
@@ -33,11 +34,27 @@ function Gig() {
 		onSuccess: () => refetch(),
 	});
 
+	const applyMutation = useMutation({
+		mutationFn: (applicationDetails) => ApplyToGig(id, applicationDetails, currentUser),
+		onSuccess: () => {
+		  // Handle successful application
+		  setShowSuccessModal(true);
+		},
+	  });
+	
+
 	const onApply = () => {
-		mutate();
+		const applicationDetails = {
+			applicantId: currentUser.uid,
+			gigId: id,
+			// Add more details as needed
+		  };
+	  
+		  applyMutation.mutate(applicationDetails);
+		  mutate();
 	};
 
-	// Fetch on first page load
+	// Fetch on firstApplyTo page load
 	useEffect(() => {
 		refetch();
 	}, []);
@@ -81,6 +98,21 @@ function Gig() {
 		minute: "2-digit",
 	});
 
+	// success modal
+	const SuccessModal = () => (
+		// Modal backdrop
+		<div className="modal-backdrop" onClick={() => setShowSuccessModal(false)}>
+		  {/* Modal content*/}
+		  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+			<p>Applied to Gig Successfully</p>
+			<div className="modal-actions">
+			  <Button onClick={() => navigate("/gigs")}>Go to Discover Gigs</Button>
+			  <Button onClick={() => navigate("/my_gigs")}>View on My Gigs</Button>
+			</div>
+		  </div>
+		</div>
+	  );
+	  
 	// Loading screen
 	if (isLoading) return <Loading />;
 
@@ -120,6 +152,7 @@ function Gig() {
 									? "Remove Application"
 									: "Apply"}
 							</Button>
+							{showSuccessModal && <SuccessModal />}
 							<SharePage
 								id={id}
 								category="gigs"

@@ -34,7 +34,7 @@ function Home() {
     id: "createnewgig001",
     name: "Create New Gig",
     bio: "Find local talent for your next gig!",
-    event_start: "", // Assuming these are optional for CreateNewGig
+    event_start: "", 
     event_end: "",
     gigImages: [NewGigImg],
     gig_role_tags: [],
