@@ -14,7 +14,8 @@
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
-	background-image: url("../src/assets/Background.png");
+	background-color: whitesmoke;
+	background-image: url("../src/assets/Bckground.png");
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -52,7 +53,7 @@
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	background-color: rgb(5, 22, 36);
+	background-color: #002d3d;
 	color: #ffffff;
 	align-self: flex-start;
 }
@@ -580,15 +581,63 @@ button.submit-button:focus,
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	color: #ffffff;
-	padding: 0 1rem;
-	margin-top: 1rem;
+	color: rgb(5, 22, 36);
+	margin: 0.15rem 0;
 }
 
 .title h1 {
-	margin-top: 1rem;
-	font-size: 1.5rem;
+	font-size: 1.25rem;
 	margin-bottom: 1rem;
+	color:rgb(8, 54, 88);
+	text-decoration: underline;
+}
+#TitleHome {
+	font-size: 1.75rem;
+	margin: 1rem 1.5rem;
+	color:rgb(8, 54, 88);
+	padding:0;
+	align-self: flex-start;
+	font-weight: bolder;
+	margin-bottom: 0.5rem;
+}
+
+.homebody {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	justify-self: center;
+	flex-direction: column;
+	background-color: whitesmoke;
+	justify-content: space-between;
+}
+.gig-cards{
+	display: flex;
+	margin:0;
+	padding: 0;
+	flex-direction: column;
+	height: fit-content;
+	margin: 0 1.5rem;
+	background-color: white;
+	padding: 1.2rem 1.5rem;
+	flex-direction: column;
+	justify-content: space-evenly;
+	padding-top: 0.9rem;
+	margin-top: 0.5rem;
+
+
+}
+.artist-cards{
+	display: flex;
+	margin:0;
+	padding: 0;
+	height: fit-content;
+	flex-direction: column;
+	margin: 0 1.5rem;
+	padding: 0.75rem 1.5rem;
+	background-color: white;
+	flex-direction: column;
+	justify-content: space-evenly;
+	
 }
 
 .title button {
@@ -602,23 +651,34 @@ button.submit-button:focus,
 .title button:hover {
 	background-color: rgba(54, 151, 199, 0.25);
 }
+.half {
+	display: flex;
+	flex-direction: column;
+	width: auto;
+    height: auto;
+	box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.1);
+
+}
+
 
 .cards {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
-	padding: 1rem;
+
 }
 
 .card {
 	background-color: #ffffff;
 	display: block;
 	flex-direction: column;
-	width: 17.5rem;
+	width: 18rem;
 	overflow: auto;
 	border-radius: 0.8rem;
 	padding: 1rem;
+	padding-top: 1.5rem;
 	margin-right: 2.5rem;
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.3);
 }
 
 .card img {
@@ -628,6 +688,7 @@ button.submit-button:focus,
 	margin: 0;
 	border-radius: 0.44rem;
 	padding: 0;
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.3);
 }
 
 .card h2 {
@@ -649,13 +710,15 @@ button.submit-button:focus,
 
 .gig-cards .cards .card:first-child {
 	color: #ffffff;
-	background-color: rgb(0, 64, 88);
+	background-color: #004058;
 	align-items: center;
 }
 
 .gig-cards .cards .card:first-child p {
 	color: rgb(232, 248, 252);
 	padding-top: 0.15rem;
+	padding-left: 0;
+	margin-left: 0;
 }
 
 .gig-cards .cards .card:first-child img {
@@ -727,10 +790,13 @@ button.submit-button:focus,
 }
 
 .page-body {
-	padding: 1.5rem;
+	padding: 0 1.5rem;
 	align-items: flex-start;
 	display: flex;
-	width: 98%;
+	width: 97%;
+	background-color: white;
+	padding-top: 1.5rem;
+	height: 100%;
 }
 
 .Title,
@@ -759,45 +825,61 @@ button.submit-button:focus,
   color: #333;
   line-height: 1.6;
   margin: 0;
-  padding: 20px;
+  padding: 2rem;
   box-sizing: border-box;
+  padding-top:0;
 }
 
 #ArtistPageApp {
   display: flex;
-  flex-direction: row; 
-  gap: 20px; 
+  flex-direction: column; 
 }
 
 #ArtistBody {
   display: flex;
-  width: 100%;
+  width: 90%;
+  margin-right: 2rem;
+  justify-content: space-between;
+  overflow-y: auto;
+  
 }
-.main-artist-page, #Filterbar {
+#Filterbar {
   display: flex;
   flex-direction: column;
   align-items: flex-start; 
+  padding: 0 2rem;
+  width: 100%;
+  height: 100%;
 }
 
-.main-artist-page {
-  width: 65%; 
+.main-artist-page{
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start; 
+	padding: 0;
+	width: 100%;
+	justify-content: space-between;
+	background-color: whitesmoke;
 }
 
 .header-search {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between; 
-  margin-bottom: 10px; 
+  justify-content: space-between;
+  width: 77.5%;
+  height: fit-content;
+  gap: 4rem;
+  margin-bottom: 2.5rem;
+  margin: 1.5rem 0;
 }
 
 .header-title {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: xx-large;
-  font-weight: 500;
-  text-decoration: underline;
-  color: white;
+  font-size: 2rem;
+  font-weight: boldeer;
+  color: #004058;
+    margin: 0;
+    font-weight: bolder;
 }
 
 h2 .Title{
@@ -809,10 +891,8 @@ h2 .Title{
 
 .searchbar {
   display: flex;
-  flex-grow: 0.8;
-  align-items: center;
-  margin-left:1rem;
-  gap: 10px; 
+  fwidth: 50%;
+  margin-left:2rem;
 }
 
 .searchbar input {
@@ -855,6 +935,8 @@ h2 .Title{
   display: flex;
   flex-direction: column;
   width: 100%;
+  background-color: whitesmoke;
+  overflow-y: auto;
 }
 
 /* FILTER BAR STYLES */
@@ -1049,7 +1131,8 @@ select:focus {
 .page-body {
 	display: flex;
 	flex-direction: column;
-	height: 100%; /* Adjust this as needed; could be 100vh for full viewport height */
+	background-color: white;
+	height: 100%; 
 }
 
 .Title,

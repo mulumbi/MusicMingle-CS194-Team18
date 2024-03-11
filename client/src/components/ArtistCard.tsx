@@ -25,7 +25,7 @@ const ArtistCard: React.FC<CardProps> = ({ artist }) => {
             <h2>{artist.name}</h2>
             <p>{artist.bio}</p>
             <div className="tags">
-                {artist.user_role_tags.concat(artist.user_genre_tags).map((tag, index) => (
+                {artist.user_role_tags.concat(artist.user_genre_tags).slice(0, 2).map((tag, index) => (
                     <span key={index} className="tag">{tag}</span>
                 ))}
             </div>

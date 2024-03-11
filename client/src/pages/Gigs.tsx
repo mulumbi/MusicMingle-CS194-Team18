@@ -95,8 +95,8 @@ function EventsList() {
 			className="App"
 			id="ArtistPageApp"
 		>
-			<div className="main-artist-page">
-				<div className="header-search">
+			<div className="page-body">
+							<div className="header-search">
 					<h2 className="header-title">Discover Gigs</h2>
 					<div className="searchbar">
 						<Input
@@ -112,6 +112,7 @@ function EventsList() {
 						</Button>
 					</div>
 				</div>
+			<div className="main-artist-page">
 				<div id="ArtistBody">
 					<div className="Artist-page-cards">
 						<Link to="/create_gig">
@@ -150,8 +151,7 @@ function EventsList() {
 						})}
 					</div>
 				</div>
-			</div>
-			<FilterSidebarGig
+				<FilterSidebarGig
 				minBudget={minBudget}
 				maxBudget={maxBudget}
 				selectedRoles={selectedRoles}
@@ -164,7 +164,8 @@ function EventsList() {
 					refetch();
 				}}
 			/>
-
+			</div>
+			</div>
 		</div>
 	);
 }
