@@ -114,6 +114,6 @@ const PostedGigCard: React.FC<PostedGigCardProps> = ({
 	                </div>
 	      	</div>
 	);
-);
+};
 
 export default PostedGigCard;
