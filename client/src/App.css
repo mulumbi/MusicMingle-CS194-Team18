@@ -1207,6 +1207,12 @@ select:focus {
 	/* Makes the content scrollable when it overflows vertically */
 }
 
+.empty-gigs {
+	background-color: white;
+	padding: 0 2rem;
+	font-size: 20px;
+}
+
 /* This could be the <div className="App"> or directly on the body */
 .App,
 body,

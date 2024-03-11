@@ -71,69 +71,77 @@ const MyGigs = () => {
 				</div>
 				<div className="my-gigs-cards">
 					{(activeTab === "APPLIED"
-						? (data?.my_applications).map((app, index) => {
-							return (
-								<Link to={"/gigs/" + app.gigId}>
-									<GigCard
-										key={index}
-										imageUrl={
-											app?.gigProfileImage?.public_url ||
-											""
-										}
-										title={app.name}
-										bio={app.bio}
-										eventStart={app.event_start}
-										eventEnd={app.event_end}
-										tags={app.gig_role_tags}
-										buttonText={
-											"View Details"
-										}
-										onButtonClick={() => {
-											// onRemove(app.gigId); // opting to use link and remove directly on the gig page
-										}}
-									/>
-								</Link>
-							);
-						})
-						: (data?.my_gigs).map((gig, index) => (
-							<PostedGigCard
-								key={index}
-								imageUrl={
-									gig?.gigProfileImage?.public_url ||
-									""
-								}
-								title={gig.name}
-								bio={gig.bio}
-								eventStart={gig.event_start}
-								eventEnd={gig.event_end}
-								tags={gig.gig_role_tags}
-								popupButtonText={
-									"View Applicants"
-								}
-								popupContent={
-									(gig.applications).map((app) => (
-										<Link to={"/artists/" + app.user.id}>
-											<p>{app.user.name}</p>
-										</Link>
-									))}
-								buttonText1={
-									"Edit Gig"
-								}
-								onButtonClick1={() => {
-									/* wire mygigs/edit */
-								}}
-								buttonText2={
-									gig.is_open
-										? "Close Gig"
-										: "Gig Closed!"
-								}
-								onButtonClick2={() => {
-									onClose(gig.id);
-								}}
-							/>
-						))
-					)}
-
+						? ((data?.my_applications).length > 0 
+							? (data?.my_applications).map((app, index) => {
+								return (
+									<Link to={"/gigs/" + app.gigId}>
+										<GigCard
+											key={index}
+											imageUrl={
+												app?.gigProfileImage?.public_url ||
+												""
+											}
+											title={app.name}
+											bio={app.bio}
+											eventStart={app.event_start}
+											eventEnd={app.event_end}
+											tags={app.gig_role_tags}
+											buttonText={
+												"View Details"
+											}
+											onButtonClick={() => {
+												// onRemove(app.gigId); // opting to use link and remove directly on the gig page
+											}}
+										/>
+									</Link>
+								);
+							})
+							: <div className="empty-gigs">
+								<i>You haven't applied to any gigs yet!</i>
+							</div>
+						)
+						: ((data?.my_gigs).length > 0 
+							? (data?.my_gigs).map((gig, index) => (
+								<PostedGigCard
+									key={index}
+									imageUrl={
+										gig?.gigProfileImage?.public_url ||
+										""
+									}
+									title={gig.name}
+									bio={gig.bio}
+									eventStart={gig.event_start}
+									eventEnd={gig.event_end}
+									tags={gig.gig_role_tags}
+									popupButtonText={
+										"View Applicants"
+									}
+									popupContent={
+										(gig.applications).map((app) => (
+											<Link to={"/artists/" + app.user.id}>
+												<p>{app.user.name}</p>
+											</Link>
+										))}
+									buttonText1={
+										"Edit Gig"
+									}
+									onButtonClick1={() => {
+										/* wire mygigs/edit */
+									}}
+									buttonText2={
+										gig.is_open
+											? "Close Gig"
+											: "Gig Closed!"
+									}
+									onButtonClick2={() => {
+										onClose(gig.id);
+									}}
+								/>
+							))
+							: <div className="empty-gigs">
+								<i>You haven't posted any gigs yet!</i>
+							</div>
+						))}
 				</div>
 			</div>
 		</div>
