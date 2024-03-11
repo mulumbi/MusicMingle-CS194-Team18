@@ -9,7 +9,7 @@ type CardProps = {
 };
 
 const Card: React.FC<CardProps> = ({ gig }) => {
-  const imageUrl = gig.gigImages.length > 0 ? gig.gigImages[0].public_url : DefaultEvent;
+  const imageUrl =  gig?.gigProfileImage?.public_url;
   const eventDate = new Date(gig.event_start).toLocaleDateString();
   const eventTime = `${new Date(gig.event_start).toLocaleTimeString()} - ${new Date(gig.event_end).toLocaleTimeString()}`;
   const navigate = useNavigate();

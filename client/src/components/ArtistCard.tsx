@@ -18,7 +18,7 @@ const ArtistCard: React.FC<CardProps> = ({ artist }) => {
             <button onClick={handleClick} style={{ width:'100%', border: 'none', background: 'none', padding: 0, margin: 0 }}>
             <img
                 className="profile-photo"
-                src={artist.profile_image?.public_url || DefaultArtist} 
+                src={artist.profileImage[0]?.public_url} 
                 alt="Profile Photo"
             />
             </button>
