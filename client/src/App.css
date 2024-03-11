@@ -610,8 +610,8 @@ button.submit-button:focus,
 	height: 100%;
 	justify-self: center;
 	flex-direction: column;
-	background-color: whitesmoke;
 	justify-content: space-around;
+	background-color: white;
 }
 
 .gig-cards {
@@ -815,9 +815,6 @@ margin-bottom: 0.5rem;
 	outline: none;
 }
 
-.my-gigs-cards {
-	/* Styles for the gigs cards container */
-}
 
 .page-body {
 	padding: 0 1.5rem;
@@ -893,7 +890,7 @@ margin-bottom: 0.5rem;
 	padding: 0;
 	width: 100%;
 	justify-content: space-between;
-	background-color: whitesmoke;
+	background-color: white;
 	height: 83.5%;
 }
 
@@ -970,7 +967,6 @@ h2 .Title {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	background-color: whitesmoke;
 	overflow-y: auto;
 }
 
@@ -1203,8 +1199,7 @@ select:focus {
 	height: fit-content;
 	width: 95%;
 	overflow-y: auto;
-	background-color: whitesmoke;
-	/* Makes the content scrollable when it overflows vertically */
+	background-color: white;
 }
 
 .empty-gigs {
@@ -1247,3 +1242,56 @@ body {
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	z-index: 1051;
 }
+
+/*VIEW APPLICANTS POPOVER STYLING*/
+.overlay {
+	position: fixed;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 32px; 
+	z-index: 1000; 
+  }
+  
+  .popover-content {
+	background-color: white;
+	border-radius: 1rem; 
+	padding: 2.5rem; 
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); 
+	max-width: 800px; 
+	width: 90%;
+	z-index: 1001;
+	position: relative;
+	transition: transform 0.3s, opacity 0.3s;
+	opacity: 1; 
+	transform: translateY(0);
+  }
+  
+  .popover-close-button {
+	position: absolute;
+	top: 1.5rem; 
+	right: 1.5rem; 
+	background: #3696c7;
+	color:white; 
+	border-radius: 50%; 
+	width: 2.5rem; 
+	height: 2rem; 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	font-size: 1.25rem;
+	transition: background-color 0.2s; 
+  }
+  
+  .popover-close-button:hover {
+	background: #002d3d ; 
+	color:white;
+  }
+  
+  a  .popover-content{
+	font-size: 0.8rem;
+	color:#0074a2;
+  }
