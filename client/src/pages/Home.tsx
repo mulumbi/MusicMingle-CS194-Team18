@@ -59,7 +59,7 @@ function Home() {
 
       <div className="gig-cards">
       <div className="title">
-          <h1>Discover Gigs</h1>
+          <h1 className="header-title">Discover Gigs</h1>
           <button onClick={() => navigate("/create-gig")}>Show all</button>
         </div>
         <div className="cards">
@@ -84,7 +84,7 @@ function Home() {
       
       <div className="artist-cards">
         <div className="title">
-          <h1>Discover Artists</h1>
+          <h1 className="header-title">Discover Artists</h1>
           <button onClick={() => navigate("/artists")}>Show all</button>
         </div>
         <div className="cards">
