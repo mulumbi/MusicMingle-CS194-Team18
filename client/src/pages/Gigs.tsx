@@ -142,7 +142,6 @@ function EventsList() {
 										eventEnd={gig.event_end}
 										buttonText="Apply Now"
 										onButtonClick={() =>
-											// applyToGig(gig.name, currentUser)
 											navigate(`/gigs/${gig.id}`)
 										}
 									/>

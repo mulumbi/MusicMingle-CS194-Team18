@@ -54,7 +54,7 @@ const MyGigs = () => {
 						<Link to={"/gigs/" + gig.id}>
 							<GigCard
 								key={index}
-								imageUrl={gig.gigProfileImage}
+								imageUrl={gig?.gigProfileImage?.public_url}
 								title={gig.name}
 								bio={gig.bio}
 								eventStart={gig.event_start}
