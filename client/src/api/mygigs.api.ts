@@ -31,7 +31,7 @@ export const mutateCloseGig = async (
 	query.append("gig_id", gig_id)
 	
 	const response = await axios
-		.post(`${import.meta.env.VITE_BACKEND_URL}/mygigs/close_gig?` + query.to_string(), {
+		.post(`${import.meta.env.VITE_BACKEND_URL}/mygigs/close_gig?` + query.toString(), {
 			headers: { authorization: token },
 		})
 		.then((res) => {
@@ -53,7 +53,7 @@ export const mutateWithdrawApp = async (
 	query.append("gig_id", gig_id)
 	
 	const response = await axios
-		.post(`${import.meta.env.VITE_BACKEND_URL}/mygigs/withdraw_app?` + query.to_string(), {
+		.post(`${import.meta.env.VITE_BACKEND_URL}/mygigs/withdraw_app?` + query.toString(), {
 			headers: { authorization: token },
 		})
 		.then((res) => {
