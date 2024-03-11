@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import GigCard from "@/components/GigCards";
 import PostedGigCard from "@/components/PostedGigCards";
 import Loading from "@/components/Loading.tsx";
 import { fetchGigsData, mutateCloseGig, mutateWithdrawApp } from "../api/mygigs.api";
+import { mutateApplication } from "../api/gigs.api";
 
 const MyGigs = () => {
 	const [activeTab, setActiveTab] = useState("APPLIED");
@@ -17,9 +18,23 @@ const MyGigs = () => {
 		queryFn: () => fetchGigsData(currentUser),
 	});
 
-	useEffect(() => {
-		refetch();
-	}, []);
+	const mutateRemove = useMutation({
+		mutationFn: (id: any) => mutateApplication(currentUser, id),
+		onSuccess: () => refetch(),
+	});
+
+	const mutateClose = useMutation({
+		mutationFn: (id: any) => mutateCloseGig(currentUser, id),
+		onSuccess: () => refetch(),
+	});
+
+	const onRemove = (id: any) => {
+		  mutateRemove.mutate(id);
+	};
+
+	const onClose = (id: any) => {
+		mutateClose.mutate(id);
+  	};
 
 	if (isLoading) return <Loading />;
 
@@ -53,20 +68,23 @@ const MyGigs = () => {
 					{(activeTab === "APPLIED"
 					  	? (data?.my_applications).map((app, index) => {
 							return (
-								<Link to={"/gigs/" + app.id}>
+								<Link to={"/gigs/" + app.gigId}>
 									<GigCard
 										key={index}
-										imageUrl={app.gigProfileImage}
+										imageUrl={
+											app?.gigProfileImage?.public_url ||
+											""
+										}
 										title={app.name}
 										bio={app.bio}
 										eventStart={app.event_start}
 										eventEnd={app.event_end}
 										tags={app.gig_role_tags}
 										buttonText={
-											"Withdraw Application"
+											"View Details"
 										}
 										onButtonClick={() => {
-											mutateWithdrawApp(currentUser, app.id);
+											// onRemove(app.gigId); // opting to use link and remove directly on the gig page
 										}}
 									/>
 								</Link>
@@ -75,7 +93,10 @@ const MyGigs = () => {
 						: (data?.my_gigs).map((gig, index) => (
 							<PostedGigCard
 								key={index}
-								imageUrl={gig.gigProfileImage}
+								imageUrl={
+									gig?.gigProfileImage?.public_url ||
+									""
+								}
 								title={gig.name}
 								bio={gig.bio}
 								eventStart={gig.event_start}
@@ -86,7 +107,7 @@ const MyGigs = () => {
 								}
 								popupContent={
 									(gig.applications).map((app) => (
-										<Link to="/artists/${app.user.id}">
+										<Link to={"/artists/" + app.user.id}>
 											<p>{app.user.name}</p>
 										</Link>
 								))}
@@ -94,13 +115,15 @@ const MyGigs = () => {
 									"Edit Gig"
 								}
 								onButtonClick1={() => {
-									/* TODO: wire mygigs/edit */
+									/* wire mygigs/edit */
 								}}
 								buttonText2={
-									"Close Gig"
+									gig.is_open
+									? "Close Gig"
+									: "Gig Closed!"
 								}
 								onButtonClick2={() => {
-									mutateCloseGig(currentUser, gig.id);
+									onClose(gig.id);
 								}}
 							/>
 						))

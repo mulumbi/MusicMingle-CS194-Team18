@@ -50,7 +50,7 @@ function Gig() {
 			// Add more details as needed
 		  };
 	  
-		  applyMutation.mutate(applicationDetails);
+		  // applyMutation.mutate(applicationDetails); // causing duplicate application
 		  mutate();
 	};
 
