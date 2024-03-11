@@ -15,6 +15,7 @@ import { PiMagnifyingGlassBold } from "react-icons/pi";
 import { FilterSidebarArtist } from "../components/Filterbar";
 import GigCard from "@/components/GigCards";
 import { fetchArtists } from "../api/artists.api";
+import axios from "axios";
 
 function Artists() {
 	const navigate = useNavigate();
@@ -25,14 +26,18 @@ function Artists() {
 	const [searchName, setSearchName] = useState("");
 	const [minFlatRate, setMinFlatRate] = useState<number>(0);
 	const [maxFlatRate, setMaxFlatRate] = useState<number>(10000);
+	const [selectedGenres, setSelectedGenres] = useState<string[]>([]); 
+    const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
 
-	const { data, error, isLoading, refetch } = useQuery({
+	const { data: artists, isLoading, error, refetch } = useQuery({
 		queryKey: [
 			"artists",
 			{
 				name: searchName,
 				flat_rate_start: minFlatRate,
 				flat_rate_end: maxFlatRate,
+				selectedRoles, 
+				selectedGenres 
 			},
 		],
 		queryFn: () =>
@@ -40,13 +45,15 @@ function Artists() {
 				name: searchName,
 				flat_rate_start: minFlatRate,
 				flat_rate_end: maxFlatRate,
+				user_role_tags: selectedRoles,
+				user_genre_tags: selectedGenres,
 			}),
 		enabled: false,
 	});
 
 	useEffect(() => {
 		refetch();
-	}, [searchName, minFlatRate, maxFlatRate]);
+	}, [searchName, minFlatRate, maxFlatRate, selectedGenres, selectedRoles]);
 
 	const handleSubmit = () => {
 		refetch();
@@ -76,7 +83,7 @@ function Artists() {
 				</div>
 				<div id="ArtistBody">
 					<div className="Artist-page-cards">
-						{data?.map((artist, index) => (
+						{artists?.map((artist, index) => (
 							<Link to={"/artists/" + artist.id}>
 								<GigCard
 									key={index}
@@ -99,11 +106,14 @@ function Artists() {
 			<FilterSidebarArtist
 				minRate={minFlatRate}
 				maxRate={maxFlatRate}
-				onApplyFilters={(newMinFlatRate, newMaxFlatRate) => {
+				selectedRoles={selectedRoles}
+				selectedGenres={selectedGenres}
+				onApplyFilters={(newMinFlatRate, newMaxFlatRate, newSelectedRoles, newSelectedGenres) => {
 					setMinFlatRate(newMinFlatRate);
 					setMaxFlatRate(newMaxFlatRate);
+					setSelectedRoles(newSelectedRoles);
+					setSelectedGenres(newSelectedGenres);
 					refetch();
-					console.log("data after filters", data);
 				}}
 			/>
 		</div>
