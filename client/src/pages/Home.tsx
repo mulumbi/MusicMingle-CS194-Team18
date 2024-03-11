@@ -57,13 +57,13 @@ function Home() {
       <div className="gig-cards">
         <div className="title">
           <h1>Discover Gigs</h1>
-          <button onClick={() => navigate("/gigs")}>Show all</button>
+          <button onClick={() => navigate("/create-gig")}>Show all</button>
         </div>
 
-        
+
         <div className="cards">
         <div className="card">
-              <button onClick={() => navigate("/creategig")} style={{ width: '100%', border: 'none', background: 'none', padding: 0, margin: 0 }}>
+              <button onClick={() => navigate("/create_gig")} style={{ width: '100%', border: 'none', background: 'none', padding: 0, margin: 0 }}>
                 <img
                   src={Add}
                   alt="New Gig"
