@@ -13,31 +13,33 @@
   
   .my-gig-cards img {
     height: 11rem;
-    width: 11rem;
+    width: 22rem;
     min-height: 11rem;
     min-width: 11rem;
-    border-radius: 4px;
+    border-radius: 8px;
     object-fit: cover;
     object-position: center;
-    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5); /* Add drop shadow with a blur of 12 */
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.3);
   }
   
   .gig-details {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 11rem;
+    height: 10.5rem;
     justify-content: space-between;
   }
   
   .gig-title {
-    font-size: 1.25rem;
+    font-size: 1.33rem;
     font-weight: bold;
+    color: #3696c7; 
   }
   
   .gig-bio {
+    color: black;
+    font-weight: normal;
     font-size: 1rem;
-    color: black; /* Explicitly set the text color to black */
   }
   
   .gig-footer {
@@ -64,17 +66,55 @@
     border-radius: 0.5rem;
   }
   .gig-footer-button {
-    height: 2.4rem;
-    border-radius: 8px; /* Rounded corners */
-    color: white; /* White text */
-    font-weight: 500;
-    background-color: #3696c7; 
-    padding: 10px 20px; 
+    border-radius: 8px; 
+    color: white;  
+    font-size: 1rem;
+    font-weight: bolder;
+    background-color: #1e5f80; 
+    padding: 1rem 2.5rem; 
     border: none; 
     cursor: pointer; 
   }
   
   .gig-footer-button:hover {
-    background-color: #1e5f80; 
+    background-color: #0f2e3d; 
   }
   
+.date-time-row{
+  color: black;
+  font-weight: normal;
+  font-size: 1rem;
+}
+
+.date{
+  color: black;
+  font-weight: normal;
+  font-size: 1rem;
+}
+
+.gig-details.posted{
+  width: 80%;
+}
+.postedGigsButton {
+  display: flex; /* Changed to flex to better control the child elements */
+  flex-direction: column-reverse;
+  height: 100%;
+  width: 15%;
+  justify-content: right;
+  align-items: flex-end; /* Align items to the start of the container (left) */
+  justify-content: space-between; /* Keep space-between if you want to distribute the buttons vertically */
+}
+
+.posted-gig-footer-button {
+  display: inline-block; /* Use inline-block if you want the button to size to its content */
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  margin: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: bolder;
+  background-color: #1e5f80;
+  border: none;
+  cursor: pointer;
+  /* No changes needed here as these styles should already allow the buttons to size to their content */
+}

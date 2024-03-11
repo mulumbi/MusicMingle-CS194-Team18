@@ -63,7 +63,7 @@ const PostedGigCard: React.FC<PostedGigCardProps> = ({
 	                        src={imageUrl}
 	                        alt="Main Image"
 	                />
-	                <div className="gig-details">
+	                <div className="gig-details posted">
 	                        <div>
 					<div className="gig-title">{title}</div>
 					{eventStart && (
@@ -90,28 +90,31 @@ const PostedGigCard: React.FC<PostedGigCardProps> = ({
 							</span>
 						))}
 					</div>
+
+	                </div>
+					</div>
+					<div className="postedGigsButton">
 					<Popover>
 						<PopoverTrigger asChild>
-							<button className="gig-footer-button">{popupButtonText}</button>
+							<button className="posted-gig-footer-button">{popupButtonText}</button>
 						</PopoverTrigger>
 						<PopoverContent>
 							{popupContent}
 						</PopoverContent>
 					</Popover>
 					<button
-						className="gig-footer-button"
+						className="posted-gig-footer-button"
 						onClick={onButtonClick1}
 					>
 						{buttonText1}
 					</button>
 					<button
-						className="gig-footer-button"
+						className="posted-gig-footer-button"
 						onClick={onButtonClick2}
 					>
 						{buttonText2}
 					</button>
 	                        </div>
-	                </div>
 	      	</div>
 	);
 };

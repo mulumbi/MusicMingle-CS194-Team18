@@ -64,8 +64,8 @@ function Artists() {
 			className="App"
 			id="ArtistPageApp"
 		>
-			<div className="main-artist-page">
-				<div className="header-search">
+						<div className="page-body">
+						<div className="header-search">
 					<h2 className="header-title">Discover Artists </h2>
 					<div className="searchbar">
 						<Input
@@ -81,6 +81,9 @@ function Artists() {
 						</Button>
 					</div>
 				</div>
+						
+			<div className="main-artist-page">
+
 				<div id="ArtistBody">
 					<div className="Artist-page-cards">
 						{artists?.map((artist, index) => (
@@ -102,8 +105,7 @@ function Artists() {
 						))}
 					</div>
 				</div>
-			</div>
-			<FilterSidebarArtist
+				<FilterSidebarArtist
 				minRate={minFlatRate}
 				maxRate={maxFlatRate}
 				selectedRoles={selectedRoles}
@@ -116,6 +118,8 @@ function Artists() {
 					refetch();
 				}}
 			/>
+			</div>
+		</div>
 		</div>
 	);
 }

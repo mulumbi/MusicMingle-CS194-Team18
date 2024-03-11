@@ -17,6 +17,9 @@ const MyGigs = () => {
 		queryKey: ["my_gigs_get"],
 		queryFn: () => fetchGigsData(currentUser),
 	});
+	useEffect(() => {
+        refetch(); // Refetch data when activeTab changes
+    }, [activeTab, refetch]);
 
 	const mutateRemove = useMutation({
 		mutationFn: (id: any) => mutateApplication(currentUser, id),
@@ -29,44 +32,46 @@ const MyGigs = () => {
 	});
 
 	const onRemove = (id: any) => {
-		  mutateRemove.mutate(id);
+		mutateRemove.mutate(id);
 	};
 
 	const onClose = (id: any) => {
 		mutateClose.mutate(id);
-  	};
+	};
 
 	if (isLoading) return <Loading />;
 
 	return (
 		<div className="App">
-			<div className="page-body">
-				<div className="Title">View My Gigs</div>
-				<div className="Selection-tabs">
-					<button
-						className={
-							activeTab === "APPLIED"
-								? "selection-buttons active"
-								: "selection-buttons"
-						}
-						onClick={() => setActiveTab("APPLIED")}
-					>
-						APPLIED GIGS
-					</button>
-					<button
-						className={
-							activeTab === "POSTED"
-								? "selection-buttons active"
-								: "selection-buttons"
-						}
-						onClick={() => setActiveTab("POSTED")}
-					>
-						POSTED GIGS
-					</button>
+			<div id="MyGigsBody" className="page-body">
+				<div className="myGigsHeader">
+					<div className="header-title">View My Gigs</div>
+					<div className="Selection-tabs">
+						<button
+							className={
+								activeTab === "APPLIED"
+									? "selection-buttons active"
+									: "selection-buttons"
+							}
+							onClick={() => setActiveTab("APPLIED")}
+						>
+							APPLIED GIGS
+						</button>
+						<button
+							className={
+								activeTab === "POSTED"
+									? "selection-buttons active"
+									: "selection-buttons"
+							}
+							onClick={() => setActiveTab("POSTED")}
+						>
+							POSTED GIGS
+						</button>
+					</div>
 				</div>
 				<div className="my-gigs-cards">
 					{(activeTab === "APPLIED"
-					  	? (data?.my_applications).map((app, index) => {
+						? (data?.my_applications).map((app, index) => {
 							return (
 								<Link to={"/gigs/" + app.gigId}>
 									<GigCard
@@ -110,7 +115,7 @@ const MyGigs = () => {
 										<Link to={"/artists/" + app.user.id}>
 											<p>{app.user.name}</p>
 										</Link>
-								))}
+									))}
 								buttonText1={
 									"Edit Gig"
 								}
@@ -119,15 +124,16 @@ const MyGigs = () => {
 								}}
 								buttonText2={
 									gig.is_open
-									? "Close Gig"
-									: "Gig Closed!"
+										? "Close Gig"
+										: "Gig Closed!"
 								}
 								onButtonClick2={() => {
 									onClose(gig.id);
 								}}
 							/>
 						))
-					  )}
+					)}
+
 				</div>
 			</div>
 		</div>
