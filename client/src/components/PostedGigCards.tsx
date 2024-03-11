@@ -20,25 +20,6 @@ interface PostedGigCardProps {
       	onButtonClick2: () => void;
 }
 
-function formatDateTime(dateString: string): string {
-      	const date = new Date(dateString);
-      	const year = date.getFullYear();
-      	const month = date.getMonth() + 1; // Months are 0-indexed, add 1 for human-readable format
-      	const day = date.getDate();
-      	const hours = date.getHours();
-      	const minutes = date.getMinutes();
-      	const seconds = date.getSeconds();
-      
-      	const formattedDate = `${year}-${month.toString().padStart(2, "0")}-${day
-            		.toString()
-            		.padStart(2, "0")}`;
-      	const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
-            		.toString()
-            		.padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-      
-      	return `${formattedDate} ${formattedTime}`;
-}
-
 const PostedGigCard: React.FC<PostedGigCardProps> = ({
       	imageUrl,
       	title,
@@ -52,45 +33,87 @@ const PostedGigCard: React.FC<PostedGigCardProps> = ({
       	onButtonClick1,
         buttonText2,
       	onButtonClick2,
-}) => (
-      	<div className="my-gig-cards">
-                <img
-                        src={imageUrl}
-                        alt="Gig"
-                />
-                <div className="gig-details">
-                        <div className="gig-header">{title}</div>
-                        <p className="gig-bio">{bio}</p>
-                        <p>
-                              {formatDateTime(eventStart)} to {formatDateTime(eventEnd)}
-                        </p>
-                        <div className="gig-bottoms">
-                                <div className="gig-tabs">
-                                        {/* Dynamically generate spans for each tag */}
-                                        {tags?.map((tag, index) => (
-                                                <span
-                                                        key={index}
-                                                        className="tab"
-                                                >
-                                                        {tag}
-                                                </span>
-                                        ))}
-                                </div>
-                                <div className="bottom-buttons">
-                                        <Popover>
-                                                <PopoverTrigger asChild>
-                                                        <button>{popupButtonText}</button>
-                                                </PopoverTrigger>
-                                                <PopoverContent>
-                                                        {popupContent}
-                                                </PopoverContent>
-                                        </Popover>
-                                        <button onClick={onButtonClick1}>{buttonText1}</button>
-                                        <button onClick={onButtonClick2}>{buttonText2}</button>
-                                </div>
-                        </div>
-                </div>
-      	</div>
+}) => {
+	// Parse date and times
+	const startDateTime = new Date(eventStart);
+	const startDate = startDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const startTime = startDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+
+	const endDateTime = new Date(eventEnd);
+	const endDate = endDateTime.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		weekday: "short",
+	});
+	const endTime = endDateTime.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+	
+	return (
+	      	<div className="my-gig-cards">
+	                <img
+	                        src={imageUrl}
+	                        alt="Main Image"
+	                />
+	                <div className="gig-details">
+	                        <div>
+					<div className="gig-title">{title}</div>
+					{eventStart && (
+						<div className="date-time-row">
+							<div className="date">{startDate}</div>
+							{startTime + " - "}
+							{endDate != startDate && (
+								<div className="date">{endDate}</div>
+							)}
+							{endTime}
+						</div>
+					)}
+					<p className="gig-bio">{bio}</p>
+				</div>
+	                        <div className="gig-footer">
+	                                <div className="gig-tags">
+						{/* Dynamically generate spans for each tag */}
+						{tags?.map((tag, index) => (
+							<span
+								key={index}
+								className="tag"
+							>
+								{tag}
+							</span>
+						))}
+					</div>
+					<Popover>
+						<PopoverTrigger asChild>
+							<button className="gig-footer-button">{popupButtonText}</button>
+						</PopoverTrigger>
+						<PopoverContent>
+							{popupContent}
+						</PopoverContent>
+					</Popover>
+					<button
+						className="gig-footer-button"
+						onClick={onButtonClick1}
+					>
+						{buttonText1}
+					</button>
+					<button
+						className="gig-footer-button"
+						onClick={onButtonClick2}
+					>
+						{buttonText2}
+					</button>
+	                        </div>
+	                </div>
+	      	</div>
+	);
 );
 
 export default PostedGigCard;
