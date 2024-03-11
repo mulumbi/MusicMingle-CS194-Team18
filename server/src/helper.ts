@@ -7,9 +7,10 @@ import models, { sequelize } from "./db";
 import { Op, Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
+import { promises } from "dns";
 
 const bucketStorage = new Storage({
-	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
+	keyFilename: `config/musicmingle-847509563d60.json`,
 });
 const profileBucket = bucketStorage.bucket("music-mingle-profile");
 const videoBucket = bucketStorage.bucket("music-mingle-video");
@@ -186,50 +187,64 @@ const uploadPortfolioImages = async (req, res, next) => {
 
 		if (portfolio_images?.length > 0) {
 			const portfolio_images_obj = [];
-			portfolio_images.forEach(async (image) => {
-				const { path, originalname } = image;
-				const name = req.user?.name || "Jason Mei";
-				const ref = `${name}-${originalname}.webp`;
-				const file = portfolioImageBucket.file(ref);
-				// Create portfolio image instance
-				const user_content = await user.createUserContent({
-					type: "portfolioImage",
-					file_name: ref,
-					public_url: file.publicUrl(),
-					// UserId: uid,
-				});
-				// Optimize image, upload to google cloud storage, make image public
-				sharp(path)
-					.webp({ quality: 70 })
-					.toBuffer()
-					.then((data) => {
-						file.save(data)
-							.then(() => {
-								fs.unlink(path, (err) => {
-									console.log(err);
-								});
-								file.makePublic().catch((err) => {
-									console.log("Error verifying token:", err);
-									res.status(501).json({
-										error: `Profile make public error: ${err}`,
+			const portfolioUploadPromises = portfolio_images.map(
+				async (image) => {
+					const { path, originalname } = image;
+					const name = req.user?.name || "Jason Mei";
+					const ref = `${name}-${originalname}.webp`;
+					const file = portfolioImageBucket.file(ref);
+					// Create portfolio image instance
+					const user_content = await user.createUserContent({
+						type: "portfolioImage",
+						file_name: ref,
+						public_url: file.publicUrl(),
+						// UserId: uid,
+					});
+					// Optimize image, upload to google cloud storage, make image public
+					await new Promise((resolve, reject) => {
+						sharp(path)
+							.webp({ quality: 70 })
+							.toBuffer()
+							.then((data) => {
+								file.save(data)
+									.then(() => {
+										fs.unlink(path, (err) => {
+											console.log(err);
+										});
+										file.makePublic()
+											.then(() => {
+												resolve(true);
+											})
+											.catch((err) => {
+												console.log(
+													"Error verifying token:",
+													err
+												);
+												reject(false);
+												res.status(501).json({
+													error: `Profile make public error: ${err}`,
+												});
+											});
+									})
+									.catch((err) => {
+										console.log("Save error:", err);
+										res.status(501).json({
+											error: `Save profile error: ${err}`,
+										});
+										reject(false);
 									});
-								});
 							})
 							.catch((err) => {
-								console.log("Save error:", err);
 								res.status(501).json({
-									error: `Save profile error: ${err}`,
+									error: `Parse profile image error: ${err}`,
 								});
+								reject(false);
 							});
-					})
-					.catch((err) => {
-						res.status(501).json({
-							error: `Parse profile image error: ${err}`,
-						});
 					});
-				portfolio_images_obj.push(user_content);
-			});
-			await Promise.allSettled(portfolio_images_obj);
+					return user_content;
+				}
+			);
+			await Promise.allSettled(portfolioUploadPromises);
 			req.portfolio_images = portfolio_images_obj;
 			next();
 		} else {
@@ -269,7 +284,7 @@ const uploadVideos = async (req, res, next) => {
 						.fps(30)
 						.addOptions(["-crf 28"])
 						.save(ref)
-						.on("error", reject)
+						.on("error", () => reject(false))
 						.on("end", () => {
 							fs.unlink(path, (err) => {
 								if (err)
@@ -281,7 +296,7 @@ const uploadVideos = async (req, res, next) => {
 
 							fs.createReadStream(ref)
 								.pipe(file.createWriteStream())
-								.on("error", reject)
+								.on("error", () => reject(false))
 								.on("finish", async () => {
 									await file.makePublic();
 									fs.unlink(ref, (err) => {
@@ -352,87 +367,108 @@ const uploadGigImages = async (req, res, next) => {
 		const { gig_images, gig_profile_image } = req.files;
 		if (gig_images?.length > 0) {
 			const gigImages = [];
-			gig_images.forEach(async (image) => {
+			const gigImageUploads = gig_images.map(async (image) => {
 				const { path, originalname } = image;
 				const ref = `${uuidv4()}-${originalname}.webp`;
 				const file = gigImageBucket.file(ref);
 				// Optimize image, upload to google cloud storage, make image public
-				sharp(path)
-					.webp({ quality: 70 })
-					.toBuffer()
-					.then((data) => {
-						file.save(data)
-							.then(() => {
-								fs.unlink(path, (err) => {
-									console.log(err);
-								});
-								file.makePublic().catch((err) => {
-									console.log("Error verifying token:", err);
+				await new Promise((resolve, reject) => {
+					sharp(path)
+						.webp({ quality: 70 })
+						.toBuffer()
+						.then((data) => {
+							file.save(data)
+								.then(() => {
+									fs.unlink(path, (err) => {
+										console.log(err);
+									});
+									file.makePublic()
+										.then(() => resolve(true))
+										.catch((err) => {
+											console.log(
+												"Error verifying token:",
+												err
+											);
+											reject(false);
+											res.status(501).json({
+												error: `Profile make public error: ${err}`,
+											});
+										});
+								})
+								.catch((err) => {
+									console.log("Save error:", err);
+									reject(false);
 									res.status(501).json({
-										error: `Profile make public error: ${err}`,
+										error: `Save profile error: ${err}`,
 									});
 								});
-							})
-							.catch((err) => {
-								console.log("Save error:", err);
-								res.status(501).json({
-									error: `Save profile error: ${err}`,
-								});
+						})
+						.catch((err) => {
+							reject(false);
+							res.status(501).json({
+								error: `Parse profile image error: ${err}`,
 							});
-					})
-					.catch((err) => {
-						res.status(501).json({
-							error: `Parse profile image error: ${err}`,
 						});
-					});
+				});
 				gigImages.push({
 					type: "gigImage",
 					file_name: ref,
 					public_url: file.publicUrl(),
 				});
 			});
-			await Promise.allSettled(gigImages);
+			await Promise.allSettled(gigImageUploads);
 			req.gig_images = gigImages;
 		}
 		const gigProfileImage = {};
 		if (gig_profile_image.length > 0) {
-			gig_profile_image.forEach((image) => {
+			const profileImageUpload = gig_profile_image.map(async (image) => {
 				const { path, originalname } = image;
 				const ref = `${uuidv4()}-${originalname}.webp`;
 				const file = gigImageBucket.file(ref);
 				// Optimize image, upload to google cloud storage, make image public
-				sharp(path)
-					.webp({ quality: 70 })
-					.toBuffer()
-					.then((data) => {
-						file.save(data)
-							.then(() => {
-								fs.unlink(path, (err) => {
-									console.log(err);
-								});
-								file.makePublic().catch((err) => {
-									console.log("Error verifying token:", err);
+				await new Promise((resolve, reject) => {
+					sharp(path)
+						.webp({ quality: 70 })
+						.toBuffer()
+						.then((data) => {
+							file.save(data)
+								.then(() => {
+									fs.unlink(path, (err) => {
+										console.log(err);
+									});
+									file.makePublic()
+										.then(() => resolve(true))
+										.catch((err) => {
+											console.log(
+												"Error verifying token:",
+												err
+											);
+											reject(false);
+											res.status(501).json({
+												error: `Profile make public error: ${err}`,
+											});
+										});
+								})
+								.catch((err) => {
+									console.log("Save error:", err);
+									reject(false);
 									res.status(501).json({
-										error: `Profile make public error: ${err}`,
+										error: `Save profile error: ${err}`,
 									});
 								});
-							})
-							.catch((err) => {
-								console.log("Save error:", err);
-								res.status(501).json({
-									error: `Save profile error: ${err}`,
-								});
+						})
+						.catch((err) => {
+							reject(false);
+							res.status(501).json({
+								error: `Parse profile image error: ${err}`,
 							});
-					})
-					.catch((err) => {
-						res.status(501).json({
-							error: `Parse profile image error: ${err}`,
 						});
-					});
+				});
 				gigProfileImage["type"] = "gigProfileImage";
 				gigProfileImage["file_name"] = ref;
 				gigProfileImage["public_url"] = file.publicUrl();
 			});
+			await Promise.allSettled(profileImageUpload);
 			req.gig_profile_image = gigProfileImage;
 		}
 		next();
@@ -582,11 +618,10 @@ const searchGigs = async (req, res) => {
 			},
 		});
 		console.log(application, gig_id, "Application");
-		const gig = await models.Gig.findByPk(gig_id);
+		const gig = (await models.Gig.findByPk(gig_id)) || null;
 		const content = gig ? await gig?.getGigImages() : [];
-		const { ...gigData } = gig.dataValues;
 		return {
-			...gigData,
+			...gig?.dataValues,
 			application: application ? application.dataValues : null,
 			gigImages: content
 				.filter((image) => image.type === "gigImage")

@@ -78,7 +78,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const bucketStorage = new Storage({
-	keyFilename: `/usr/src/app/config/musicmingle-847509563d60.json`,
+	keyFilename: `config/musicmingle-847509563d60.json`,
 });
 const videoBucket = bucketStorage.bucket("music-mingle-video");
 const portfolioImageBucket = bucketStorage.bucket(
