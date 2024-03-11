@@ -122,12 +122,6 @@ const MyGigs = () => {
 												<p>{app.user.name}</p>
 											</Link>
 										))}
-									buttonText1={
-										"Edit Gig"
-									}
-									onButtonClick1={() => {
-										/* wire mygigs/edit */
-									}}
 									buttonText2={
 										gig.is_open
 											? "Close Gig"
