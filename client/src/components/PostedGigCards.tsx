@@ -102,12 +102,7 @@ const PostedGigCard: React.FC<PostedGigCardProps> = ({
 							{popupContent}
 						</PopoverContent>
 					</Popover>
-					<button
-						className="posted-gig-footer-button"
-						onClick={onButtonClick1}
-					>
-						{buttonText1}
-					</button>
+
 					<button
 						className="posted-gig-footer-button"
 						onClick={onButtonClick2}

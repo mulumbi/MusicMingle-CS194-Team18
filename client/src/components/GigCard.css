@@ -100,8 +100,8 @@
   flex-direction: column-reverse;
   height: 100%;
   width: 15%;
+  align-self: end;
   justify-content: right;
-  align-items: flex-end; /* Align items to the start of the container (left) */
   justify-content: space-between; /* Keep space-between if you want to distribute the buttons vertically */
 }
 
@@ -110,7 +110,7 @@
   border-radius: 8px;
   color: white;
   font-size: 1rem;
-  margin: 0.5rem;
+  margin: 1rem 0.5rem;
   padding: 0.75rem 1.5rem;
   font-weight: bolder;
   background-color: #1e5f80;
