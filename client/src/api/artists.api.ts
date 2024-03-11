@@ -35,7 +35,7 @@ export const fetchArtists = async (
 		)
 		.then((res) => {
 			console.log(res);
-			const artists: [Artist] = res.data;
+			const artists: Artist[] = res.data;
 			return artists;
 		})
 		.catch((err) => {
@@ -58,7 +58,7 @@ export const fetchArtist = async (
 				query.toString()
 		)
 		.then((res) => {
-			const artist: [Artist] = res.data;
+			const artist: Artist = res.data;
 			console.log("artist", artist);
 			return artist;
 		})

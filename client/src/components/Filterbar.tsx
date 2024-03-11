@@ -284,19 +284,30 @@ interface FilterSidebarArtistProps {
 	maxRate: number;
 	selectedGenres: string[];
 	selectedRoles: string[];
-	onApplyFilters: (minRate: number, maxRate: number) => void;
+	onApplyFilters: (minRate: number, maxRate: number, selectedRoles: string[],
+		selectedGenres: string[]) => void;
 }
 
 const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 	minRate,
 	maxRate,
+	selectedGenres, 
+    selectedRoles,
 	onApplyFilters,
 }) => {
 	const [localMinRate, setLocalMinRate] = useState(minRate);
 	const [localMaxRate, setLocalMaxRate] = useState(maxRate);
+	const [localGenres, setLocalGenres] = useState(selectedGenres); 
+    const [localRoles, setLocalRoles] = useState(selectedRoles);
+	const { control, setValue } = useForm({
+		defaultValues: {
+			selectedGenres: selectedGenres,
+			selectedRoles: selectedRoles,
+		},
+	});
 
 	const handleApplyFilters = () => {
-		onApplyFilters(localMinRate, localMaxRate);
+		onApplyFilters(localMinRate, localMaxRate, localRoles, localGenres);
 	};
 
 	return (
@@ -329,45 +340,126 @@ const FilterSidebarArtist: React.FC<FilterSidebarArtistProps> = ({
 						/>
 					</div>
 
-					<div className="filter-action">
-						<h3>Genre</h3>
-						<Select>
-							<SelectTrigger>
-								<SelectValue placeholder="Choose genre" />
-							</SelectTrigger>
-							<SelectContent className="fillDropdown">
-								{genres.map((genre) => (
-									<SelectItem
-										key={genre.value}
-										value={genre.value}
-									>
-										{genre.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
+					
+					<FormField
+						control={control}
+						name="selectedRoles"
+						render={({ field }) => (
+							<div className="filter-action">
+								<Popover>
+									<PopoverTrigger asChild>
+										<Button>Select Roles</Button>
+									</PopoverTrigger>
+									<PopoverContent className="popover-content">
+										<Command>
+											<CommandGroup>
+												{roles.map((role) => (
+													<CommandItem
+														value={role.label}
+														key={role.value}
+														className="command-item"
+														onSelect={() => {
+															const newRoles =
+																localRoles.includes(
+																	role.value
+																)
+																	? localRoles.filter(
+																			(
+																				r
+																			) =>
+																				r !==
+																				role.value
+																	  )
+																	: [
+																			...localRoles,
+																			role.value,
+																	  ];
+															setLocalRoles(
+																newRoles
+															);
+														}}
+													>
+														<Check
+															className={
+																localRoles.includes(
+																	role.value
+																)
+																	? "check-show"
+																	: "check-hide"
+															}
+														/>
+														{role.label}
+													</CommandItem>
+												))}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+							</div>
+						)}
+					/>
 
-					<div className="filter-action">
-						<h3>Role</h3>
-						<Select>
-							<SelectTrigger>
-								<SelectValue placeholder="Choose role" />
-							</SelectTrigger>
-							<SelectContent className="fillDropdown">
-								{roles.map((role) => (
-									<SelectItem
-										key={role.value}
-										value={role.value}
-									>
-										{role.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
+					<FormField
+						control={control}
+						name="selectedGenres"
+						render={({ field }) => (
+							<div className="filter-action">
+								<Popover>
+									<PopoverTrigger asChild>
+										<Button>Select Genres</Button>
+									</PopoverTrigger>
+									<PopoverContent className="popover-content">
+										<Command>
+											<CommandGroup>
+												{genres.map((genre) => (
+													<CommandItem
+														value={genre.label}
+														key={genre.value}
+														className="command-item"
+														onSelect={() => {
+															const newGenres =
+																localGenres.includes(
+																	genre.value
+																)
+																	? localGenres.filter(
+																			(
+																				g
+																			) =>
+																				g !==
+																				genre.value
+																	  )
+																	: [
+																			...localGenres,
+																			genre.value,
+																	  ];
+															setLocalGenres(
+																newGenres
+															);
+														}}
+													>
+														<Check
+															className={
+																localGenres.includes(
+																	genre.value
+																)
+																	? "check-show"
+																	: "check-hide"
+															}
+														/>
+														{genre.label}
+													</CommandItem>
+												))}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+							</div>
+						)}
+					/>
+        
 				</div>
 			</CardContent>
+
 
 			<CardFooter>
 				<Button
