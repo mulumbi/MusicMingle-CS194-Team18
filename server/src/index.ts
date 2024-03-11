@@ -359,6 +359,7 @@ app.get("/api/mygigs/", isLoggedIn, async (req: any, res) => {
 				const profileImage = await Gig.getGigImages();
 				return {
 					...Gig.dataValues,
+					gigId,
 					gigProfileImage: profileImage.find(
 						(image) => image.type === "gigProfileImage"
 					),
