@@ -177,23 +177,26 @@ function CreateGig() {
 		mutate(bodyFormData);
 	};
 
+	// Loading screen
+	if (isLoading) return <Loading />;
+
 	return (
 		<div
-			className="App"
+			className="gig_app"
 			id="CreateGigPage"
 		>
 			{isLoading && <Loading />}
 			<div className="create_gig">
 				<h2 className="NewGigTitle">Create New Gig</h2>
 				<div className="new-gig-fields">
-					<Label className="entryLabel">Gig Title: </Label>
+					<Label className="entryLabel">Gig Name*</Label>
 					<Input
 						type="text"
 						onChange={(e) => setGigTitle(e.target.value)}
 						required
 					/>
 
-					<Label className="entryLabel">Gig Profile Image: </Label>
+					<Label className="entryLabel">Main Image*</Label>
 					<Input
 						id="gig_profile_image"
 						type="file"
@@ -205,24 +208,12 @@ function CreateGig() {
 						required
 					/>
 
-					<Label className="entryLabel">Gig Gallery Images:</Label>
-					<Input
-						id="gig_portfolio_images"
-						type="file"
-						multiple
-						onChange={(e) => {
-							if (e?.target?.files?.length > 0) {
-								setGigPortfolioImages(e.target.files);
-							}
-						}}
-					/>
-
-					<Label className="entryLabel">Description:</Label>
+					<Label className="entryLabel">Description*</Label>
 					<Textarea
-						style={{ width: "100%", height: "150px" }}
+						style={{ width: "100%", height: "80px" }}
 						onChange={(e) => setDescription(e.target.value)}
 					/>
-					<Label className="entryLabel">Date and Time:</Label>
+					<Label className="entryLabel">Start & End Date*</Label>
 					<div className="datetime-picker">
 						<Popover>
 							<PopoverTrigger asChild>
@@ -255,93 +246,42 @@ function CreateGig() {
 						</Popover>
 					</div>
 					<Label className="entryLabel">
-						Start Time:
-						<Input
-							type="time"
-							onChange={(e) => setStartTime(e.target.value)}
-							style={{ marginLeft: "10px" }}
-						/>
+						Start Time*
 					</Label>
+					<Input
+						type="time"
+						onChange={(e) => setStartTime(e.target.value)}
+					/>
 					<Label className="entryLabel">
-						End Time:
-						<Input
-							type="time"
-							onChange={(e) => setEndTime(e.target.value)}
-							style={{ marginLeft: "10px" }}
-						/>
+						End Time*
 					</Label>
-					<Label className="entryLabel">
-						Budget:
-						<Input
-							type="text"
-							placeholder="50"
-							onChange={(e) => setBudget(e.target.value)}
-						/>
-					</Label>
-					<Label className="entryLabel">Genre: </Label>
-					<Popover>
-						<PopoverTrigger asChild>
-							<Button
-								variant="outline"
-								role="combobox"
-								className="settings-combobox"
-							>
-								{genre.length
-									? genre.length + " selected"
-									: "Select genres"}
-								<ChevronsUpDown className="chevrons-icon" />
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent className="popover-content">
-							<Command>
-								<CommandGroup>
-									{genres.map((individual_genre) => (
-										<CommandItem
-											value={individual_genre.label}
-											key={individual_genre.value}
-											className="command-item"
-											onSelect={() => {
-												const existing_tags =
-													genre || [];
-												if (
-													!existing_tags.includes(
-														individual_genre.value
-													)
-												) {
-													const new_tags =
-														existing_tags.concat([
-															individual_genre.value,
-														]);
-													setGenre(new_tags);
-												} else {
-													const new_tags =
-														existing_tags.filter(
-															(tag) =>
-																tag !=
-																individual_genre.value
-														);
-													setGenre(new_tags);
-												}
-											}}
-										>
-											<Check
-												className={
-													genre?.includes(
-														individual_genre.value
-													)
-														? "check-show"
-														: "check-hide"
-												}
-											/>
-											{individual_genre.label}
-										</CommandItem>
-									))}
-								</CommandGroup>
-							</Command>
-						</PopoverContent>
-					</Popover>
+					<Input
+						type="time"
+						onChange={(e) => setEndTime(e.target.value)}
+					/>
 
-					<Label className="entryLabel">Instrument/Role:</Label>
+					<Label className="entryLabel">
+						Budget*
+					</Label>
+					<Input
+						type="text"
+						placeholder="$"
+						onChange={(e) => setBudget(e.target.value)}
+					/>
+
+					<Label className="entryLabel">Gallery Images</Label>
+					<Input
+						id="gig_portfolio_images"
+						type="file"
+						multiple
+						onChange={(e) => {
+							if (e?.target?.files?.length > 0) {
+								setGigPortfolioImages(e.target.files);
+							}
+						}}
+					/>
+
+					<Label className="entryLabel">Roles</Label>
 					<Popover>
 						<PopoverTrigger asChild>
 							<Button
@@ -397,6 +337,69 @@ function CreateGig() {
 												}
 											/>
 											{role.label}
+										</CommandItem>
+									))}
+								</CommandGroup>
+							</Command>
+						</PopoverContent>
+					</Popover>
+
+					<Label className="entryLabel">Genres </Label>
+					<Popover>
+						<PopoverTrigger asChild>
+							<Button
+								variant="outline"
+								role="combobox"
+								className="settings-combobox"
+							>
+								{genre.length
+									? genre.length + " selected"
+									: "Select genres"}
+								<ChevronsUpDown className="chevrons-icon" />
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent className="popover-content">
+							<Command>
+								<CommandGroup>
+									{genres.map((individual_genre) => (
+										<CommandItem
+											value={individual_genre.label}
+											key={individual_genre.value}
+											className="command-item"
+											onSelect={() => {
+												const existing_tags =
+													genre || [];
+												if (
+													!existing_tags.includes(
+														individual_genre.value
+													)
+												) {
+													const new_tags =
+														existing_tags.concat([
+															individual_genre.value,
+														]);
+													setGenre(new_tags);
+												} else {
+													const new_tags =
+														existing_tags.filter(
+															(tag) =>
+																tag !=
+																individual_genre.value
+														);
+													setGenre(new_tags);
+												}
+											}}
+										>
+											<Check
+												className={
+													genre?.includes(
+														individual_genre.value
+													)
+														? "check-show"
+														: "check-hide"
+												}
+											/>
+											{individual_genre.label}
 										</CommandItem>
 									))}
 								</CommandGroup>
