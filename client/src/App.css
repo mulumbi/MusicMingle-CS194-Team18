@@ -1057,14 +1057,24 @@ h2 .Title {
 
 /* GIGS PAGE STYLING */
 
+.gig_app {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 92%;
+	background-color: whitesmoke;
+}
+
 .create_gig {
 	display: flex;
-	justify-self: left;
+	justify-self: flex-start;
+	align-self: center;
 	flex-direction: column;
 	background-color: #ffffff;
 	padding: 1rem 2rem;
 	width: 75%;
-	margin: 1rem auto;
+	height: 100%;
+	margin: 1rem 0;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	border-radius: 8px;
 	overflow-y: scroll;
@@ -1075,12 +1085,12 @@ h2 .Title {
 	font-size: 1.8rem;
 	font-weight: bold;
 	padding: 1rem;
-	color: #004058;
+	color: var(--violet-11);
 	margin-top: 0;
 	background-color: #ffffff;
 	text-align: center;
 	justify-content: left;
-	border-bottom: 2px solid #3696c7;
+	border-bottom: 2px solid var(--violet-11);
 }
 
 .new-gig-fields {
@@ -1097,6 +1107,7 @@ h2 .Title {
 	gap: 0.5rem;
 	font-size: 1rem;
 	color: #004058;
+	font-weight: 500;
 }
 
 input[type="text"],
@@ -1139,16 +1150,15 @@ select:focus {
 }
 
 #create_gig_button {
-	background-color: #3696c7;
+	background-color: var(--violet-11);
 	color: #ffffff;
-	padding: 2rem 4.5rem;
+	padding: 1rem 4.5rem;
 	border: none;
 	cursor: pointer;
 	border-radius: 4px;
 	transition: background-color 0.3s;
 	margin: 0rem auto;
 	width: 100%;
-	margin-top: 0.75rem;
 }
 
 .button_container {
@@ -1190,6 +1200,12 @@ select:focus {
 	width: 95%;
 	overflow-y: auto;
 	background-color: white;
+}
+
+.empty-gigs {
+	background-color: white;
+	padding: 0 2rem;
+	font-size: 20px;
 }
 
 /* This could be the <div className="App"> or directly on the body */

@@ -70,6 +70,12 @@ function Gig() {
 		enabled: false,
 	});
 
+	useEffect(() => {
+		if (data.UserId) {
+			organizerResults.refetch();
+		}
+	}, []);
+
 	// Fetch once data is loaded
 	useEffect(() => {
 		organizerResults.refetch();
@@ -139,9 +145,11 @@ function Gig() {
 					<div className="profile-right">
 						<div>
 							<h1>{data?.name}</h1>
-							<div className="organizer-row">
-								Posted by {organizerResults?.data?.name}
-							</div>
+							{organizerResults?.data?.name && (
+								<div className="organizer-row">
+									Posted by {organizerResults?.data?.name}
+								</div>
+							)}
 						</div>
 						<div className="profile-actions">
 							<Button
