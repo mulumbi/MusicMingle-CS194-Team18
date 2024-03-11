@@ -715,7 +715,7 @@ button.submit-button:focus,
 }
 
 .selection-buttons:hover {
-	background: rgba(0, 64, 88, 0.7);
+	background: rgba(42, 64, 71, 0.7);
 }
 
 .selection-buttons.Active {
@@ -727,9 +727,10 @@ button.submit-button:focus,
 }
 
 .page-body {
-	padding: 2.5rem;
+	padding: 1.5rem;
 	align-items: flex-start;
-	width: 100%;
+	display: flex;
+	width: 98%;
 }
 
 .Title,
@@ -745,19 +746,11 @@ button.submit-button:focus,
 	width: auto; /* Hug content */
 }
 
-.selection-buttons {
-	border-radius: 8px;
-	background: rgba(255, 255, 255, 0.5);
-	margin-right: 2.5rem; /* Add space between buttons */
-}
 
 .selection-buttons:last-child {
 	margin-right: 0; /* Remove margin for the last button */
 }
 
-.selection-buttons.Active {
-	/* Distinct styling for the active button */
-}
 
 /* ARTISTS PAGE STYLING */
 #ArtistPageApp {
@@ -1076,13 +1069,8 @@ select:focus {
 .selection-buttons {
 	cursor: pointer;
 	padding: 10px;
-	margin: 5px;
+	margin-right: 1rem;
 	border: none;
-	background-color: #f0f0f0; /* Light grey background */
-}
-
-.selection-buttons.active {
-	background-color: #d1d1d1; /* Slightly darker background for active state */
 }
 
 /* Ensure the parent container of .page-body has a defined height */

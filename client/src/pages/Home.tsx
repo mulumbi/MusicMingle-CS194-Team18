@@ -30,20 +30,6 @@ function Home() {
     public_url: Add,
   };
 
-  const CreateNewGig: Gig = {
-    id: "createnewgig001",
-    name: "Create New Gig",
-    bio: "Find local talent for your next gig!",
-    event_start: "", 
-    event_end: "",
-    gigImages: [NewGigImg],
-    gig_role_tags: [],
-    gig_genre_tags: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    user: currentUser,
-    estimate_flat_rate: 0,
-  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -53,8 +39,8 @@ function Home() {
         const gigs = await fetchGigs({ name: searchName, min_budget: minFlatRate, max_budget: maxFlatRate });
 
         // Prepend CreateNewGig to the gigs data
-        const updatedGigsData = [CreateNewGig, ...gigs].slice(0, 5);
-        const updatedArtistsData = artists.slice(0, 6 - updatedGigsData.length);
+        const updatedGigsData =gigs.slice(0, 5);
+        const updatedArtistsData = artists.slice(0, 5);
 
         setGigCardsData(updatedGigsData);
         setArtistCardsData(updatedArtistsData);
@@ -74,6 +60,19 @@ function Home() {
           <button onClick={() => navigate("/gigs")}>Show all</button>
         </div>
         <div className="cards">
+        <div className="card">
+              <button onClick={() => navigate("/creategig")} style={{ width: '100%', border: 'none', background: 'none', padding: 0, margin: 0 }}>
+                <img
+                  src={Add}
+                  alt="New Gig"
+                />
+              </button>
+              <h2>Create New Gig</h2>
+              <p>Date: Discover local artists in your area!</p>
+              <div className="tags">
+                <span className="tag">Tag</span>
+              </div>
+              </div>
           {gigCardsData.map((gig, index) => (
             <Card key={gig.id} gig={gig} />
           ))}
